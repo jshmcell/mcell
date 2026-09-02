@@ -1,18 +1,24 @@
 export interface HeroSlide {
   bg: string;
+  bgMobile?: string;
   logo: string;
   tagline: string;
   title: string;
+  titleMobile?: string;
   description: string;
+  descriptionMobile?: string;
 }
 
 export const heroSlides: HeroSlide[] = [
   {
     bg: "/assets/img/7e3811393ea6c.jpg",
+    bgMobile: "/assets/img/e63040ece0492.jpg",
     logo: "/assets/img/f4c9af1f6d804.png",
     tagline: "Empower Heat, Shape Innovation",
     title: "스마트 발열 기술로 산업의 혁신을 이끌어갑니다.",
+    titleMobile: "스마트 발열 기술로\n산업의 혁신을 이끌어갑니다.",
     description: "더 얇고, 더 가볍고, 더 안전한 열전달 구조로 고효율 에너지 솔루션을 제시합니다.",
+    descriptionMobile: "더 얇고, 더 가볍고, 더 안전한 열전달 구조로\n고효율 에너지 솔루션을 제시합니다.",
   },
 ];
 

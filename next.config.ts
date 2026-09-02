@@ -8,6 +8,7 @@ const oldRoutes: [string, string][] = [
   ["/36", "/about/contact"],
   ["/30", "/mcell"],
   ["/31", "/mcell"],
+  ["/32", "/mcell/oem-odm"],
   ["/37", "/shop"],
   ["/38", "/library/portfolio"],
   ["/39", "/library/portfolio"],
