@@ -4,7 +4,8 @@
 @custom-variant md-header (@media (min-width: 992px));
 
 @theme {
-  --font-sans: var(--font-pretendard), Pretendard, -apple-system, BlinkMacSystemFont,
+  --font-sans:
+    var(--font-pretendard), Pretendard, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* mcell navy palette */
@@ -42,8 +43,16 @@ body {
   color: var(--color-ink);
 }
 
-/* original container: full-width, padding 15px, 40px from 1366 up */
+/* original section container: fixed 1280px centered, 15px side padding
+   (measured on live site: content 1250px wide at 1280 and 1920 viewports) */
 @utility container-site {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 15px;
+}
+
+/* full-width variant used by the header (15px, 40px from 1366 up) */
+@utility container-wide {
   max-width: 100%;
   margin-inline: auto;
   padding-inline: 15px;

@@ -24,9 +24,9 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/45" />
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: "-60%" }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative z-10 pb-[166px] pt-[174px] text-center text-white"
         >
           <Image
@@ -37,9 +37,15 @@ export default function Hero() {
             className="mx-auto h-auto"
             priority
           />
-          <p className="mt-[29px] text-[20px] leading-[26px]">{slide.tagline}</p>
-          <h1 className="mt-[10px] text-[36px] font-bold leading-[48px]">{slide.title}</h1>
-          <p className="mt-[9px] text-[18px] leading-[30px]">{slide.description}</p>
+          <p className="mt-[29px] text-[20px] leading-[26px]">
+            {slide.tagline}
+          </p>
+          <h1 className="mt-[10px] text-[36px] font-bold leading-[48px]">
+            {slide.title}
+          </h1>
+          <p className="mt-[9px] text-[18px] leading-[30px]">
+            {slide.description}
+          </p>
         </motion.div>
       </section>
 
@@ -58,9 +64,9 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/55" />
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: "-60%" }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative z-10 py-[30px] text-center text-white"
         >
           <Image
@@ -72,8 +78,12 @@ export default function Hero() {
             priority
           />
           <p className="mt-[24px] text-[20px]">{slide.tagline}</p>
-          <h1 className="mt-[6px] whitespace-pre-line text-[22px] font-bold leading-[2]">{slide.titleMobile ?? slide.title}</h1>
-          <p className="mt-[6px] whitespace-pre-line text-[14px] leading-[2]">{slide.descriptionMobile ?? slide.description}</p>
+          <h1 className="mt-[6px] whitespace-pre-line text-[22px] font-bold leading-[2]">
+            {slide.titleMobile ?? slide.title}
+          </h1>
+          <p className="mt-[6px] whitespace-pre-line text-[14px] leading-[2]">
+            {slide.descriptionMobile ?? slide.description}
+          </p>
         </motion.div>
       </section>
     </>

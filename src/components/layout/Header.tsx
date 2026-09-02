@@ -30,9 +30,12 @@ function useStickyHeader(threshold = 120) {
   const [stuck, setStuck] = useState(false);
   useEffect(() => {
     const sentinel = document.createElement("div");
-    sentinel.style.cssText = "position:absolute;top:0;height:1px;width:1px;pointer-events:none";
+    sentinel.style.cssText =
+      "position:absolute;top:0;height:1px;width:1px;pointer-events:none";
     document.body.prepend(sentinel);
-    const io = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting), { threshold: 0 });
+    const io = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting), {
+      threshold: 0,
+    });
     io.observe(sentinel);
     return () => {
       io.disconnect();
@@ -48,17 +51,18 @@ function PcHeader() {
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const pathname = usePathname();
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
 
   return (
     <header
       className={cn(
         "z-[1000] w-full bg-navy-900/90",
-        stuck && "fixed inset-x-0 top-0"
+        stuck && "fixed inset-x-0 top-0",
       )}
       style={{ height: HEADER_HEIGHT }}
     >
-      <div className="container-site flex h-full items-center">
+      <div className="container-wide flex h-full items-center">
         <Link href="/" className="shrink-0" aria-label={company.name}>
           <Image
             src={company.logoWhite}
@@ -80,7 +84,7 @@ function PcHeader() {
                   href={item.href}
                   className={cn(
                     "flex h-10 items-center px-[15px] text-[16px] text-white transition-colors duration-300 hover:text-[#c5c5c5]",
-                    isActive(item.href) && "font-bold"
+                    isActive(item.href) && "font-bold",
                   )}
                 >
                   {item.label}
@@ -98,7 +102,7 @@ function PcHeader() {
                           href={child.href}
                           className={cn(
                             "block h-[42.6px] px-5 py-3 text-[13px] leading-[18.6px] text-ink-soft transition-colors duration-200 hover:bg-sky-hover hover:!text-white",
-                            isActive(child.href) && "bg-sky-hover text-white"
+                            isActive(child.href) && "bg-sky-hover text-white",
                           )}
                         >
                           {child.label}
@@ -132,11 +136,20 @@ function PcHeader() {
             </svg>
           </button>
           <div className="flex items-center text-[14px] text-white">
-            <Link href="/login" className="transition-colors duration-300 hover:text-[#e5e5e5]">
+            <Link
+              href="/login"
+              className="transition-colors duration-300 hover:text-[#e5e5e5]"
+            >
               로그인
             </Link>
-            <span className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60" aria-hidden />
-            <Link href="/signup" className="transition-colors duration-300 hover:text-[#e5e5e5]">
+            <span
+              className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
+              aria-hidden
+            />
+            <Link
+              href="/signup"
+              className="transition-colors duration-300 hover:text-[#e5e5e5]"
+            >
               회원가입
             </Link>
           </div>
