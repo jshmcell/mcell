@@ -114,8 +114,6 @@ export const industries = {
       image: "/assets/img/51846a3cba4c4.jpg",
     },
   ],
-  moreLabel: "더보기",
-  moreHref: "/shop",
 };
 
 export const certifications = {
