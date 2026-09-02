@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-pretendard), Pretendard, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* mcell navy palette */
+  --color-navy-900: #17375e;
+  --color-navy-800: #1c3a6e;
+  --color-navy-700: #27397d;
+  --color-navy-600: #313f76;
+  --color-accent: #00b8ff;
+  --color-sky-hover: #93cddd;
+  --color-ink: #363636;
+  --color-ink-soft: #474747;
+
+  --breakpoint-header: 992px;
+
+  --shadow-dropdown: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  word-break: keep-all;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: var(--color-ink);
+}
+
+@utility container-site {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 40px;
+
+  @media (max-width: 767px) {
+    padding-inline: 20px;
+  }
 }
