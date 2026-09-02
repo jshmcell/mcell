@@ -100,4 +100,5 @@ public/assets/img|pdf/
 framer-motion, embla-carousel-react, react-countup. Zustand: mobile drawer + search overlay only.
 
 ## Status
-Current: Phase 1 — scaffold.
+Current: Phase 4 — subpages. Home page done (9 sections live, scroll-reveal verified vs original screenshots).
+Phase 0/1/2/3 complete. Assets: 112 imgs + catalog PDF in public/assets.
