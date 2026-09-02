@@ -100,5 +100,7 @@ public/assets/img|pdf/
 framer-motion, embla-carousel-react, react-countup. Zustand: mobile drawer + search overlay only.
 
 ## Status
-Current: Phase 4 — subpages. Home page done (9 sections live, scroll-reveal verified vs original screenshots).
-Phase 0/1/2/3 complete. Assets: 112 imgs + catalog PDF in public/assets.
+Current: Phase 5 — polish/QA. All pages built:
+- Home (9 sections), /mcell (stats+tech+products+comparisons+platform+cooperation), /about, /about/history, /about/certifications, /about/contact, /shop, /library/{portfolio,catalog}, /news/{notices,updates}, /partnership (disabled form), /login, /signup, /policy, /privacy
+- Redirects: /29,/33,/34,/35,/36,/30,/31,/37,/38,/39,/40,/48,/45,/46,/44 → new routes
+- Remaining: sitemap/robots, Lighthouse, Vercel deploy, pixel-diff fine-tuning
