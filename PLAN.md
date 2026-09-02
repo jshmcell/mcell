@@ -113,7 +113,7 @@ framer-motion, embla-carousel-react, react-countup. Zustand: mobile drawer + sea
 
 ## Status
 
-Current: Phase 5 — QA/polish. All pages built; home sections 1-10 pixel-matched against the live original (2026-09: sections 1-10 verified at 1280/1920/375 — PC page total 5370px == original). Remaining:
+Current: Phase 5 — QA/polish. All pages built; home sections 1-10 pixel-matched against the live original (2026-09: sections 1-10 verified at 1280/1920/375 — PC page total 5370px == original). About pages pixel-matched 2026-09 (orig vs ours @1280/1920/768/375): /about 2002==2002, /history −12, /certifications +1, /contact −29; sub-hero chips + inline breadcrumb + imweb scroll-triggered appear animations (Appear) replicated; all <Image> wrapped in SmartImage (skeleton+spinner loader; storage-ready). Remaining:
 
 - Home (9 sections), /mcell (stats+tech+products+comparisons+platform+cooperation), /about, /about/history, /about/certifications, /about/contact, /shop, /library/{portfolio,catalog}, /news/{notices,updates}, /partnership (disabled form), /login, /signup, /policy, /privacy
 - Redirects: /29,/33,/34,/35,/36,/30,/31,/37,/38,/39,/40,/48,/45,/46,/44 → new routes
