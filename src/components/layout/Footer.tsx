@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import type { SVGProps } from "react";
 import { company } from "@/data/site";
@@ -47,7 +47,7 @@ export default function Footer() {
     <footer className="bg-[#242424]">
       <div className="container-site flex flex-col items-stretch pb-[20px] pt-[29px] lg:flex-row lg:justify-between lg:pb-[45px] lg:pt-[50px]">
         <div>
-          <Image
+          <SmartImage
             src="/assets/img/fd051c1da84e1.png"
             alt={company.name}
             width={134}

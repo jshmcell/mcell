@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import useEmblaCarousel from "embla-carousel-react";
 import Reveal from "@/components/ui/Reveal";
 import { certifications } from "@/data/home";
@@ -92,7 +92,7 @@ export default function CertCarousel() {
                     className="block w-full cursor-pointer border border-[#eee] bg-white"
                   >
                     <div className="relative h-[224px] w-full md-header:h-[320px]">
-                      <Image
+                      <SmartImage
                         src={img.thumb}
                         alt="엠셀 인증서"
                         fill
@@ -134,7 +134,7 @@ export default function CertCarousel() {
             className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-6"
             onClick={() => setLightbox(null)}
           >
-            <Image
+            <SmartImage
               src={lightbox}
               alt="엠셀 인증서"
               width={691}

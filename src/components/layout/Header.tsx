@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUiStore } from "@/lib/store";
@@ -64,7 +64,7 @@ function PcHeader() {
     >
       <div className="container-wide flex h-full items-center">
         <Link href="/" className="shrink-0" aria-label={company.name}>
-          <Image
+          <SmartImage
             src={company.logoWhite}
             alt={company.name}
             width={129}
@@ -195,7 +195,7 @@ function MobileHeader() {
           aria-label={company.name}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
-          <Image
+          <SmartImage
             src={company.logoColor}
             alt={company.name}
             width={100}

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { aboutBanner } from "@/data/home";
@@ -6,7 +6,7 @@ import { aboutBanner } from "@/data/home";
 export default function AboutBanner() {
   return (
     <section className="relative overflow-hidden">
-      <Image
+      <SmartImage
         src={aboutBanner.bg}
         alt=""
         fill

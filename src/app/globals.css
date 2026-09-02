@@ -61,3 +61,54 @@ body {
     padding-inline: 40px;
   }
 }
+
+/* imweb 위젯 등장 애니메이션 (Appear 컴포넌트에서 사용)
+   원본 계측값: fadeInUp 시작 translateY = 요소 높이의 60%, zoomIn scale 0.3 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 60%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wg-appear-pending {
+  visibility: hidden;
+}
+
+/* 로딩 스켈레톤 — 빠른 로드 시 깜빡임 방지용 150ms 지연 등장 */
+@keyframes skeleton-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.skeleton-in {
+  animation: skeleton-in 0s linear 0.15s both;
+}

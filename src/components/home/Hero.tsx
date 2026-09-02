@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import { motion } from "framer-motion";
 import { heroSlides } from "@/data/home";
 
@@ -12,7 +12,7 @@ export default function Hero() {
       {/* PC variant */}
       <section className="relative hidden overflow-hidden md-header:block">
         <div className="absolute inset-0">
-          <Image
+          <SmartImage
             src={slide.bg}
             alt=""
             fill
@@ -29,7 +29,7 @@ export default function Hero() {
           transition={{ duration: 1.2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative z-10 pb-[166px] pt-[174px] text-center text-white"
         >
-          <Image
+          <SmartImage
             src={slide.logo}
             alt="엠셀"
             width={161}
@@ -52,7 +52,7 @@ export default function Hero() {
       {/* Mobile variant */}
       <section className="relative overflow-hidden md-header:hidden">
         <div className="absolute inset-0">
-          <Image
+          <SmartImage
             src={slide.bgMobile ?? slide.bg}
             alt=""
             fill
@@ -69,7 +69,7 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative z-10 py-[30px] text-center text-white"
         >
-          <Image
+          <SmartImage
             src={slide.logo}
             alt="엠셀"
             width={161}

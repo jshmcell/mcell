@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { products } from "@/data/mcell";
 
@@ -21,7 +21,7 @@ export default function Products() {
           {products.map((product, i) => (
             <Reveal key={product.name} delay={(i % 3) * 0.08}>
               <div className="group overflow-hidden border border-black/10">
-                <Image
+                <SmartImage
                   src={product.thumb}
                   alt={product.name}
                   width={420}

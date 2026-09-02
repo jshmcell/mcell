@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { tech } from "@/data/mcell";
 
@@ -18,7 +18,7 @@ export default function TechLayers() {
         </Reveal>
 
         <Reveal delay={0.15}>
-          <Image
+          <SmartImage
             src={tech.image}
             alt={tech.title}
             width={1037}

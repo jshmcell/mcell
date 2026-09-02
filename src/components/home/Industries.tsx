@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import { industries } from "@/data/home";
@@ -27,14 +27,14 @@ export default function Industries() {
                 >
                   {/* thumb ↔ full image crossfade on hover (imweb gallery behavior) */}
                   <div className="relative h-[224px] overflow-hidden border border-[#eee] bg-white md-header:h-[355px]">
-                    <Image
+                    <SmartImage
                       src={item.thumb}
                       alt={item.label}
                       fill
                       sizes="(max-width: 991px) 50vw, 27vw"
                       className="object-cover transition-opacity duration-[400ms] group-hover:opacity-0"
                     />
-                    <Image
+                    <SmartImage
                       src={item.image}
                       alt=""
                       fill

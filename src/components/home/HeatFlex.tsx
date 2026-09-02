@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { heatFlex } from "@/data/home";
@@ -15,7 +15,7 @@ export default function HeatFlex() {
         {/* PC: logo+title+desc fadeInUp 1.2s/0.3s, button static */}
         <div className="hidden md-header:block">
           <Reveal direction="up" duration={1.2} delay={0.3}>
-            <Image
+            <SmartImage
               src={heatFlex.logo}
               alt="HEAT FLEX"
               width={120}
@@ -43,7 +43,7 @@ export default function HeatFlex() {
         </div>
         {/* mobile: content static, button fadeInUp 0.7s/0.3s */}
         <div className="md-header:hidden">
-          <Image
+          <SmartImage
             src={heatFlex.logo}
             alt="HEAT FLEX"
             width={120}

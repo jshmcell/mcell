@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { production } from "@/data/home";
 
@@ -27,7 +27,7 @@ export default function Production() {
               delay={0.2 + i * 0.2}
             >
               <div className="rounded-[10px] bg-[#fafafa] pb-[20px] pt-[30px]">
-                <Image
+                <SmartImage
                   src={card.icon}
                   alt=""
                   width={74}

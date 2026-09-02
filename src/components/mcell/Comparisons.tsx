@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { comparisons } from "@/data/mcell";
 
@@ -21,7 +21,7 @@ export default function Comparisons() {
                 <div className="flex h-full flex-col rounded-[15px] border border-black/10 bg-white p-8">
                   <h3 className="text-[20px] font-bold text-ink">{cmp.competitorTitle}</h3>
                   <div className="mt-4 flex-1">
-                    <Image src={cmp.image} alt={cmp.competitorTitle} width={520} height={0} className="h-auto w-full max-w-[520px]" />
+                    <SmartImage src={cmp.image} alt={cmp.competitorTitle} width={520} height={0} className="h-auto w-full max-w-[520px]" />
                     <div className="mt-5 text-[14px] leading-7 text-ink/85">
                       {cmp.competitorLines.map((line) => (
                         <p key={line.slice(0, 20)}>{line}</p>
@@ -35,7 +35,7 @@ export default function Comparisons() {
                 <div className="flex h-full flex-col rounded-[15px] border border-navy-900/30 bg-navy-900 p-8 text-white">
                   <h3 className="text-[20px] font-bold">{cmp.oursTitle}</h3>
                   <div className="mt-4 flex-1">
-                    <Image src={cmp.image} alt={cmp.oursTitle} width={520} height={0} className="h-auto w-full max-w-[520px]" />
+                    <SmartImage src={cmp.image} alt={cmp.oursTitle} width={520} height={0} className="h-auto w-full max-w-[520px]" />
                     <div className="mt-5 text-[14px] leading-7 text-white/90">
                       {cmp.oursLines
                         .filter((line) => !line.endsWith("|bold"))

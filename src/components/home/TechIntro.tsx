@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { techIntro } from "@/data/home";
 
@@ -13,7 +13,7 @@ export default function TechIntro() {
       <div className="container-site relative pb-[42px] pt-[47px] md-header:pb-[110px] md-header:pt-[110px]">
         <div className="my-[15px] grid grid-cols-1 items-start gap-y-[44px] md-header:grid-cols-[40.24%_10.96%_1fr] md-header:gap-y-0">
           <Reveal direction="right" distance="60%" duration={1.2} delay={0.3}>
-            <Image
+            <SmartImage
               src={techIntro.photo}
               alt={techIntro.title}
               width={503}
@@ -32,7 +32,7 @@ export default function TechIntro() {
                   <p key={line}>{line}</p>
                 ))}
               </div>
-              <Image
+              <SmartImage
                 src={techIntro.image}
                 alt={techIntro.title}
                 width={447}

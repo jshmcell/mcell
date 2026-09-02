@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
 import { platform, industries, cooperation } from "@/data/mcell";
 
@@ -11,7 +11,7 @@ export default function Platform() {
             <p className="text-[18px] font-bold text-navy-900">{platform.heading}</p>
             <h2 className="mt-2 text-[30px] font-bold text-navy-900">{platform.title}</h2>
             <p className="mt-3 text-[16px]">{platform.description}</p>
-            <Image
+            <SmartImage
               src={platform.image}
               alt={platform.title}
               width={1173}
@@ -28,7 +28,7 @@ export default function Platform() {
       </section>
 
       <section className="relative overflow-hidden">
-        <Image
+        <SmartImage
           src={industries.image}
           alt={industries.title}
           fill
@@ -55,7 +55,7 @@ export default function Platform() {
           <div className="mt-12 grid grid-cols-2 gap-5 lg:grid-cols-4">
             {cooperation.logos.map((logo, i) => (
               <Reveal key={logo} delay={i * 0.08}>
-                <Image
+                <SmartImage
                   src={logo}
                   alt="협력사"
                   width={300}
