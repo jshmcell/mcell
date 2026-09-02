@@ -82,6 +82,15 @@ export const featureCards: FeatureCard[] = [
 
 export const layerSection = {
   bg: "/assets/img/b61d2d12a0e68.jpg",
+  title: "탄소나노튜브 잉크 코팅 기술로 발열의 품질을 높히다",
+  titleMobile: "탄소나노튜브 잉크 코팅 기술로\n발열의 품질을 높히다",
+  lines: [
+    "엠셀은 섬유에 자기조립 단층(Self-Assembled Layer)을 형성한 뒤,",
+    "탄소나노튜브잉크를 정밀하게 흡착시키는 방식으로 발열층을 구성합니다.",
+  ],
+  linesMobile: [
+    "엠셀은 섬유에 자기조립 단층(Self-Assembled Layer)을 형성한 뒤,탄소나노튜브잉크를 정밀하게 흡착시키는 방식으로 발열층을 구성합니다.",
+  ],
   cta: { label: "기술력 소개 바로가기 →", href: "/mcell" },
 };
 

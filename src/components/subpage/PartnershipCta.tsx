@@ -11,7 +11,11 @@ export default function PartnershipCta() {
       <div className="absolute inset-0 bg-black/70" />
       <div className="container-site relative py-28 text-center text-white">
         <Reveal>
-          <ButtonLink href="/partnership" variant="outline" className="h-[43px] px-[40px] py-[10px] text-[15px]">
+          <ButtonLink
+            href="/partnership"
+            variant="outline"
+            className="h-[43px] rounded-[4px] px-[40px] py-[10px] text-[15px]"
+          >
             제휴 및 문의 바로가기 →
           </ButtonLink>
         </Reveal>

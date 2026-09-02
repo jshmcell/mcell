@@ -31,7 +31,7 @@ export default function HeatFlex() {
           <ButtonLink
             href={heatFlex.cta.href}
             variant="outline"
-            className="mt-12 h-[43px] px-[40px] py-[10px] text-[15px]"
+            className="mt-12 h-[43px] rounded-[4px] px-[40px] py-[10px] text-[15px]"
           >
             {heatFlex.cta.label}
           </ButtonLink>
