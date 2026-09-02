@@ -45,6 +45,15 @@ export default function CertCarousel() {
     return () => clearInterval(id);
   }, [emblaApi, lightbox]);
 
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox]);
+
   const goToPage = useCallback(
     (page: number) => {
       emblaApi?.scrollTo(page * perView);
