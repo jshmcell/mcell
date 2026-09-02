@@ -12,7 +12,7 @@ export default function TechIntro() {
       {/* imweb rows carry 15px gutters; PC: 80px pad + 15+15 gutter = 110px each side */}
       <div className="container-site relative pb-[42px] pt-[47px] md-header:pb-[110px] md-header:pt-[110px]">
         <div className="my-[15px] grid grid-cols-1 items-start gap-y-[44px] md-header:grid-cols-[40.24%_10.96%_1fr] md-header:gap-y-0">
-          <Reveal direction="left" distance="60%" duration={1.2} delay={0.3}>
+          <Reveal direction="right" distance="60%" duration={1.2} delay={0.3}>
             <Image
               src={techIntro.photo}
               alt={techIntro.title}
