@@ -34,7 +34,7 @@ export default function Header() {
       )}
       style={{ height: HEADER_HEIGHT }}
     >
-      <div className="container-site flex h-full items-center justify-between">
+      <div className="container-site flex h-full items-center">
         <Link href="/" className="relative shrink-0" aria-label={company.name}>
           <Image
             src={company.logoWhite}
@@ -46,7 +46,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center lg:flex">
+        <nav className="ml-12 hidden items-center lg:flex">
           <ul className="flex items-center">
             {navItems.map((item) => (
               <li
@@ -89,12 +89,12 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="ml-auto flex items-center gap-4">
           <button
             type="button"
             aria-label="site search"
             onClick={() => toggleSearch()}
-            className="flex h-[34px] w-[34px] items-center justify-center bg-accent text-white transition-colors hover:opacity-90"
+            className="flex h-[34px] w-[34px] items-center justify-center text-white transition-colors hover:text-[#e2e2e2]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />

@@ -1,9 +1,25 @@
-import Image from "next/image";
+import Hero from "@/components/home/Hero";
+import TechIntro from "@/components/home/TechIntro";
+import FeatureGrid from "@/components/home/FeatureGrid";
+import LayerCta from "@/components/home/LayerCta";
+import Industries from "@/components/home/Industries";
+import CertCarousel from "@/components/home/CertCarousel";
+import AboutBanner from "@/components/home/AboutBanner";
+import Production from "@/components/home/Production";
+import HeatFlex from "@/components/home/HeatFlex";
 
 export default function HomePage() {
   return (
-    <div className="flex h-screen items-center justify-center bg-navy-900">
-      <Image src="/assets/img/f4c9af1f6d804.png" alt="엠셀" width={161} height={48} />
-    </div>
+    <>
+      <Hero />
+      <TechIntro />
+      <FeatureGrid />
+      <LayerCta />
+      <Industries />
+      <CertCarousel />
+      <AboutBanner />
+      <Production />
+      <HeatFlex />
+    </>
   );
 }
