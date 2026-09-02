@@ -1,0 +1,105 @@
+- generic [active] [ref=f23e1]:
+  - generic:  
+  - text: 
+  - generic:
+    - list [ref=f23e3]:    
+    - text: 
+  - banner [ref=f23e4]:
+    - generic [ref=f23e6]:
+      - generic [ref=f23e12]:
+        - link "엠셀 엠셀 엠셀" [ref=f23e19] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f23e20]: 엠셀
+          - img "엠셀" [ref=f23e21]
+          - img "엠셀" [ref=f23e22]
+        - generic [ref=f23e30]:
+          - link " site search" [ref=f23e38] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f23e39]: 
+            - generic [ref=f23e40]: site search
+          - generic [ref=f23e45]:
+            - link "로그인" [ref=f23e47] [cursor=pointer]:
+              - /url: /login?back_url=LzQw&used_login_btn=Y
+            - link "회원가입" [ref=f23e52] [cursor=pointer]:
+              - /url: /site_join_pattern_choice?back_url=LzQw
+      - text:  
+  - main [ref=f23e57]:
+    - generic [ref=f23e65]:
+      - list [ref=f23e76]:
+        - listitem [ref=f23e77]:
+          - link "포트폴리오" [ref=f23e78] [cursor=pointer]:
+            - /url: /39
+        - listitem [ref=f23e79]:
+          - link "카달로그" [ref=f23e80] [cursor=pointer]:
+            - /url: /40
+      - list [ref=f23e94]:
+        - listitem [ref=f23e95]:
+          - link "자료실" [ref=f23e96] [cursor=pointer]:
+            - /url: /38
+          - list [ref=f23e97]:
+            - listitem [ref=f23e98]:
+              - text: 
+              - link "카달로그" [ref=f23e99] [cursor=pointer]:
+                - /url: /40
+  - main [ref=f23e109]
+  - main [ref=f23e113]:
+    - generic [ref=f23e119]:
+      - generic [ref=f23e122]:
+        - generic [ref=f23e124]:
+          - text: 카달로그
+          - emphasis [ref=f23e125]: "1"
+        - generic [ref=f23e127]:
+          - textbox "search" [ref=f23e128]:
+            - /placeholder: Search
+          - link "검색" [ref=f23e129] [cursor=pointer]:
+            - /url: javascript:;
+            - generic [aria-hidden] [ref=f23e130]: 
+      - generic [ref=f23e132]:
+        - list [ref=f23e133]:
+          - listitem [ref=f23e134]: "No"
+          - listitem [ref=f23e135]: 제목
+          - listitem [ref=f23e136]: 글쓴이
+          - listitem [ref=f23e137]: 작성시간
+          - listitem [ref=f23e138]: 조회수
+          - listitem [ref=f23e139]: 좋아요
+        - list [ref=f23e140]:
+          - listitem [ref=f23e141]: "1"
+          - listitem [ref=f23e142]:
+            - link:
+              - /url: "?category="
+            - generic:  
+            - link "엠셀 카달로그" [ref=f23e143] [cursor=pointer]:
+              - /url: /40/?q=YToxOntzOjEyOiJrZXl3b3JkX3R5cGUiO3M6MzoiYWxsIjt9&bmode=view&idx=165574527&t=board
+          - listitem [ref=f23e144]: 관리자
+          - listitem "2025-06-17 15:22" [ref=f23e145]: 2025-06-17
+          - listitem [ref=f23e146]: "232"
+          - listitem [ref=f23e147]:
+            - text: 
+            - emphasis [ref=f23e148]: "0"
+      - button "글쓰기" [ref=f23e151] [cursor=pointer]
+  - main [ref=f23e155]
+  - generic:
+    - main
+  - main [ref=f23e166]:
+    - generic [ref=f23e174]:
+      - generic [ref=f23e180]:
+        - paragraph [ref=f23e181]
+        - paragraph [ref=f23e183]: 본점 ) 경기도 성남시 수정구 달래내로 46 성남글로벌융합센터 A401호 Mcell
+        - paragraph [ref=f23e184]: 연구실 ) 경기도 안성시 삼죽면 덕계실2길 64
+        - paragraph [ref=f23e185]
+        - paragraph [ref=f23e186]: "TEL. : +8270-4333-5233"
+        - paragraph [ref=f23e187]: "FAX : +82-50-4180-9916"
+        - paragraph [ref=f23e188]: "E-mail: contact@mcell.co.kr"
+      - generic [ref=f23e189]:
+        - generic [ref=f23e201]:
+          - generic [aria-hidden] [ref=f23e204]: ꄉ
+          - generic [aria-hidden] [ref=f23e207]: ꄗ
+          - generic [aria-hidden] [ref=f23e210]: ꄹ
+        - paragraph [ref=f23e218]:
+          - link "이용약관" [ref=f23e219] [cursor=pointer]:
+            - /url: /?mode=policy
+          - link "개인정보처리방침" [ref=f23e220] [cursor=pointer]:
+            - /url: /?mode=privacy
+  - generic:
+    - main
+  - iframe [ref=f23e227]

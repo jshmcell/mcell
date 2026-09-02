@@ -1,0 +1,237 @@
+- generic [active] [ref=f14e1]:
+  - generic:  
+  - text: 
+  - generic:
+    - list [ref=f14e3]:    
+    - text: 
+  - banner [ref=f14e4]:
+    - generic [ref=f14e6]:
+      - generic [ref=f14e12]:
+        - link "엠셀 엠셀 엠셀" [ref=f14e19] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f14e20]: 엠셀
+          - img "엠셀" [ref=f14e21]
+          - img "엠셀" [ref=f14e22]
+        - generic [ref=f14e30]:
+          - link " site search" [ref=f14e38] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=f14e39]: 
+            - generic [ref=f14e40]: site search
+          - generic [ref=f14e45]:
+            - link "로그인" [ref=f14e47] [cursor=pointer]:
+              - /url: /login?back_url=LzMx&used_login_btn=Y
+            - link "회원가입" [ref=f14e52] [cursor=pointer]:
+              - /url: /site_join_pattern_choice?back_url=LzMx
+      - text:  
+  - main [ref=f14e57]:
+    - generic [ref=f14e68]:  
+  - main [ref=f14e138]
+  - main [ref=f14e164]:
+    - generic [ref=f14e181]:
+      - generic [ref=f14e189]:
+        - paragraph [ref=f14e190]:
+          - strong [ref=f14e193]: TPU 보호막
+        - paragraph [ref=f14e194]: 발열층 위에 TPU 보호막을 코팅하여
+        - paragraph [ref=f14e195]: 발열 섬유 표면의 전기 절연 및 발열층의 박리 예방
+      - generic [ref=f14e203]:
+        - paragraph [ref=f14e204]:
+          - strong [ref=f14e207]: 전도성사 전극
+        - paragraph [ref=f14e208]: 고장력 전도사로 제작하여 내구성이 우수하며
+        - paragraph [ref=f14e209]: 컴퓨터 설계에 의한 고집적 전극 설계
+      - generic [ref=f14e217]:
+        - paragraph [ref=f14e218]:
+          - strong [ref=f14e221]: 탄소 나노 코팅
+        - paragraph [ref=f14e222]: 섬유 사이사이에 흡착하여 내구성이 우수하며
+        - paragraph [ref=f14e223]: 섬유 변형시에도 탄성력, 복원력과 발열 효율을 유지
+      - generic [ref=f14e231]:
+        - paragraph [ref=f14e232]:
+          - strong [ref=f14e235]: 자가조립단층
+        - paragraph [ref=f14e236]: 섬유와 발열층의 결합력 및 발열 섬유의 내구성을 향상
+  - main [ref=f14e254]:
+    - generic [ref=f14e275]:
+      - generic [ref=f14e276]:
+        - paragraph [ref=f14e281]:
+          - text: 온열안대
+          - generic [ref=f14e282]: HEAT-FLEX의 면상 발열 기술이 적용된 온열 안대는, 원적외선 기반의 열을 통해 민감한 눈가 피부에도 자극 없이 작용하며, 휴식과 수면 중 편안한 눈가 온열 케어를 제공합니다.
+        - paragraph [ref=f14e287]:
+          - text: 온열밴드
+          - generic [ref=f14e288]: 유연한 섬유 형태에 고효율 발열 소재가 통합된 온열 밴드는, 복부나 요추 등 움직임이 많은 부위에도 밀착되어 국소 통증 완화와 체온 유지에 특화된 열 전달 효과를 구현합니다.
+        - paragraph [ref=f14e293]:
+          - text: 온열담요
+          - generic [ref=f14e294]: 넓은 면적에 균일한 발열을 구현하는 HEAT-FLEX 담요는, 저전력 고효율 구조로 실내 난방을 대체할 수 있을 만큼 강력한 보온 성능을 제공하며, 안심하고 사용할 수 있는 안전 회로와 부드러운 착용감까지 갖추고 있습니다.
+      - generic [ref=f14e295]:
+        - paragraph [ref=f14e300]:
+          - text: 온열조끼
+          - generic [ref=f14e301]: HEAT-FLEX 섬유를 패션 웨어에 통합한 온열 조끼는 외부 활동 중에도 일정한 온도를 유지하며, 유연성과 통기성까지 확보해 활동성과 스타일을 동시에 만족시킵니다.
+        - paragraph [ref=f14e306]:
+          - text: 온열방석
+          - generic [ref=f14e307]: 표면 전체에 HEAT-FLEX 발열층을 적용한 온열 방석은 빠른 예열과 열 보존력을 기반으로 하체 보온에 최적화되어 있으며, 차량용·사무용 등 다양한 환경에 안정적으로 대응합니다.
+        - paragraph [ref=f14e312]:
+          - text: 온열패드
+          - generic [ref=f14e313]: 신체 굴곡에 맞게 밀착되는 HEAT-FLEX 패드는 복부, 어깨, 다리 등 다양한 부위에 적용 가능하며, 정밀 제어되는 발열 기술로 찜질 효과를 과학적으로 실현합니다.
+  - main [ref=f14e328]:
+    - generic [ref=f14e345]:
+      - generic [ref=f14e362]:
+        - heading [level=6] [ref=f14e363]:
+          - strong [ref=f14e364]: 타사 발열 방석
+        - paragraph [ref=f14e365]:
+          - strong [ref=f14e366]
+        - paragraph [ref=f14e368]: 일반적인 타사 제품은 와이어 또는 선형 패턴 방식을 사용해 발열부와 비발열부 간의 온도 편차가 크게 발생합니다. 이로 인해 일정하지 않은 열 분포, 과열 집중, 에너지 손실 등의 문제가 나타나며 사용 환경에 따라 불균일한 체온 유지 및 안정성 저하로 이어질 수 있습니다.
+      - generic [ref=f14e383]:
+        - heading [level=6] [ref=f14e384]:
+          - strong [ref=f14e385]: 히트플렉스 발열 방석
+        - paragraph [ref=f14e386]:
+          - strong [ref=f14e387]
+        - paragraph [ref=f14e389]
+        - paragraph [ref=f14e390]: 전면에 균일하게 열이 분포되는 구조적
+        - paragraph [ref=f14e391]: 설계를 통해 단일 지점이 아닌
+        - paragraph [ref=f14e392]:
+          - strong [ref=f14e393]: 섬유 전체에 안정적인 발열
+          - text: 을 제공합니다.
+        - paragraph [ref=f14e394]: 고정밀 전극 분산 기술과 탄소나노 전도잉크의
+        - paragraph [ref=f14e395]:
+          - text: 조합으로
+          - strong [ref=f14e396]: 온도 편차 없이 일정한 열 균형을
+        - paragraph [ref=f14e397]:
+          - strong [ref=f14e398]: 유지
+          - text: 하며, 장시간 사용 시에도 과열 및
+        - paragraph [ref=f14e399]: 국부 집중 현상이 발생하지 않습니다.
+  - main [ref=f14e409]:
+    - generic [ref=f14e421]:
+      - generic [ref=f14e428]:
+        - heading [level=6] [ref=f14e429]:
+          - strong [ref=f14e430]: 타사 발열 방석
+        - paragraph [ref=f14e431]:
+          - strong [ref=f14e432]
+        - paragraph [ref=f14e434]: 일반 발열소재는 낮은 전도 효율과 불균일한
+        - paragraph [ref=f14e435]: 발열 구조로 인해 동일한 에너지를 사용해도
+        - paragraph [ref=f14e436]: 열이 고르게 퍼지지 않고, 응답 속도와
+        - paragraph [ref=f14e437]: 온도 유지 능력에서도 큰 차이를 보입니다. 특히 저전력 환경에서는 발열 자체가
+        - paragraph [ref=f14e438]: 불완전하게 발생하거나 초기 성능을
+        - paragraph [ref=f14e439]: 일정하게 유지하지 못하는 경우가 많습니다.
+      - generic [ref=f14e446]:
+        - heading [level=6] [ref=f14e447]:
+          - strong [ref=f14e448]: 히트플렉스 발열 방석
+        - paragraph [ref=f14e449]:
+          - strong [ref=f14e450]
+        - paragraph [ref=f14e452]: 히트플렉스는 구동 후 10초 이내에
+        - paragraph [ref=f14e453]: 목표 온도에 도달하며, 저전력 조건에서도
+        - paragraph [ref=f14e454]:
+          - strong [ref=f14e455]: 99% 이상의 발열 효율
+          - text: 을 구현합니다.
+        - paragraph [ref=f14e456]: 섬유 전반에 균일하게 분산된 탄소 전도층과
+        - paragraph [ref=f14e457]: 고정밀 전극 구조를 기반으로
+        - paragraph [ref=f14e458]:
+          - strong [ref=f14e459]: 발열 속도, 열 보존력, 전력 소모 대비
+        - paragraph [ref=f14e460]:
+          - strong [ref=f14e461]: 효율성
+          - text: 에서 매우 우수한 성능을 나타냅니다.
+  - main [ref=f14e471]:
+    - generic [ref=f14e493] [cursor=pointer]
+  - main [ref=f14e503]:
+    - generic [ref=f14e519]:
+      - generic [ref=f14e521]:
+        - paragraph [ref=f14e527]
+        - paragraph [ref=f14e533]
+        - paragraph [ref=f14e539]
+        - paragraph [ref=f14e545]
+        - paragraph [ref=f14e551]
+        - paragraph [ref=f14e557]
+        - paragraph [ref=f14e563]
+        - paragraph [ref=f14e569]
+      - generic:
+        - generic:
+          - generic: 
+          - generic: 
+  - text:  
+  - main [ref=f14e573]:
+    - generic [ref=f14e574]:
+      - generic [ref=f14e589] [cursor=pointer]
+      - paragraph [ref=f14e604]: 엠셀은 친환경, 고기능, 글로벌 확장을 위한 스마트 소재 플랫폼을 완성해가고 있습니다.
+  - main [ref=f14e614]:
+    - generic [ref=f14e615]:
+      - generic [ref=f14e630]:
+        - generic [ref=f14e631]:
+          - generic [ref=f14e632]:
+            - generic [ref=f14e633]: 업체명
+            - textbox "업체명" [ref=f14e635]:
+              - /placeholder: 업체명을 입력해 주세요
+          - generic [ref=f14e636]:
+            - generic [ref=f14e637]: 담당자(회사명)
+            - textbox "담당자(회사명)" [ref=f14e639]:
+              - /placeholder: 담당자(회사명)을 입력해주세요
+          - generic [ref=f14e640]:
+            - generic [ref=f14e641]: 연락처
+            - textbox "연락처" [ref=f14e643]:
+              - /placeholder: 연락처를 입력해 주세요
+          - generic [ref=f14e644]:
+            - generic [ref=f14e645]: 이메일
+            - textbox "이메일" [ref=f14e647]:
+              - /placeholder: 이메일을 입력해 주세요
+          - generic [ref=f14e648]:
+            - generic [ref=f14e649]: 주소
+            - textbox "주소" [ref=f14e650]:
+              - /placeholder: 주소를 입력해 주세요
+          - generic [ref=f14e651]:
+            - generic [ref=f14e652]: OEM/ODM
+            - generic [ref=f14e654] [cursor=pointer]:
+              - radio "OEM/ODM OEM" [ref=f14e655]
+              - generic [ref=f14e656]: OEM
+            - generic [ref=f14e658] [cursor=pointer]:
+              - radio "ODM" [ref=f14e659]
+              - generic [ref=f14e660]: ODM
+          - generic [ref=f14e661]:
+            - generic [ref=f14e662]: 개발내용
+            - textbox "개발내용" [ref=f14e663]:
+              - /placeholder: ""
+        - link "문의하기" [ref=f14e665] [cursor=pointer]:
+          - /url: javascript:;
+      - paragraph [ref=f14e673]
+    - generic [ref=f14e686]:
+      - generic [ref=f14e687]:
+        - generic:
+          - generic [ref=f14e691] [cursor=pointer]
+          - generic [ref=f14e695] [cursor=pointer]
+          - generic [ref=f14e699] [cursor=pointer]
+          - generic [ref=f14e703] [cursor=pointer]
+          - generic [ref=f14e707] [cursor=pointer]
+          - generic [ref=f14e711] [cursor=pointer]
+          - generic [ref=f14e715] [cursor=pointer]
+          - generic [ref=f14e719] [cursor=pointer]
+          - generic [ref=f14e723] [cursor=pointer]
+          - generic [ref=f14e727] [cursor=pointer]
+          - generic [ref=f14e731] [cursor=pointer]
+          - generic [ref=f14e735] [cursor=pointer]
+          - generic [ref=f14e739] [cursor=pointer]
+          - generic [ref=f14e743] [cursor=pointer]
+          - generic [ref=f14e747] [cursor=pointer]
+          - generic [ref=f14e751] [cursor=pointer]
+      - generic:
+        - generic:
+          - generic: 
+          - generic: 
+  - generic:
+    - main
+  - main [ref=f14e762]:
+    - generic [ref=f14e770]:
+      - generic [ref=f14e776]:
+        - paragraph [ref=f14e777]
+        - paragraph [ref=f14e779]: 본점 ) 경기도 성남시 수정구 달래내로 46 성남글로벌융합센터 A401호 Mcell
+        - paragraph [ref=f14e780]: 연구실 ) 경기도 안성시 삼죽면 덕계실2길 64
+        - paragraph [ref=f14e781]
+        - paragraph [ref=f14e782]: "TEL. : +8270-4333-5233"
+        - paragraph [ref=f14e783]: "FAX : +82-50-4180-9916"
+        - paragraph [ref=f14e784]: "E-mail: contact@mcell.co.kr"
+      - generic [ref=f14e785]:
+        - generic [ref=f14e797]:
+          - generic [aria-hidden] [ref=f14e800]: ꄉ
+          - generic [aria-hidden] [ref=f14e803]: ꄗ
+          - generic [aria-hidden] [ref=f14e806]: ꄹ
+        - paragraph [ref=f14e814]:
+          - link "이용약관" [ref=f14e815] [cursor=pointer]:
+            - /url: /?mode=policy
+          - link "개인정보처리방침" [ref=f14e816] [cursor=pointer]:
+            - /url: /?mode=privacy
+  - generic:
+    - main
+  - iframe [ref=f14e823]
