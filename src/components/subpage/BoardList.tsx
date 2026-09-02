@@ -2,13 +2,14 @@ import Link from "next/link";
 import SubHero from "@/components/subpage/SubHero";
 import Reveal from "@/components/ui/Reveal";
 import { boards, type BoardPost } from "@/data/boards";
+import type { NavChild } from "@/data/site";
 
 interface BoardListProps {
   boardKey: keyof typeof boards;
   groupLabel: string;
   title: string;
   currentHref: string;
-  children: { label: string; href: string }[];
+  nav: NavChild[];
 }
 
 export default function BoardList({
@@ -16,14 +17,14 @@ export default function BoardList({
   groupLabel,
   title,
   currentHref,
-  children,
+  nav,
 }: BoardListProps) {
   const board = boards[boardKey];
 
   return (
     <>
       <SubHero groupLabel={groupLabel} title={title} currentHref={currentHref}>
-        {children}
+        {nav}
       </SubHero>
       <section className="bg-white">
         <div className="container-site py-16">

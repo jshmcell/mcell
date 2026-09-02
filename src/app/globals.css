@@ -6,15 +6,12 @@
 
   /* mcell navy palette */
   --color-navy-900: #17375e;
-  --color-navy-800: #1c3a6e;
   --color-navy-700: #27397d;
   --color-navy-600: #313f76;
   --color-accent: #00b8ff;
   --color-sky-hover: #93cddd;
   --color-ink: #363636;
   --color-ink-soft: #474747;
-
-  --breakpoint-header: 992px;
 
   --shadow-dropdown: 0 6px 12px rgba(0, 0, 0, 0.175);
 }

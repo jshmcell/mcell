@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import CountUp from "react-countup";
 import Reveal from "@/components/ui/Reveal";
 import { stats } from "@/data/mcell";

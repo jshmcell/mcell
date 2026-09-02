@@ -12,7 +12,7 @@ export default function PortfolioPage() {
       groupLabel="자료실"
       title="포트폴리오"
       currentHref="/library/portfolio"
-      children={[
+      nav={[
         { label: "포트폴리오", href: "/library/portfolio" },
         { label: "카달로그", href: "/library/catalog" },
       ]}

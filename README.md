@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mcell — Corporate Website
 
-## Getting Started
+Pixel-faithful rebuild of mcell.co.kr (originally built on imweb.me) as a modern Next.js application.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router, Turbopack)
+- TypeScript
+- Tailwind CSS v4
+- Zustand (UI state: mobile drawer, search overlay)
+- framer-motion, embla-carousel-react, react-countup
+- Deploy target: Vercel
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| command         | description          |
+| --------------- | -------------------- |
+| `npm run dev`   | dev server           |
+| `npm run build` | production build     |
+| `npm run start` | serve production     |
+| `npm run lint`  | eslint               |
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/(site)/        routes (shared header/footer layout)
+  components/
+    home/            home page sections (one per section)
+    layout/          Header, Footer, MobileDrawer
+    mcell/           /mcell page sections
+    subpage/         SubHero, BoardList, PartnershipCta
+    ui/              Button, Reveal (scroll animation), SectionHeading
+  data/              typed content files — single source for all copy/media
+  lib/               cn helper, constants, zustand store
+public/assets/       images + PDF downloaded from the original site
+PLAN.md              rebuild plan, URL map, design tokens, progress
+docs/extract-notes.md  notes from the original site extraction
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content editing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All page content lives in `src/data/*.ts` as typed objects. Components render
+exclusively from these files, so copy/media changes never touch component code.
+A CMS/DB backend can later replace this layer without UI changes.
 
-## Deploy on Vercel
+## URL map (old → new)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| original imweb | new route           |
+| -------------- | ------------------- |
+| `/`            | `/`                 |
+| `/29` `/33`    | `/about`            |
+| `/34`          | `/about/history`    |
+| `/35`          | `/about/certifications` |
+| `/36`          | `/about/contact`    |
+| `/30` `/31`    | `/mcell`            |
+| `/37`          | `/shop`             |
+| `/38` `/39`    | `/library/portfolio`|
+| `/40`          | `/library/catalog`  |
+| `/48` `/45`    | `/news/notices`     |
+| `/46`          | `/news/updates`     |
+| `/44`          | `/partnership`      |
+| `?mode=policy` | `/policy`           |
+| `?mode=privacy`| `/privacy`          |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Legacy paths are redirected (308) in `next.config.ts`.
+
+## Pending (by design)
+
+- Auth: UI shells only (`/login`, `/signup`) — backend later
+- Partnership form: disabled submit — email/DB integration later
+- SHOP: placeholder — e-commerce later
+- CMS: content is TS data now; drag-and-drop CMS planned later

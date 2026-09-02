@@ -12,7 +12,7 @@ export default function NoticesPage() {
       groupLabel="뉴스"
       title="공지사항"
       currentHref="/news/notices"
-      children={[
+      nav={[
         { label: "공지사항", href: "/news/notices" },
         { label: "소식", href: "/news/updates" },
       ]}

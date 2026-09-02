@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { navItems, type NavItem } from "@/data/site";
+import type { NavChild } from "@/data/site";
 import { cn } from "@/lib/cn";
 
 interface SubHeroProps {
@@ -7,10 +7,7 @@ interface SubHeroProps {
   title: string;
   children?: NavChild[];
   currentHref: string;
-  parent?: { label: string; href: string };
 }
-
-type NavChild = NonNullable<NavItem["children"]>[number];
 
 export default function SubHero({ groupLabel, title, children, currentHref }: SubHeroProps) {
   const items = children ?? [];

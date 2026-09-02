@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { layerSection } from "@/data/home";
