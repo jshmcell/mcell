@@ -53,11 +53,11 @@ export default function Products() {
                       sizes="(min-width: 640px) 340px, 100vw"
                     />
                   </div>
-                  <div className="w-full p-[10px] px-0 text-left">
-                    <p className="text-[14px] font-medium text-[#212121]">
+                  <div className="w-full p-[20px] text-left">
+                    <p className="text-[16px] font-normal leading-[1.6] text-[#212121]">
                       {product.name}
                     </p>
-                    <p className="mt-[2px] text-[12px] leading-[1.7] text-[#999999]">
+                    <p className="mt-[10px] text-[14px] leading-[1.6] text-[#999999]">
                       {product.description}
                     </p>
                   </div>
