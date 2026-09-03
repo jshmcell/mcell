@@ -24,8 +24,16 @@ const COLS = [
   { key: "likes", label: "좋아요", width: "w-[88px]", align: "text-center" },
 ] as const;
 
-function postHref(boardKey: string, post: BoardPost) {
-  return `/${boardKey}/${post.id}`;
+/** 게시판 URL prefix — boardKey → 실제 라우트 (/news/*, /library/*) */
+const BOARD_BASE: Record<string, string> = {
+  notices: "/news/notices",
+  updates: "/news/updates",
+  catalog: "/library/catalog",
+  portfolio: "/library/portfolio",
+};
+
+function postHref(boardKey: keyof typeof boards, post: BoardPost) {
+  return `${BOARD_BASE[boardKey]}/${post.id}`;
 }
 
 export default function BoardTable({

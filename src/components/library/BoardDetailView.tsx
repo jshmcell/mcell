@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { boards } from "@/data/boards";
 
+/** 게시판 URL prefix — boardKey → 실제 라우트 (/news/*, /library/*) */
+const BOARD_BASE: Record<string, string> = {
+  notices: "/news/notices",
+  updates: "/news/updates",
+  catalog: "/library/catalog",
+  portfolio: "/library/portfolio",
+};
+
 /**
  * 게시물 뷰 — 원본 /40·/45·/46 뷰 페이지 공통 레이아웃.
  * 제목(20px/32px) → 작성자(14px)+카테고리·날짜·조회수(13px, 70%회색·카테고리 #757575)
@@ -158,7 +166,7 @@ export default function BoardDetailView({
         <div className="mt-[16px] border-t border-black/10">
           {prev && (
             <Link
-              href={`/${boardKey}/${prev.id}`}
+              href={`${BOARD_BASE[boardKey]}/${prev.id}`}
               className="flex h-[44px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
             >
               <svg aria-hidden viewBox="0 0 12 12" className="h-[12px] w-[12px] shrink-0 text-ink/50" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -169,7 +177,7 @@ export default function BoardDetailView({
           )}
           {next && (
             <Link
-              href={`/${boardKey}/${next.id}`}
+              href={`${BOARD_BASE[boardKey]}/${next.id}`}
               className="flex h-[43px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
             >
               <svg aria-hidden viewBox="0 0 12 12" className="h-[12px] w-[12px] shrink-0 rotate-90 text-ink/50" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -183,7 +191,7 @@ export default function BoardDetailView({
         {/* 목록 */}
         <div className="mt-[14px]">
           <Link
-            href={`/${boardKey}`}
+            href={BOARD_BASE[boardKey]}
             className="inline-flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             목록
