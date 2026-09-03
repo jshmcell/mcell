@@ -1,42 +1,58 @@
-import SmartImage from "@/components/ui/SmartImage";
-import Reveal from "@/components/ui/Reveal";
-import { products } from "@/data/mcell";
+"use client";
 
+import SmartImage from "@/components/ui/SmartImage";
+import Appear from "@/components/ui/Appear";
+import { useImageViewer } from "@/components/ui/ImageViewer";
+import { products, type Product } from "@/data/mcell";
+
+/**
+ * 제품 정보 — 원본: 3열 이미지 갤러리(캡션은 라이트박스에 표시),
+ * 컨테이너 1037px, 이미지 326x373
+ */
 export default function Products() {
+  const openViewer = useImageViewer();
+  const viewerImages = products.map((p: Product) => ({
+    src: p.image,
+    alt: p.name,
+    caption: { title: p.name, description: p.description },
+  }));
+
   return (
     <section className="bg-white">
-      <div className="container-site py-20">
-        <Reveal>
-          <p className="text-[18px] font-bold text-navy-900">제품 정보</p>
-          <h2 className="mt-2 text-[30px] font-bold text-navy-900">
+      <div className="container-site pt-[109px] pb-[132px] text-center">
+        <Appear animation="fadeIn" duration={0.7}>
+          <p className="text-[20px] font-bold text-navy-900">제품 정보</p>
+          <h2 className="text-[30px] font-bold text-ink">
             히트플렉스로 완성된 차세대 발열 제품
           </h2>
-          <p className="mt-3 text-[16px] leading-8">
-            HEAT-FLEX의 핵심 기술이 적용된 제품 라인업을 소개합니다. 다양한 산업군에 맞춘 솔루션으로
-            더 나은 일상을 제공합니다.
+          <p className="mt-[6px] text-[18px] leading-[2] text-ink">
+            에너지 효율과 유연성, 안정성을 모두 갖춘 HEAT-FLEX는 다양한 분야에
+            활용되고 있습니다.
           </p>
-        </Reveal>
+        </Appear>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, i) => (
-            <Reveal key={product.name} delay={(i % 3) * 0.08}>
-              <div className="group overflow-hidden border border-black/10">
+        <Appear className="mx-auto mt-[30px] max-w-[1068px]">
+          <div className="grid grid-cols-1 gap-y-[15px] sm:grid-cols-3 sm:gap-[10px]">
+            {products.map((product, i) => (
+              <button
+                key={product.name}
+                type="button"
+                aria-label={`${product.name} 크게 보기`}
+                onClick={() => openViewer(viewerImages, i)}
+                className="cursor-pointer p-[15px]"
+              >
                 <SmartImage
                   src={product.thumb}
                   alt={product.name}
-                  width={420}
-                  height={420}
-                  className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  width={326}
+                  height={361}
+                  className="h-[263px] w-full object-cover md-header:h-[361px]"
+                  sizes="(min-width: 992px) 340px, 100vw"
                 />
-                <div className="p-6">
-                  <h3 className="text-[20px] font-bold text-ink">{product.name}</h3>
-                  <p className="mt-2 text-[14px] leading-6 text-ink/80">{product.description}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              </button>
+            ))}
+          </div>
+        </Appear>
       </div>
     </section>
   );

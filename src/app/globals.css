@@ -84,6 +84,28 @@ body {
   }
 }
 
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-60%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(60%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -111,4 +133,14 @@ body {
 
 .skeleton-in {
   animation: skeleton-in 0s linear 0.15s both;
+}
+
+/* 기술력 배너 하단 이미지 스트립 marquee (w-max 2배 너비, -50% 루프) */
+@keyframes strip-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }

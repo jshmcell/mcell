@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
-export type AppearAnimation = "fadeIn" | "fadeInUp" | "zoomIn";
+export type AppearAnimation =
+  "fadeIn" | "fadeInUp" | "fadeInLeft" | "fadeInRight" | "zoomIn";
 
 interface AppearProps {
   children: React.ReactNode;

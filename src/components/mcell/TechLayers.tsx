@@ -1,7 +1,11 @@
+import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
-import Reveal from "@/components/ui/Reveal";
 import { tech } from "@/data/mcell";
 
+/**
+ * 핵심 기술 소개 — 원본: 배경 이미지 + 흰색 60% 오버레이,
+ * 4개 기술 레이어 행(#e8ecf1, 1037x153/117) + 단면 다이어그램 1037x109
+ */
 export default function TechLayers() {
   return (
     <section className="relative overflow-hidden">
@@ -10,37 +14,49 @@ export default function TechLayers() {
         style={{ backgroundImage: `url(${tech.bg})` }}
       />
       <div className="absolute inset-0 bg-white/60" />
-      <div className="container-site relative py-20">
-        <Reveal>
-          <p className="text-[18px] font-bold text-navy-900">{tech.heading}</p>
-          <h2 className="mt-2 text-[30px] font-bold text-navy-900">{tech.title}</h2>
-          <p className="mt-3 text-[16px] leading-8">{tech.description}</p>
-        </Reveal>
 
-        <Reveal delay={0.15}>
-          <SmartImage
-            src={tech.image}
-            alt={tech.title}
-            width={1037}
-            height={0}
-            className="mx-auto mt-10 h-auto w-full max-w-[1037px]"
-          />
-        </Reveal>
+      <div className="container-site relative pt-[110px] pb-[171px] text-center">
+        <Appear animation="fadeIn" duration={0.7}>
+          <p className="text-[20px] font-bold text-navy-900">{tech.heading}</p>
+          <h2 className="text-[30px] font-bold text-ink">{tech.title}</h2>
+          <p className="mt-[6px] text-[18px] leading-[2] text-ink">
+            {tech.description}
+          </p>
+        </Appear>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {tech.layers.map((layer, i) => (
-            <Reveal key={layer.title} delay={i * 0.08}>
-              <div className="flex h-full flex-col rounded-[15px] bg-white p-6 text-center">
-                <h3 className="text-[20px] font-bold text-ink">{layer.title}</h3>
-                <div className="mt-2 text-[14px] leading-6 text-ink/85">
+        <Appear className="mx-auto mt-[30px] max-w-[1037px]">
+          <div className="space-y-[22px]">
+            {tech.layers.map((layer) => (
+              <div
+                key={layer.title}
+                className="bg-[#e8ecf1] px-6 py-[18px] text-center"
+              >
+                <h3 className="text-[22px] font-bold leading-[2] text-navy-900">
+                  {layer.title}
+                </h3>
+                <div className="text-[18px] leading-[2] text-ink">
                   {layer.lines.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
                 </div>
               </div>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Appear>
+
+        <Appear
+          duration={1.2}
+          className="mx-auto mt-[45px] block max-w-[1037px]"
+        >
+          <SmartImage
+            src={tech.image}
+            alt={tech.title}
+            width={1037}
+            height={109}
+            className="h-auto w-full"
+            sizes="(min-width: 992px) 1037px, 100vw"
+          />
+        </Appear>
       </div>
     </section>
   );
