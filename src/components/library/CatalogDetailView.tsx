@@ -186,8 +186,7 @@ export default function CatalogDetailView() {
             rows={2}
             placeholder="로그인이 필요합니다."
             aria-label="댓글 입력"
-            className="block w-full resize-none text-[15px] leading-[24px] text-[#363636] outline-none placeholder:text-[#363636]/70"
-            disabled
+            className="mb-[10px] block w-full resize-none text-[15px] leading-[24px] text-[#363636] outline-none placeholder:text-[#363636]/70"
           />
           <div className="flex justify-end">
             <Link
