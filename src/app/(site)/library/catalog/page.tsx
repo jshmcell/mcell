@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SubHero from "@/components/subpage/SubHero";
 import SubPageBanner from "@/components/subpage/SubPageBanner";
-import CatalogBoard from "@/components/library/CatalogBoard";
+import BoardTable from "@/components/library/BoardTable";
 import { catalogBand } from "@/data/portfolio";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function CatalogPage() {
         currentHref="/library/catalog"
       />
       <SubPageBanner image={catalogBand} heightClassName="h-[300px]" />
-      <CatalogBoard />
+      <BoardTable boardKey="catalog" />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>
   );

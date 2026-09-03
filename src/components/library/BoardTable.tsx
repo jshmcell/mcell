@@ -1,10 +1,10 @@
- "use client";
+"use client";
 
 import Link from "next/link";
-import { boards } from "@/data/boards";
+import { boards, type BoardPost } from "@/data/boards";
 
 /**
- * 카달로그 게시판 — 원본 /40 보드 위젯과 동일.
+ * 게시판 리스트 — 원본 /40·/45·/46 보드 위젯과 동일 (같은 위젯 재사용).
  * PC: 타이틀(15px)+검색(220x34) 행 → 1px #363636 상단 테두리 리스트
  * (No 63 / 제목 700 / 글쓴이 125 / 작성시간 150 / 조회수 125 / 좋아요 88,
  * 헤더 45px·15px, 행 45px, 셀 패딩 10px 7px, 행 구분선 rgba(54,54,54,.15),
@@ -12,7 +12,8 @@ import { boards } from "@/data/boards";
  * 모바일: 타이틀+글쓰기 행 → 전체검색(345x37·16px) → 테두리 없는
  * 타이틀(15px)+메타(12px) 행 → 하단 글쓰기.
  * 섹션 여백: 상 15px / 하 15px (PC), 상 8px / 하 7px (모바일).
- * 제목 클릭 → 게시물 뷰 페이지(/library/catalog/[id]), 글쓰기 → 로그인.
+ * 제목 클릭 → 게시물 뷰(카달로그만 상세 페이지, 그 외 원본과 같이 상단 진행),
+ * 글쓰기 → 로그인.
  */
 const COLS = [
   { key: "no", label: "No", width: "w-[63px]", align: "text-center" },
@@ -23,8 +24,16 @@ const COLS = [
   { key: "likes", label: "좋아요", width: "w-[88px]", align: "text-center" },
 ] as const;
 
-export default function CatalogBoard() {
-  const board = boards.catalog;
+function postHref(boardKey: string, post: BoardPost) {
+  return post.body ? `/${boardKey}/${post.id}` : "#";
+}
+
+export default function BoardTable({
+  boardKey,
+}: {
+  boardKey: keyof typeof boards;
+}) {
+  const board = boards[boardKey];
 
   return (
     <section className="bg-white">
@@ -85,15 +94,15 @@ export default function CatalogBoard() {
               </div>
             ))}
           </div>
-          {board.posts.map((post) => (
+          {board.posts.map((post, i) => (
             <div key={post.id} className="flex">
               <div className="w-[63px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[15px] leading-[24px] text-[#363636]">
-                1
+                {board.posts.length - i}
               </div>
               <div className="w-[700px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-left text-[14px] leading-[24px]">
                 <Link
-                  href={`/library/catalog/${post.id}`}
-                  className="text-[#363636] transition-colors hover:text-navy-900"
+                  href={postHref(boardKey, post)}
+                  className="line-clamp-1 text-[#363636] transition-colors hover:text-navy-900"
                 >
                   {post.title}
                 </Link>
@@ -105,7 +114,7 @@ export default function CatalogBoard() {
                 {post.date}
               </div>
               <div className="w-[125px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
-                조회수234
+                조회수{post.views ?? 0}
               </div>
               <div className="w-[88px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
                 0
@@ -119,15 +128,15 @@ export default function CatalogBoard() {
           {board.posts.map((post) => (
             <div key={post.id} className="pt-[11px] pb-[13px]">
               <Link
-                href={`/library/catalog/${post.id}`}
-                className="block text-[15px] leading-[25px] text-[#363636]"
+                href={postHref(boardKey, post)}
+                className="line-clamp-2 block text-[15px] leading-[25px] text-[#363636]"
               >
                 {post.title}
               </Link>
               <div className="mt-[1px] flex items-center gap-2 text-[12px] leading-[24px] text-[#363636]/65">
                 <span>{post.author}</span>
                 <span>{post.date}</span>
-                <span>조회수234</span>
+                <span>조회수{post.views ?? 0}</span>
                 <span>0</span>
               </div>
             </div>
