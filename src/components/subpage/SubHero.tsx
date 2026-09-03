@@ -24,14 +24,14 @@ export default function SubHero({
 
   return (
     <section className="border-b border-black/5 bg-white">
-      <div className="container-site pt-[50px] pb-[52px] md-header:pt-[85px] md-header:pb-[75px]">
+      <div className="container-site pt-[65px] pb-[40px] md-header:pt-[85px] md-header:pb-[75px]">
         <Appear animation="fadeIn" duration={2} delay={0.3} disableOnMobile>
           <h1 className="text-[30px] font-bold leading-[1.2] text-ink md-header:text-[48px]">
             {title}
           </h1>
         </Appear>
 
-        <div className="mt-[20px] flex items-start justify-between md-header:mt-[40px]">
+        <div className="mt-[18px] flex items-start justify-between md-header:mt-[40px]">
           {items.length > 0 && (
             <nav aria-label="하위 메뉴">
               <ul className="flex flex-wrap items-center gap-y-1">
@@ -43,10 +43,10 @@ export default function SubHero({
                         href={item.href}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "mr-0 flex items-center rounded-full border px-[15px] py-[4px] text-[15px] leading-[24px] transition-colors duration-300 md-header:mr-[5px]",
+                          "mr-0 flex items-center rounded-full px-[16px] py-[4px] text-[13px] leading-[21px] transition-colors duration-300 md-header:mr-[5px] md-header:text-[15px] md-header:leading-[24px]",
                           active
-                            ? "border-navy-900 bg-navy-900 font-medium text-white"
-                            : "border-transparent text-ink/70 hover:text-ink",
+                            ? "border border-navy-900 bg-navy-900 text-white"
+                            : "text-ink/70 hover:text-ink",
                         )}
                       >
                         {item.label}

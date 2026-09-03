@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
-import BoardList from "@/components/subpage/BoardList";
+import SubHero from "@/components/subpage/SubHero";
+import SubPageBanner from "@/components/subpage/SubPageBanner";
+import CatalogBoard from "@/components/library/CatalogBoard";
+import { catalogBand } from "@/data/portfolio";
 
 export const metadata: Metadata = {
   title: "카달로그",
 };
 
+/** 카달로그 (원본 /40) — 서브 히어로 + 와이드 밴드 + 게시판 */
 export default function CatalogPage() {
   return (
-    <BoardList
-      boardKey="catalog"
-      groupLabel="자료실"
-      title="카달로그"
-      currentHref="/library/catalog"
-      nav={[
-        { label: "포트폴리오", href: "/library/portfolio" },
-        { label: "카달로그", href: "/library/catalog" },
-      ]}
-    />
+    <>
+      <SubHero
+        groupLabel="자료실"
+        title="카달로그"
+        currentHref="/library/catalog"
+      />
+      <SubPageBanner image={catalogBand} heightClassName="h-[300px]" />
+      <CatalogBoard />
+      <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
+    </>
   );
 }

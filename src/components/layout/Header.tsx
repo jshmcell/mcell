@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,27 +25,7 @@ export default function Header() {
   );
 }
 
-function useStickyHeader(threshold = 120) {
-  const [stuck, setStuck] = useState(false);
-  useEffect(() => {
-    const sentinel = document.createElement("div");
-    sentinel.style.cssText =
-      "position:absolute;top:0;height:1px;width:1px;pointer-events:none";
-    document.body.prepend(sentinel);
-    const io = new IntersectionObserver(([e]) => setStuck(!e.isIntersecting), {
-      threshold: 0,
-    });
-    io.observe(sentinel);
-    return () => {
-      io.disconnect();
-      sentinel.remove();
-    };
-  }, [threshold]);
-  return stuck;
-}
-
 function PcHeader() {
-  const stuck = useStickyHeader();
   const searchOpen = useUiStore((s) => s.searchOpen);
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const pathname = usePathname();
@@ -55,10 +34,7 @@ function PcHeader() {
 
   return (
     <header
-      className={cn(
-        "z-[1000] w-full bg-navy-900/90",
-        stuck && "fixed inset-x-0 top-0",
-      )}
+      className="sticky top-0 z-[1000] w-full bg-navy-900/90"
       style={{ height: HEADER_HEIGHT }}
     >
       <div className="container-wide flex h-full items-center">

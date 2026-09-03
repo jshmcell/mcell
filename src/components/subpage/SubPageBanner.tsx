@@ -1,7 +1,11 @@
+import { cn } from "@/lib/cn";
+
 interface SubPageBannerProps {
   image: string;
   /** 원본: 연혁/인증서/Contact 배너에는 rgba(0,0,0,0.45) 오버레이가 있고 About 배너에는 없음 */
   overlay?: boolean;
+  /** 높이 오버라이드 (기본: 290px 모바일 / 245px 태블릿 / 300px PC) */
+  heightClassName?: string;
 }
 
 /**
@@ -11,13 +15,18 @@ interface SubPageBannerProps {
 export default function SubPageBanner({
   image,
   overlay = false,
+  heightClassName,
 }: SubPageBannerProps) {
   return (
     <section className="relative">
       <div
         role="img"
         aria-label=""
-        className="h-[290px] bg-cover bg-center bg-no-repeat md:h-[245px] md-header:h-[300px] md-header:bg-fixed"
+        className={cn(
+          "bg-cover bg-center bg-no-repeat md-header:bg-fixed",
+          heightClassName ??
+            "h-[290px] md:h-[245px] md-header:h-[300px]",
+        )}
         style={{ backgroundImage: `url(${image})` }}
       />
       {overlay && (
