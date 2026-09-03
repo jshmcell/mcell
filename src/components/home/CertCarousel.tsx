@@ -4,7 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import SmartImage from "@/components/ui/SmartImage";
 import useEmblaCarousel from "embla-carousel-react";
 import Reveal from "@/components/ui/Reveal";
+import { useImageViewerStore } from "@/lib/store";
 import { certifications } from "@/data/home";
+
+/** 라이트박스용 원본 이미지 목록 (인증서 전체) */
+const viewerImages = certifications.images.map((img) => ({
+  src: img.full,
+  alt: "엠셀 인증서",
+}));
 
 export default function CertCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -14,7 +21,8 @@ export default function CertCarousel() {
   });
   const [isPC, setIsPC] = useState(true);
   const [selected, setSelected] = useState(0);
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const openViewer = useImageViewerStore((s) => s.openViewer);
+  const viewerOpen = useImageViewerStore((s) => s.open);
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 992px)");
@@ -38,21 +46,12 @@ export default function CertCarousel() {
     };
   }, [emblaApi]);
 
-  // original: autoplay every 2s, 0.2s slide effect
+  // original: autoplay every 2s, 0.2s slide effect; pauses while the viewer is open
   useEffect(() => {
-    if (!emblaApi || lightbox) return;
+    if (!emblaApi || viewerOpen) return;
     const id = setInterval(() => emblaApi.scrollNext(), 2000);
     return () => clearInterval(id);
-  }, [emblaApi, lightbox]);
-
-  useEffect(() => {
-    if (!lightbox) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightbox(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [lightbox]);
+  }, [emblaApi, viewerOpen]);
 
   const goToPage = useCallback(
     (page: number) => {
@@ -80,7 +79,7 @@ export default function CertCarousel() {
         <div className="mb-[15px] mt-[15px] md-header:mt-[30px]">
           <div className="-mx-[5px] overflow-hidden" ref={emblaRef}>
             <div className="flex">
-              {certifications.images.map((img) => (
+              {certifications.images.map((img, i) => (
                 <div
                   key={img.thumb}
                   className="min-w-0 shrink-0 grow-0 basis-[50%] p-[5px] md-header:basis-[252px]"
@@ -88,7 +87,7 @@ export default function CertCarousel() {
                   <button
                     type="button"
                     aria-label="인증서 크게 보기"
-                    onClick={() => setLightbox(img.full)}
+                    onClick={() => openViewer(viewerImages, i)}
                     className="block w-full cursor-pointer border border-[#eee] bg-white"
                   >
                     <div className="relative h-[224px] w-full md-header:h-[320px]">
@@ -127,22 +126,6 @@ export default function CertCarousel() {
             ))}
           </div>
         </div>
-
-        {/* lightbox: full-size certificate */}
-        {lightbox && (
-          <div
-            className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-6"
-            onClick={() => setLightbox(null)}
-          >
-            <SmartImage
-              src={lightbox}
-              alt="엠셀 인증서"
-              width={691}
-              height={922}
-              className="max-h-[85vh] w-auto object-contain"
-            />
-          </div>
-        )}
       </div>
     </section>
   );

@@ -52,14 +52,18 @@ export default function SmartImage({
     <div
       aria-busy={(!loaded && !failed) || undefined}
       className={cn(
-        "relative overflow-hidden",
+        "overflow-hidden",
+        // fill: 절대 배치 — relative 를 섞으면 Tailwind 유틸 순서상 relative 가 이겨서 래퍼가 무너진다
         fill
           ? "absolute inset-0"
-          : fluid
-            ? "block w-full"
-            : centered
-              ? "mx-auto block w-fit"
-              : "inline-block",
+          : cn(
+              "relative",
+              fluid
+                ? "block w-full"
+                : centered
+                  ? "mx-auto block w-fit"
+                  : "inline-block",
+            ),
         wrapperClassName,
       )}
     >
