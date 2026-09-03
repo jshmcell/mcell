@@ -51,8 +51,7 @@ function PcHeader() {
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const pathname = usePathname();
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+  const isActive = (href: string) => pathname === href;
 
   return (
     <header

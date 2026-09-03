@@ -6,7 +6,8 @@ const STRIP_COPIES = 12;
 
 /**
  * 기술력 소개 배너 — 원본: 473px(PC)/387px(모바일), bg + 0.35 오버레이,
- * 36px 타이틀 + 18px 설명 + 140px 로고, 하단 142px 이미지 스트립(원본: 같은 이미지 반복 슬라이드)
+ * 36px 타이틀 + 18px 설명 + 140px 로고, 하단 이미지 스트립(원본: 같은 이미지 반복 슬라이드,
+ * 높이 142px@1280 = 11vw, 뷰포트 비례)
  */
 export default function McellHero() {
   return (
@@ -22,7 +23,7 @@ export default function McellHero() {
       <Appear
         animation="fadeInUp"
         duration={1.2}
-        className="container-site absolute inset-x-0 top-0 flex h-[calc(100%-142px)] flex-col items-center justify-center text-center"
+        className="container-site absolute inset-x-0 top-0 flex h-[calc(100%-11vw)] flex-col items-center justify-center text-center"
       >
         <h1 className="text-[24px] font-bold leading-[2] text-white md-header:text-[36px]">
           {hero.title}
@@ -42,7 +43,7 @@ export default function McellHero() {
         </div>
       </Appear>
 
-      {/* 하단 이미지 스트립 — 원본과 같이 같은 이미지가 천천히 흐른다 */}
+      {/* 하단 이미지 스트립 — 원본과 같이 같은 이미지가 천천히 흐른다 (뷰포트 비례) */}
       <div
         className="absolute bottom-0 left-0 w-full overflow-hidden"
         aria-hidden
@@ -55,8 +56,8 @@ export default function McellHero() {
               alt=""
               width={360}
               height={142}
-              className="h-[100px] w-[253px] shrink-0 object-cover md-header:h-[142px] md-header:w-[360px]"
-              sizes="360px"
+              className="h-[11vw] w-[28.125vw] shrink-0 object-cover"
+              sizes="100vw"
             />
           ))}
         </div>

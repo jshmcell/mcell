@@ -206,6 +206,19 @@ export const partnerStrip = [
   "/assets/img/451482e34ad3e.jpg",
 ];
 
+/**
+ * 스트립 썸네일별 라이트박스 원본 — 원본 갤러리 data-src (썸네일과 다른 full-size 이미지).
+ * 순서대로 partnerStrip과 1:1 대응.
+ */
+export const partnerStripFull = [
+  "/assets/img/3492a2a9e137a.jpg",
+  "/assets/img/ee29083abcc5e.jpg",
+  "/assets/img/bbc717c969b66.jpg",
+  "/assets/img/6457e5bae2e3d.jpg",
+  "/assets/img/06285cdf4dddb.jpg",
+  "/assets/img/912ac979ae6fc.jpg",
+];
+
 export interface ProofItem {
   icon: string;
   title: string;

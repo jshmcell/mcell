@@ -42,7 +42,7 @@ export default function Products() {
                 onClick={() => openViewer(viewerImages, i)}
                 className="group cursor-pointer p-[15px]"
               >
-                <div className="relative bottom-0 transition-all duration-500 group-hover:bottom-[20px] group-hover:shadow-[0_0_20px_#00000026]">
+                <div className="relative bottom-0 border border-[#eeeeee] bg-[#eaeef0] transition-all duration-500 group-hover:bottom-[20px] group-hover:shadow-[0_0_20px_#00000026]">
                   <div className="h-[183px] w-full overflow-hidden">
                     <SmartImage
                       src={product.thumb}
