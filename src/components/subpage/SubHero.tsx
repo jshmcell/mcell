@@ -9,6 +9,8 @@ interface SubHeroProps {
   title: string;
   children?: NavChild[];
   currentHref: string;
+  /** 원본 /44처럼 칩 메뉴 없이 브레드크럼만 있는 컴팩트 히어로 (높이 228px) */
+  compact?: boolean;
 }
 
 export default function SubHero({
@@ -16,6 +18,7 @@ export default function SubHero({
   title,
   children,
   currentHref,
+  compact = false,
 }: SubHeroProps) {
   const items =
     children ?? navItems.find((n) => n.label === groupLabel)?.children ?? [];
@@ -24,14 +27,28 @@ export default function SubHero({
 
   return (
     <section className="border-b border-black/5 bg-white">
-      <div className="container-site pt-[65px] pb-[40px] md-header:pt-[85px] md-header:pb-[75px]">
+      <div
+        className={cn(
+          "container-site",
+          compact
+            ? "pt-[30px] pb-[49px] md:pb-[78px] md-header:pt-[60px] md-header:pb-[74px]"
+            : "pt-[65px] pb-[40px] md-header:pt-[85px] md-header:pb-[75px]",
+        )}
+      >
         <Appear animation="fadeIn" duration={2} delay={0.3} disableOnMobile>
           <h1 className="text-[30px] font-bold leading-[1.2] text-ink md-header:text-[48px]">
             {title}
           </h1>
         </Appear>
 
-        <div className="mt-[18px] flex items-start justify-between md-header:mt-[40px]">
+        <div
+          className={cn(
+            "flex items-start justify-between",
+            compact
+              ? "mt-[10px] md-header:mt-[15px]"
+              : "mt-[18px] md-header:mt-[40px]",
+          )}
+        >
           {items.length > 0 && (
             <nav aria-label="하위 메뉴">
               <ul className="flex flex-wrap items-center gap-y-1">
@@ -58,7 +75,13 @@ export default function SubHero({
             </nav>
           )}
 
-          <nav aria-label="브레드크럼" className="hidden md-header:block">
+          <nav
+            aria-label="브레드크럼"
+            className={cn(
+              "hidden md-header:block",
+              items.length === 0 && "ml-auto",
+            )}
+          >
             <ol className="flex items-start text-[13px] leading-[21px]">
               <li>
                 <Link

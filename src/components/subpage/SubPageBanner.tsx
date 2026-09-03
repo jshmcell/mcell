@@ -9,7 +9,7 @@ interface SubPageBannerProps {
 }
 
 /**
- * 서브페이지 배너 (원본: 300px PC / ~245px 태블릿 / ~285px 모바일,
+ * 서브페이지 배너 (원본: 300px PC·모바일 / 255px 태블릿(768–991),
  * PC에서 background-attachment: fixed 시차 스크롤)
  */
 export default function SubPageBanner({
@@ -24,8 +24,7 @@ export default function SubPageBanner({
         aria-label=""
         className={cn(
           "bg-cover bg-center bg-no-repeat md-header:bg-fixed",
-          heightClassName ??
-            "h-[290px] md:h-[245px] md-header:h-[300px]",
+          heightClassName ?? "h-[300px] md:h-[255px] md-header:h-[300px]",
         )}
         style={{ backgroundImage: `url(${image})` }}
       />
