@@ -25,7 +25,7 @@ const COLS = [
 ] as const;
 
 function postHref(boardKey: string, post: BoardPost) {
-  return post.body ? `/${boardKey}/${post.id}` : "#";
+  return `/${boardKey}/${post.id}`;
 }
 
 export default function BoardTable({
@@ -37,8 +37,8 @@ export default function BoardTable({
 
   return (
     <section className="bg-white">
-      <div className="container-site pt-[8px] pb-[7px] md-header:pt-[15px] md-header:pb-[15px]">
-        {/* 타이틀 행 */}
+      <div className="container-site pt-[8px] pb-[7px] md-header:pt-[59px] md-header:pb-[15px]">
+        {/* 타이틀 행 — 원본: 타이틀 y75, 검색 y75 (같은 행) */}
         <div className="flex h-[30px] items-center justify-between md-header:h-[34px]">
           <p className="text-[15px] leading-[1.5] text-[#363636]">
             {board.label} <span>{board.posts.length}</span>
