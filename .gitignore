@@ -46,4 +46,5 @@ next-env.d.ts
 .playwright-mcp/
 shots/
 dev.log
+dev-server*.log
 analysis/

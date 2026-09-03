@@ -7,18 +7,29 @@ import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { partnership } from "@/data/partnership";
 import { partnerStrip, partnerStripFull, partnershipBadge } from "@/data/mcell";
+import { getPageContents } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "제휴 및 문의",
 };
+
+export const dynamic = "force-dynamic";
 
 /**
  * 제휴 및 문의 (원본 /44) — 서브 히어로 + 300px 배너(0.45 오버레이) +
  * #f7f7f7 문의 섹션(헤딩 블록 + 입력폼 + 배지 + 슬라이드 갤러리).
  * 갤러리는 /mcell/oem-odm과 동일한 InfiniteSlider(뷰포트 비례 아이템,
  * 4:3, 6px 거터, 무한 마퀴, 클릭 시 라이트박스)를 사용.
+ * 헤딩/타이틀은 관리자 페이지 콘텐츠 오버라이드 가능 (page_content).
  */
-export default function PartnershipPage() {
+export default async function PartnershipPage() {
+  const overrides = await getPageContents([
+    "partnership.heading",
+    "partnership.title",
+  ]);
+  const heading = overrides["partnership.heading"] || partnership.heading;
+  const title = overrides["partnership.title"] || partnership.title;
+
   return (
     <>
       <SubHero
@@ -35,10 +46,10 @@ export default function PartnershipPage() {
             {/* 헤딩 블록 — 원본 h6: PC 20px/27px(#17375e) · 30px/36px(#363636) · 18px 줄간격 2,
                 모바일 16px/22.4px, h6 마진 10px */}
             <h2 className="my-[10px] text-[16px] leading-[22.4px] font-bold text-navy-900 md-header:mt-[54px] md-header:text-[20px] md-header:leading-[27px]">
-              {partnership.heading}
+              {heading}
             </h2>
             <h2 className="my-[10px] text-[16px] leading-[22.4px] font-bold text-ink md-header:text-[30px] md-header:leading-[36px]">
-              {partnership.title}
+              {title}
             </h2>
             <div className="text-[15px] leading-[30px] text-ink md-header:text-[18px] md-header:leading-[30px]">
               {partnership.lines.map((line) => (

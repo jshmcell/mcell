@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { boards, type BoardPost } from "@/data/boards";
+import type { PublicPost } from "@/lib/boards";
 
 /**
  * 게시판 리스트 — 원본 /40·/45·/46 보드 위젯과 동일 (같은 위젯 재사용).
@@ -12,8 +12,7 @@ import { boards, type BoardPost } from "@/data/boards";
  * 모바일: 타이틀+글쓰기 행 → 전체검색(345x37·16px) → 테두리 없는
  * 타이틀(15px)+메타(12px) 행 → 하단 글쓰기.
  * 섹션 여백: 상 15px / 하 15px (PC), 상 8px / 하 7px (모바일).
- * 제목 클릭 → 게시물 뷰(카달로그만 상세 페이지, 그 외 원본과 같이 상단 진행),
- * 글쓰기 → 로그인.
+ * 데이터: DB (board_post, published만).
  */
 const COLS = [
   { key: "no", label: "No", width: "w-[63px]", align: "text-center" },
@@ -32,16 +31,16 @@ const BOARD_BASE: Record<string, string> = {
   portfolio: "/library/portfolio",
 };
 
-function postHref(boardKey: keyof typeof boards, post: BoardPost) {
-  return `${BOARD_BASE[boardKey]}/${post.id}`;
-}
-
 export default function BoardTable({
+  label,
+  posts,
   boardKey,
 }: {
-  boardKey: keyof typeof boards;
+  label: string;
+  posts: PublicPost[];
+  boardKey: string;
 }) {
-  const board = boards[boardKey];
+  const base = BOARD_BASE[boardKey];
 
   return (
     <section className="bg-white">
@@ -49,7 +48,7 @@ export default function BoardTable({
         {/* 타이틀 행 — 원본: 타이틀 y75, 검색 y75 (같은 행) */}
         <div className="flex h-[30px] items-center justify-between md-header:h-[34px]">
           <p className="text-[15px] leading-[1.5] text-[#363636]">
-            {board.label} <span>{board.posts.length}</span>
+            {label} <span>{posts.length}</span>
           </p>
           <Link
             href="/login"
@@ -102,14 +101,14 @@ export default function BoardTable({
               </div>
             ))}
           </div>
-          {board.posts.map((post, i) => (
+          {posts.map((post, i) => (
             <div key={post.id} className="flex">
               <div className="w-[63px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[15px] leading-[24px] text-[#363636]">
-                {board.posts.length - i}
+                {posts.length - i}
               </div>
               <div className="w-[700px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-left text-[14px] leading-[24px]">
                 <Link
-                  href={postHref(boardKey, post)}
+                  href={`${base}/${post.id}`}
                   className="line-clamp-1 text-[#363636] transition-colors hover:text-navy-900"
                 >
                   {post.title}
@@ -122,7 +121,7 @@ export default function BoardTable({
                 {post.date}
               </div>
               <div className="w-[125px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
-                조회수{post.views ?? 0}
+                조회수{post.views}
               </div>
               <div className="w-[88px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
                 0
@@ -133,10 +132,10 @@ export default function BoardTable({
 
         {/* 모바일 행 */}
         <div className="mt-[9px] md-header:hidden">
-          {board.posts.map((post) => (
+          {posts.map((post) => (
             <div key={post.id} className="pt-[11px] pb-[13px]">
               <Link
-                href={postHref(boardKey, post)}
+                href={`${base}/${post.id}`}
                 className="line-clamp-2 block text-[15px] leading-[25px] text-[#363636]"
               >
                 {post.title}
@@ -144,7 +143,7 @@ export default function BoardTable({
               <div className="mt-[1px] flex items-center gap-2 text-[12px] leading-[24px] text-[#363636]/65">
                 <span>{post.author}</span>
                 <span>{post.date}</span>
-                <span>조회수{post.views ?? 0}</span>
+                <span>조회수{post.views}</span>
                 <span>0</span>
               </div>
             </div>

@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { boards } from "@/data/boards";
+import type { PublicPost } from "@/lib/boards";
 
-/** 게시판 URL prefix — boardKey → 실제 라우트 (/news/*, /library/*) */
 const BOARD_BASE: Record<string, string> = {
   notices: "/news/notices",
   updates: "/news/updates",
@@ -17,25 +16,21 @@ const BOARD_BASE: Record<string, string> = {
  * 66px 행(아바타 없음, 원본 뉴스·카달로그 보드 공통) → 본문(15px/24px, y226) →
  * (첨부 박스 #f7f7f7, 있을 때) → 좋아요/댓글 46px 행 + 공유·인쇄 →
  * 이전글/다음글 리스트(43~44px 행, 1px 구분선) → 목록(63x30) 버튼.
- * 섹션 여백: 상 15px / 하 15px. 카달로그 게시물은 첨부 박스가 본문 아래에 붙고
- * 댓글 안내 폼이 이 보드 뷰와 달리 카달로그 전용(로그인 안내) — 카달로그는
- * CatalogDetailView를 그대로 사용한다.
+ * 섹션 여백: 상 15px / 하 15px. 데이터: DB.
  * 공유: navigator.share(미지원 시 클립보드), 인쇄: window.print().
  */
 export default function BoardDetailView({
   boardKey,
-  postId,
+  post,
+  prev,
+  next,
 }: {
-  boardKey: keyof typeof boards;
-  postId: number;
+  boardKey: string;
+  post: PublicPost;
+  prev: { id: string; title: string } | null;
+  next: { id: string; title: string } | null;
 }) {
-  const board = boards[boardKey];
-  const post = board.posts.find((p) => p.id === postId);
-  if (!post) return null;
-
-  const idx = board.posts.findIndex((p) => p.id === postId);
-  const prev = board.posts[idx - 1];
-  const next = board.posts[idx + 1];
+  const base = BOARD_BASE[boardKey];
 
   const onShare = async () => {
     const url = window.location.href;
@@ -62,7 +57,7 @@ export default function BoardDetailView({
           {post.title}
         </h1>
 
-        {/* 작성자 행 — 원본: 아바타 없이 이름 14px + 메타 13px */}
+        {/* 작성자 행 */}
         <div className="pt-[15px] pb-[14px]">
           <p className="text-[14px] leading-[21px] text-[#363636]">
             {post.author}
@@ -70,171 +65,90 @@ export default function BoardDetailView({
           <p className="mt-[2px] flex items-center gap-[10px] text-[13px] leading-[16px]">
             <span className="text-[#757575]">{post.category}</span>
             <span className="text-[#363636]/70">{post.date}</span>
-            <span className="text-[#363636]/70">조회수 {post.views ?? 0}</span>
+            <span className="text-[#363636]/70">조회수{post.views}</span>
           </p>
         </div>
 
         {/* 본문 */}
-        <div
-          className="pt-[14px] pb-[10px] text-[15px] leading-[24px] text-[#363636] [&_li]:ml-[40px] [&_li]:list-disc [&_p]:min-h-[24px] [&_ul]:my-[24px]"
-          dangerouslySetInnerHTML={{ __html: post.body ?? "" }}
-        />
+        {post.body ? (
+          <div
+            className="fr-view-content text-[15px] leading-[24px] text-[#363636] [&_li]:ml-[16px] [&_p]:mb-[8px] [&_ul]:list-disc"
+            dangerouslySetInnerHTML={{ __html: post.body }}
+          />
+        ) : (
+          <div className="min-h-[80px]" />
+        )}
 
         {/* 첨부 박스 */}
         {post.attachment && (
-          <div className="mt-[20px] flex items-center justify-between bg-[#f7f7f7] px-[15px] py-[15px]">
-            <div>
-              <p className="text-[15px] leading-[21px] text-[#363636]">
-                {post.attachment.name}
-              </p>
-              <p className="text-[12px] italic text-[#999]">
-                {post.attachment.size}
-              </p>
-            </div>
+          <div className="mt-[20px] flex items-center gap-3 rounded-[3px] bg-[#f7f7f7] px-[14px] py-[12px]">
+            <span aria-hidden className="text-[15px]">📎</span>
             <a
               href={post.attachment.href}
+              className="text-[13px] text-[#363636] underline-offset-4 hover:underline"
               download
-              aria-label="첨부파일 다운로드"
-              className="-mr-[4px] p-[5px] text-[#999] transition-colors hover:text-[#363636]"
             >
-              <svg
-                width="14"
-                height="24"
-                viewBox="0 0 14 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-              >
-                <path d="M7 3v13m0 0 4.5-4.5M7 16 2.5 11.5" />
-                <path d="M2 19.5h10" />
-              </svg>
+              {post.attachment.name}
             </a>
+            <span className="text-[12px] text-ink/50">{post.attachment.size}</span>
           </div>
         )}
 
-        {/* 좋아요/댓글 카운트 + 공유/인쇄 */}
-        <div className="mt-[24px] flex h-[46px] items-center justify-between text-[17px] text-[#363636]">
-          <div className="flex items-center">
-            <button
-              type="button"
-              aria-label="좋아요"
-              className="flex h-[46px] w-[35px] items-center gap-[5px]"
-            >
-              <svg
-                width="18"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-              >
-                <path d="M12 20s-7-4.35-9.33-8.11C.9 9.02 2.24 5.5 5.5 5.5c2 0 3.4 1.1 4.13 2.24L12 10l2.37-2.26C15.1 6.6 16.5 5.5 18.5 5.5c3.26 0 4.6 3.52 2.83 6.39C19 15.65 12 20 12 20Z" />
-              </svg>
-              0
-            </button>
-            <span className="flex h-[46px] items-center gap-[5px] pl-[17px]">
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-              >
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.53 0-2.98-.36-4.25-1L3 20l1.33-4.09A8.5 8.5 0 1 1 21 11.5Z" />
-              </svg>
-              0
-            </span>
+        {/* 좋아요/댓글 행 */}
+        <div className="mt-[20px] flex items-center justify-between border-y border-black/10 py-[10px]">
+          <div className="flex gap-3 text-[13px] text-ink/60">
+            <span>좋아요 0</span>
+            <span>댓글 0</span>
           </div>
-
-          <div className="flex items-center">
+          <div className="flex gap-2">
             <button
               type="button"
-              aria-label="공유"
               onClick={onShare}
-              className="flex h-[46px] w-[41px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900"
+              className="h-[30px] rounded-[2px] border border-black/15 px-3 text-[12px] text-ink hover:border-navy-700"
             >
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-              >
-                <circle cx="18" cy="5" r="2.6" />
-                <circle cx="6" cy="12" r="2.6" />
-                <circle cx="18" cy="19" r="2.6" />
-                <path d="m8.3 10.7 7.4-4.3m0 11.2-7.4-4.3" />
-              </svg>
+              공유
             </button>
             <button
               type="button"
-              aria-label="인쇄"
               onClick={() => window.print()}
-              className="hidden h-[46px] w-[29px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900 md-header:flex"
+              className="h-[30px] rounded-[2px] border border-black/15 px-3 text-[12px] text-ink hover:border-navy-700"
             >
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-              >
-                <path d="M6 9V3h12v6" />
-                <rect x="3" y="9" width="18" height="8" rx="1.5" />
-                <path d="M6 14h12v7H6z" />
-              </svg>
+              인쇄
             </button>
           </div>
         </div>
 
-        {/* 이전글/다음글 */}
-        <div className="mt-[16px] border-t border-black/10">
+        {/* 이전/다음 글 */}
+        <div className="mt-[10px]">
           {prev && (
             <Link
-              href={`${BOARD_BASE[boardKey]}/${prev.id}`}
-              className="flex h-[44px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
+              href={`${base}/${prev.id}`}
+              className="flex h-[44px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
-              <svg
-                aria-hidden
-                viewBox="0 0 12 12"
-                className="h-[12px] w-[12px] shrink-0 text-ink/50"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              >
-                <path d="m7 2-4 4 4 4" />
-              </svg>
+              <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
+                이전글
+              </span>
               <span className="line-clamp-1">{prev.title}</span>
             </Link>
           )}
           {next && (
             <Link
-              href={`${BOARD_BASE[boardKey]}/${next.id}`}
-              className="flex h-[43px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
+              href={`${base}/${next.id}`}
+              className="flex h-[43px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
-              <svg
-                aria-hidden
-                viewBox="0 0 12 12"
-                className="h-[12px] w-[12px] shrink-0 rotate-90 text-ink/50"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              >
-                <path d="m2 4 4 4 4-4" />
-              </svg>
+              <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
+                다음글
+              </span>
               <span className="line-clamp-1">{next.title}</span>
             </Link>
           )}
         </div>
 
-        {/* 목록 */}
-        <div className="mt-[14px]">
+        {/* 목록 버튼 */}
+        <div className="mt-[15px] flex justify-end">
           <Link
-            href={BOARD_BASE[boardKey]}
-            className="inline-flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
+            href={base}
+            className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             목록
           </Link>

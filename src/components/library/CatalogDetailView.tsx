@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { boards } from "@/data/boards";
+import type { PublicPost } from "@/lib/boards";
 
 /**
  * 카달로그 게시물 뷰 — 원본 /40 뷰 페이지와 동일.
@@ -11,16 +11,11 @@ import { boards } from "@/data/boards";
  * 46px 높이 행) + 우측 공유·인쇄 버튼(41x46/29x46, 아이콘 17x17) →
  * 로그인 안내 댓글 박스(1px 테두리, 우하단 작성 버튼 63x30) →
  * 목록/글쓰기 버튼 행(63x30 / 74x30, #363636, 12px).
- * 섹션 여백: 상 15px / 하 15px.
+ * 섹션 여백: 상 15px / 하 15px. 데이터: DB.
  * 목록 → /library/catalog, 글쓰기 → /login, 첨부 → PDF 다운로드.
  * 공유: navigator.share (미지원 브라우저는 클립보드 복사), 인쇄: window.print().
  */
-export default function CatalogDetailView() {
-  const board = boards.catalog;
-  const post = board.posts[0];
-
-  if (!post) return null;
-
+export default function CatalogDetailView({ post }: { post: PublicPost }) {
   const onShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -60,7 +55,7 @@ export default function CatalogDetailView() {
             <p className="flex items-center gap-[10px] text-[13px] leading-[16px]">
               <span className="text-[#757575]">{post.category}</span>
               <span className="text-[#363636]/70">{post.date}</span>
-              <span className="text-[#363636]/70">조회수 237</span>
+              <span className="text-[#363636]/70">조회수 {post.views}</span>
             </p>
           </div>
         </div>

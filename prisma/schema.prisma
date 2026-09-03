@@ -17,13 +17,86 @@ model User {
   email         String   @unique
   emailVerified Boolean  @default(false)
   image         String? // future account-page avatar
+  role          Role     @default(NORMAL)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
   consents      UserConsent[]
+  boardPosts    BoardPost[]
+  inquiries     Inquiry[]
 
   @@map("user")
+}
+
+/// NORMAL: 프로필 페이지만. ADMIN: + 대시보드(CRM/콘텐츠).
+enum Role {
+  NORMAL
+  ADMIN
+
+  @@map("role")
+}
+
+/// 슈퍼유저(승격/강등 모두 가능)는 DB에서 role=SUPER로 표시하지 않고
+/// SUPERUSER_EMAIL env와 일치하는 이메일로 판별한다 (env 기준 = 단일 진실 소스).
+/// DB role은 NORMAL/ADMIN만 저장한다.
+
+model BoardPost {
+  id        String   @id @default(cuid())
+  board     String // "notices" | "updates" | "catalog" | "portfolio"
+  category  String
+  title     String
+  body      String? // HTML
+  author    String
+  authorId  String?
+  authorUser User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  views     Int      @default(0)
+  published Boolean  @default(true) // false = 임시저장/숨김
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  attachment BoardAttachment?
+
+  @@index([board, published, createdAt])
+  @@map("board_post")
+}
+
+model BoardAttachment {
+  id       String @id @default(cuid())
+  postId   String @unique
+  post     BoardPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  name     String
+  size     String // 표시용 (KB)
+  href     String // /assets/pdf/... 또는 blob url
+  @@map("board_attachment")
+}
+
+/// 페이지 콘텐츠 오버라이드 (관리자 수정 가능 문구; 없으면 TS 데이터 파일 기본값 사용)
+model PageContent {
+  key       String   @id
+  value     String
+  updatedBy String?
+  updatedAt DateTime @default(now()) @updatedAt
+  @@map("page_content")
+}
+
+/// 제휴/문의 (파트너십 폼) + 홈/기술 문의 등 모든 폼 접수
+model Inquiry {
+  id        String   @id @default(cuid())
+  type      String   @default("partnership") // "partnership" | "home" | "mcell" ...
+  company   String?
+  manager   String? // 담당자(회사명)
+  phone     String?
+  email     String?
+  address   String?
+  oemType   String? // "OEM" | "ODM"
+  content   String? // 개발내용
+  status    String   @default("new") // "new" | "in_progress" | "done"
+  createdAt DateTime @default(now())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@map("inquiry")
 }
 
 model Session {
