@@ -19,7 +19,8 @@ export default function MobileChipNav() {
       <div className="h-full overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="inline-flex h-full items-center px-[15px]">
           {navItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            // 현재 페이지 정확히 일치 항목만 하이라이트 (PC 헤더와 동일 규칙)
+            const active = pathname === item.href;
             return (
               <Link
                 key={item.href}

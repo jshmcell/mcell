@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useUiStore } from "@/lib/store";
 import { navItems } from "@/data/site";
 import { cn } from "@/lib/cn";
@@ -9,7 +10,10 @@ import { cn } from "@/lib/cn";
 export default function MobileDrawer() {
   const open = useUiStore((s) => s.mobileMenuOpen);
   const toggleMobileMenu = useUiStore((s) => s.toggleMobileMenu);
+  const pathname = usePathname();
   const [expanded, setExpanded] = useState<string | null>(null);
+  // 현재 페이지 정확히 일치 항목만 하이라이트 (PC 헤더와 동일 규칙)
+  const isActive = (href: string) => pathname === href;
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -58,7 +62,10 @@ export default function MobileDrawer() {
                     <Link
                       href={item.href}
                       onClick={() => toggleMobileMenu(false)}
-                      className="flex-1 px-5 py-[9px] text-[22px] text-white"
+                      className={cn(
+                        "flex-1 px-5 py-[9px] text-[22px] text-white",
+                        isActive(item.href) && "font-bold",
+                      )}
                     >
                       {item.label}
                     </Link>
@@ -91,7 +98,10 @@ export default function MobileDrawer() {
                           <Link
                             href={child.href}
                             onClick={() => toggleMobileMenu(false)}
-                            className="block py-2 pl-[30px] pr-[50px] text-[21px] text-white"
+                            className={cn(
+                              "block py-2 pl-[30px] pr-[50px] text-[21px] text-white",
+                              isActive(child.href) && "font-bold",
+                            )}
                           >
                             {child.label}
                           </Link>
