@@ -17,6 +17,9 @@ const oldRoutes: [string, string][] = [
   ["/45", "/news/notices"],
   ["/46", "/news/updates"],
   ["/44", "/partnership"],
+  ["/site_join_pattern_choice", "/signup"],
+  ["/site_join_agree", "/signup"],
+  ["/site_join", "/signup"],
 ];
 
 const nextConfig: NextConfig = {

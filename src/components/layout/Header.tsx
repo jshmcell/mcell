@@ -8,13 +8,20 @@ import { navItems, company } from "@/data/site";
 import { cn } from "@/lib/cn";
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from "@/lib/constants";
 import MobileChipNav from "@/components/layout/MobileChipNav";
+import { signOutAction } from "@/lib/actions/signout";
 
-export default function Header() {
+export type HeaderUser = {
+  name: string;
+  email: string;
+  image: string | null;
+};
+
+export default function Header({ user }: { user?: HeaderUser | null }) {
   return (
     <>
       {/* PC: always navy, in normal flow, sticks to top on scroll */}
       <div className="hidden md-header:block">
-        <PcHeader />
+        <PcHeader user={user ?? null} />
       </div>
       {/* Mobile: white bar + navy chip nav, in normal flow */}
       <div className="md-header:hidden">
@@ -25,7 +32,7 @@ export default function Header() {
   );
 }
 
-function PcHeader() {
+function PcHeader({ user }: { user: HeaderUser | null }) {
   const searchOpen = useUiStore((s) => s.searchOpen);
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const pathname = usePathname();
@@ -111,22 +118,44 @@ function PcHeader() {
             </svg>
           </button>
           <div className="flex items-center text-[14px] text-white">
-            <Link
-              href="/login"
-              className="transition-colors duration-300 hover:text-[#e5e5e5]"
-            >
-              로그인
-            </Link>
-            <span
-              className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
-              aria-hidden
-            />
-            <Link
-              href="/signup"
-              className="transition-colors duration-300 hover:text-[#e5e5e5]"
-            >
-              회원가입
-            </Link>
+            {user ? (
+              <>
+                <span className="max-w-[120px] truncate" title={user.name}>
+                  {user.name}님
+                </span>
+                <span
+                  className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
+                  aria-hidden
+                />
+                <form action={signOutAction}>
+                  <button
+                    type="submit"
+                    className="transition-colors duration-300 hover:text-[#e5e5e5]"
+                  >
+                    로그아웃
+                  </button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="transition-colors duration-300 hover:text-[#e5e5e5]"
+                >
+                  로그인
+                </Link>
+                <span
+                  className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
+                  aria-hidden
+                />
+                <Link
+                  href="/signup"
+                  className="transition-colors duration-300 hover:text-[#e5e5e5]"
+                >
+                  회원가입
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -6,8 +6,10 @@ import { usePathname } from "next/navigation";
 import { useUiStore } from "@/lib/store";
 import { navItems } from "@/data/site";
 import { cn } from "@/lib/cn";
+import { signOutAction } from "@/lib/actions/signout";
+import type { HeaderUser } from "@/components/layout/Header";
 
-export default function MobileDrawer() {
+export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
   const open = useUiStore((s) => s.mobileMenuOpen);
   const toggleMobileMenu = useUiStore((s) => s.toggleMobileMenu);
   const pathname = usePathname();
@@ -41,14 +43,33 @@ export default function MobileDrawer() {
       />
       <aside className="absolute left-0 top-0 flex h-full w-[300px] flex-col overflow-y-auto bg-navy-900">
         <div className="border-b border-white/20 px-5 py-5">
-          <p className="text-[14px] text-white">로그인이 필요합니다.</p>
-          <Link
-            href="/login"
-            onClick={() => toggleMobileMenu(false)}
-            className="mt-2 inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
-          >
-            로그인
-          </Link>
+          {user ? (
+            <>
+              <p className="text-[14px] text-white">
+                {user.name}님, 안녕하세요.
+              </p>
+              <form action={signOutAction}>
+                <button
+                  type="submit"
+                  onClick={() => toggleMobileMenu(false)}
+                  className="mt-2 inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
+                >
+                  로그아웃
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <p className="text-[14px] text-white">로그인이 필요합니다.</p>
+              <Link
+                href="/login"
+                onClick={() => toggleMobileMenu(false)}
+                className="mt-2 inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
+              >
+                로그인
+              </Link>
+            </>
+          )}
         </div>
 
         <nav className="flex-1 pt-[10px]">

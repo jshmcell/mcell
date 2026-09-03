@@ -110,11 +110,15 @@ public/assets/img|pdf/
 ## Libs
 
 framer-motion, embla-carousel-react, react-countup. Zustand: mobile drawer + search overlay only.
+Auth: Better Auth 1.7 + Prisma 7 + Vercel Postgres (Neon) + zod + Resend — see `PLAN-AUTH.md`.
 
 ## Status
 
-Current: Phase 5 — QA/polish. All pages built; home sections 1-10 pixel-matched against the live original (2026-09: sections 1-10 verified at 1280/1920/375 — PC page total 5370px == original). About pages pixel-matched 2026-09 (orig vs ours @1280/1920/768/375): /about 2002==2002, /history −12, /certifications +1, /contact −29; sub-hero chips + inline breadcrumb + imweb scroll-triggered appear animations (Appear) replicated; all <Image> wrapped in SmartImage (skeleton+spinner loader; storage-ready). MCELL pages pixel-matched 2026-09: /mcell 8758 vs 8801, /mcell/oem-odm 5213 vs 5312 — rebuilt from original /31·/32 (banner hero + strip, navy stat cards, 4-row tech layers, image gallery w/ viewer captions, comparison cards #e6e6e6/#c3cbd4, full-width slide gallery, 6-col proof, embedded inquiry form); global ImageViewer (zoom/prev/next/close) for all clickable images. Remaining:
+Current: Phase 5 — QA/polish. All pages built; home sections 1-10 pixel-matched against the live original (2026-09: sections 1-10 verified at 1280/1920/375 — PC page total 5370px == original). About pages pixel-matched 2026-09 (orig vs ours @1280/1920/768/375): /about 2002==2002, /history −12, /certifications +1, /contact −29; sub-hero chips + inline breadcrumb + imweb scroll-triggered appear animations (Appear) replicated; all <Image> wrapped in SmartImage (skeleton+spinner loader; storage-ready). MCELL pages pixel-matched 2026-09: /mcell 8758 vs 8801, /mcell/oem-odm 5213 vs 5312 — rebuilt from original /31·/32 (banner hero + strip, navy stat cards, 4-row tech layers, image gallery w/ viewer captions, comparison cards #e6e6e6/#c3cbd4, full-width slide gallery, 6-col proof, embedded inquiry form); global ImageViewer (zoom/prev/next/close) for all clickable images.
 
-- Home (9 sections), /mcell (stats+tech+products+comparisons+platform+cooperation), /about, /about/history, /about/certifications, /about/contact, /shop, /library/{portfolio,catalog}, /news/{notices,updates}, /partnership (disabled form), /login, /signup, /policy, /privacy
-- Redirects: /29,/33,/34,/35,/36,/30,/31,/37,/38,/39,/40,/48,/45,/46,/44 → new routes
-- Remaining: sitemap/robots, Lighthouse, Vercel deploy, pixel-diff fine-tuning
+Auth feature implemented 2026-09 (PLAN-AUTH.md, Phases A-F): Better Auth (Prisma adapter, DB sessions) + UserConsent audit table; /signup single page with internal steps (agreement → form, no searchparams — refresh/deep-link returns to agreement, consents re-verified server-side); /login reworked (이메일=아이디, 로그인상태유지 default-checked → 30d session); /find-account + /find-account/reset (Resend reset email); session-aware Header + MobileDrawer (이름님+로그아웃 ↔ 로그인/회원가입); proxy.ts optimistic bounce; /site_join* redirects. QA: Playwright signup flow 14/14, reset flow 3/3, consent rows verified in DB; lint/tsc/build green. Remaining:
+
+- Home (9 sections), /mcell (stats+tech+products+comparisons+platform+cooperation), /about, /about/history, /about/certifications, /about/contact, /shop, /library/{portfolio,catalog}, /news/{notices,updates}, /partnership (disabled form), /policy, /privacy
+- Redirects: /29,/33,/34,/35,/36,/30,/31,/37,/38,/39,/40,/48,/45,/46,/44,/site_join* → new routes
+- Remaining: sitemap/robots, Lighthouse, Vercel deploy (env: DATABASE_URL, DIRECT_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, RESEND_API_KEY), pixel-diff fine-tuning
+- Deferred: avatar upload (account page), my-page, 이메일 인증 (schema ready), 아이디 찾기
