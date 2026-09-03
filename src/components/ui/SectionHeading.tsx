@@ -16,11 +16,16 @@ export default function SectionHeading({
   children,
 }: SectionHeadingProps) {
   return (
-    <div className={cn(align === "center" ? "text-center" : "text-left", className)}>
+    <div
+      className={cn(
+        align === "center" ? "text-center" : "text-left",
+        className,
+      )}
+    >
       <h2
         className={cn(
           "text-[30px] leading-[1.3] font-bold tracking-tight lg:text-[36px]",
-          dark ? "text-white" : "text-navy-900"
+          dark ? "text-white" : "text-navy-900",
         )}
       >
         {title}
@@ -29,7 +34,7 @@ export default function SectionHeading({
         <div
           className={cn(
             "mt-4 text-[16px] leading-8 lg:text-[18px]",
-            dark ? "text-white/90" : "text-ink"
+            dark ? "text-white/90" : "text-ink",
           )}
         >
           {children}

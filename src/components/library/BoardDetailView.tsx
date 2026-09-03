@@ -120,13 +120,27 @@ export default function BoardDetailView({
               aria-label="좋아요"
               className="flex h-[46px] w-[35px] items-center gap-[5px]"
             >
-              <svg width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <svg
+                width="18"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+              >
                 <path d="M12 20s-7-4.35-9.33-8.11C.9 9.02 2.24 5.5 5.5 5.5c2 0 3.4 1.1 4.13 2.24L12 10l2.37-2.26C15.1 6.6 16.5 5.5 18.5 5.5c3.26 0 4.6 3.52 2.83 6.39C19 15.65 12 20 12 20Z" />
               </svg>
               0
             </button>
             <span className="flex h-[46px] items-center gap-[5px] pl-[17px]">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+              >
                 <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.53 0-2.98-.36-4.25-1L3 20l1.33-4.09A8.5 8.5 0 1 1 21 11.5Z" />
               </svg>
               0
@@ -140,7 +154,14 @@ export default function BoardDetailView({
               onClick={onShare}
               className="flex h-[46px] w-[41px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+              >
                 <circle cx="18" cy="5" r="2.6" />
                 <circle cx="6" cy="12" r="2.6" />
                 <circle cx="18" cy="19" r="2.6" />
@@ -153,7 +174,14 @@ export default function BoardDetailView({
               onClick={() => window.print()}
               className="hidden h-[46px] w-[29px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900 md-header:flex"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+              >
                 <path d="M6 9V3h12v6" />
                 <rect x="3" y="9" width="18" height="8" rx="1.5" />
                 <path d="M6 14h12v7H6z" />
@@ -169,7 +197,14 @@ export default function BoardDetailView({
               href={`${BOARD_BASE[boardKey]}/${prev.id}`}
               className="flex h-[44px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
             >
-              <svg aria-hidden viewBox="0 0 12 12" className="h-[12px] w-[12px] shrink-0 text-ink/50" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <svg
+                aria-hidden
+                viewBox="0 0 12 12"
+                className="h-[12px] w-[12px] shrink-0 text-ink/50"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+              >
                 <path d="m7 2-4 4 4 4" />
               </svg>
               <span className="line-clamp-1">{prev.title}</span>
@@ -180,7 +215,14 @@ export default function BoardDetailView({
               href={`${BOARD_BASE[boardKey]}/${next.id}`}
               className="flex h-[43px] items-center gap-[14px] border-b border-black/10 px-[16px] text-[14px] text-[#363636]"
             >
-              <svg aria-hidden viewBox="0 0 12 12" className="h-[12px] w-[12px] shrink-0 rotate-90 text-ink/50" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <svg
+                aria-hidden
+                viewBox="0 0 12 12"
+                className="h-[12px] w-[12px] shrink-0 rotate-90 text-ink/50"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+              >
                 <path d="m2 4 4 4 4-4" />
               </svg>
               <span className="line-clamp-1">{next.title}</span>

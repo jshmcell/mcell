@@ -84,7 +84,10 @@ export default function MobileDrawer() {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          className={cn("transition-transform", isOpen && "rotate-180")}
+                          className={cn(
+                            "transition-transform",
+                            isOpen && "rotate-180",
+                          )}
                         >
                           <path d="M6 9l6 6 6-6" />
                         </svg>

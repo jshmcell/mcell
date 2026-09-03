@@ -31,7 +31,9 @@ export default function BoardList({
           <div className="flex items-center justify-between border-b-2 border-navy-900 pb-4">
             <p className="text-[18px] font-bold text-navy-900">
               {board.label}
-              <em className="ml-2 text-[14px] not-italic text-ink/50">{board.posts.length}</em>
+              <em className="ml-2 text-[14px] not-italic text-ink/50">
+                {board.posts.length}
+              </em>
             </p>
             <div className="flex h-[38px] w-[220px] items-center border border-black/15 px-3">
               <input
@@ -39,7 +41,15 @@ export default function BoardList({
                 placeholder="Search"
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-ink/40"
               />
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-ink/50">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="text-ink/50"
+              >
                 <circle cx="11" cy="11" r="7" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
@@ -65,8 +75,12 @@ export default function BoardList({
                       <span className="flex-1 truncate text-[16px] font-medium text-ink">
                         {post.title}
                       </span>
-                      <span className="hidden text-[13px] text-ink/60 sm:block">{post.author}</span>
-                      <span className="text-[13px] text-ink/60">{post.date}</span>
+                      <span className="hidden text-[13px] text-ink/60 sm:block">
+                        {post.author}
+                      </span>
+                      <span className="text-[13px] text-ink/60">
+                        {post.date}
+                      </span>
                     </Link>
                   </Reveal>
                 </li>

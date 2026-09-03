@@ -29,7 +29,7 @@ export default function MobileChipNav() {
                   "inline-flex h-full items-center px-[13px] text-[14px]",
                   active
                     ? "font-bold text-white"
-                    : "text-[#dbdbdb] transition-colors hover:text-white"
+                    : "text-[#dbdbdb] transition-colors hover:text-white",
                 )}
               >
                 {item.label}

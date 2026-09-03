@@ -33,7 +33,9 @@ export default function ViewableImage({
     <button
       type="button"
       aria-label="이미지 크게 보기"
-      onClick={() => openViewer(viewerImages ?? [{ src, alt: rest.alt }], viewerIndex)}
+      onClick={() =>
+        openViewer(viewerImages ?? [{ src, alt: rest.alt }], viewerIndex)
+      }
       className={cn("block cursor-pointer", wrapperClassName)}
     >
       <SmartImage className={className} {...rest} />

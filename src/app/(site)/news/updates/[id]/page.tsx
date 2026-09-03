@@ -25,11 +25,7 @@ export default async function UpdateViewPage({
   if (!boards.updates.posts.some((p) => p.id === Number(id))) notFound();
   return (
     <>
-      <SubHero
-        groupLabel="뉴스"
-        title="소식"
-        currentHref="/news/updates"
-      />
+      <SubHero groupLabel="뉴스" title="소식" currentHref="/news/updates" />
       <SubPageBanner image={newsBand} heightClassName="h-[250px]" />
       <BoardDetailView boardKey="updates" postId={Number(id)} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />

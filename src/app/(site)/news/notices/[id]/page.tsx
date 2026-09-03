@@ -26,11 +26,7 @@ export default async function NoticeViewPage({
   if (!boards.notices.posts.some((p) => p.id === Number(id))) notFound();
   return (
     <>
-      <SubHero
-        groupLabel="뉴스"
-        title="공지사항"
-        currentHref="/news/notices"
-      />
+      <SubHero groupLabel="뉴스" title="공지사항" currentHref="/news/notices" />
       <SubPageBanner image={newsBand} heightClassName="h-[250px]" />
       <BoardDetailView boardKey="notices" postId={Number(id)} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />

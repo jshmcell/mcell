@@ -16,18 +16,28 @@ export default function LoginPage() {
         <h1 className="text-center text-[24px] font-bold text-ink">로그인</h1>
         <form className="mt-8 space-y-3">
           <input className={inputCls} placeholder="아이디" disabled />
-          <input className={inputCls} type="password" placeholder="비밀번호" disabled />
+          <input
+            className={inputCls}
+            type="password"
+            placeholder="비밀번호"
+            disabled
+          />
           <Button type="submit" disabled className="w-full">
             로그인
           </Button>
         </form>
         <p className="mt-6 text-center text-[13px] text-ink/60">
           계정이 없으신가요?{" "}
-          <Link href="/signup" className="text-navy-900 underline-offset-4 hover:underline">
+          <Link
+            href="/signup"
+            className="text-navy-900 underline-offset-4 hover:underline"
+          >
             회원가입
           </Link>
         </p>
-        <p className="mt-2 text-center text-[13px] text-ink/50">회원 기능은 준비 중입니다.</p>
+        <p className="mt-2 text-center text-[13px] text-ink/50">
+          회원 기능은 준비 중입니다.
+        </p>
       </div>
     </section>
   );

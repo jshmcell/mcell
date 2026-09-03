@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 export default function NoticesPage() {
   return (
     <>
-      <SubHero
-        groupLabel="뉴스"
-        title="공지사항"
-        currentHref="/news/notices"
-      />
+      <SubHero groupLabel="뉴스" title="공지사항" currentHref="/news/notices" />
       <SubPageBanner image={newsBand} heightClassName="h-[300px]" />
       <BoardTable boardKey="notices" />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
