@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
 import { boards } from "@/data/boards";
@@ -12,7 +12,7 @@ import { boards } from "@/data/boards";
  * 모바일: 타이틀+글쓰기 행 → 전체검색(345x37·16px) → 테두리 없는
  * 타이틀(15px)+메타(12px) 행 → 하단 글쓰기.
  * 섹션 여백: 상 15px / 하 15px (PC), 상 8px / 하 7px (모바일).
- * 제목 클릭 → 카달로그 PDF, 글쓰기 → 로그인.
+ * 제목 클릭 → 게시물 뷰 페이지(/library/catalog/[id]), 글쓰기 → 로그인.
  */
 const COLS = [
   { key: "no", label: "No", width: "w-[63px]", align: "text-center" },
@@ -91,14 +91,12 @@ export default function CatalogBoard() {
                 1
               </div>
               <div className="w-[700px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-left text-[14px] leading-[24px]">
-                <a
-                  href={post.attachment?.href ?? "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/library/catalog/${post.id}`}
                   className="text-[#363636] transition-colors hover:text-navy-900"
                 >
                   {post.title}
-                </a>
+                </Link>
               </div>
               <div className="w-[125px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-left text-[12px] leading-[24px] text-[#363636]/65">
                 {post.author}
@@ -120,14 +118,12 @@ export default function CatalogBoard() {
         <div className="mt-[9px] md-header:hidden">
           {board.posts.map((post) => (
             <div key={post.id} className="pt-[11px] pb-[13px]">
-              <a
-                href={post.attachment?.href ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/library/catalog/${post.id}`}
                 className="block text-[15px] leading-[25px] text-[#363636]"
               >
                 {post.title}
-              </a>
+              </Link>
               <div className="mt-[1px] flex items-center gap-2 text-[12px] leading-[24px] text-[#363636]/65">
                 <span>{post.author}</span>
                 <span>{post.date}</span>
