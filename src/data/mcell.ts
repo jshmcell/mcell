@@ -196,6 +196,16 @@ export const cooperation = {
 
 export const partnershipBadge = "/assets/img/f1f1865146574.png";
 
+/** 문의 섹션 하단 무한 슬라이드 — 원본 slide_05 갤러리 (아이템 216x166, 6장 무한 루프) */
+export const partnerStrip = [
+  "/assets/img/bf933ce625640.jpg",
+  "/assets/img/62bb6fb519dbe.jpg",
+  "/assets/img/ee5378decb3b3.jpg",
+  "/assets/img/cf15452893bc2.jpg",
+  "/assets/img/e8f318c7071b6.jpg",
+  "/assets/img/451482e34ad3e.jpg",
+];
+
 export interface ProofItem {
   icon: string;
   title: string;

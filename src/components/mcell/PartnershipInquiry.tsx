@@ -1,6 +1,8 @@
 import Appear from "@/components/ui/Appear";
+import InfiniteSlider from "@/components/ui/InfiniteSlider";
 import InquiryForm from "@/components/forms/InquiryForm";
 import { partnership } from "@/data/partnership";
+import { partnerStrip } from "@/data/mcell";
 
 /**
  * PARTNERSHIP INQUIRY — 원본 /31·/32 하단 임베드 섹션 (#f7f7f7 배경,
@@ -9,7 +11,7 @@ import { partnership } from "@/data/partnership";
 export default function PartnershipInquiry() {
   return (
     <section className="bg-[#f7f7f7]">
-      <div className="container-site pt-[60px] pb-[451px] text-center">
+      <div className="container-site pt-[60px] pb-[313px] text-center">
         <Appear animation="fadeIn" duration={0.7}>
           <p className="text-[20px] font-bold text-navy-900">
             {partnership.heading}
@@ -28,6 +30,14 @@ export default function PartnershipInquiry() {
           <InquiryForm />
         </div>
       </div>
+
+      {/* 하단 무한 슬라이드 — 원본 slide_05 갤러리 (풀 블리드 166px) */}
+      <InfiniteSlider
+        images={partnerStrip}
+        itemHeight={166}
+        itemWidth={216}
+        duration={36}
+      />
     </section>
   );
 }

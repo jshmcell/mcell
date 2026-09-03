@@ -6,8 +6,9 @@ import { useImageViewer } from "@/components/ui/ImageViewer";
 import { products, type Product } from "@/data/mcell";
 
 /**
- * 제품 정보 — 원본: 3열 이미지 갤러리(캡션은 라이트박스에 표시),
- * 컨테이너 1037px, 이미지 326x373
+ * 제품 정보 — 원본: 3열 갤러리(컨테이너 1037), 이미지 324x183 +
+ * 텍스트 블록(타이틀 14px #212121, 설명 12px #999),
+ * 호버 시 카드 전체가 20px 상승 + 그림자(0.5s), 클릭 시 뷰어(캡션 표시)
  */
 export default function Products() {
   const openViewer = useImageViewer();
@@ -19,7 +20,7 @@ export default function Products() {
 
   return (
     <section className="bg-white">
-      <div className="container-site pt-[109px] pb-[132px] text-center">
+      <div className="container-site pt-[109px] pb-[105px] text-center">
         <Appear animation="fadeIn" duration={0.7}>
           <p className="text-[20px] font-bold text-navy-900">제품 정보</p>
           <h2 className="text-[30px] font-bold text-ink">
@@ -31,24 +32,36 @@ export default function Products() {
           </p>
         </Appear>
 
-        <Appear className="mx-auto mt-[30px] max-w-[1068px]">
-          <div className="grid grid-cols-1 gap-y-[15px] sm:grid-cols-3 sm:gap-[10px]">
+        <Appear className="mx-auto mt-[30px] max-w-[1067px]">
+          <div className="grid grid-cols-1 sm:grid-cols-3">
             {products.map((product, i) => (
               <button
                 key={product.name}
                 type="button"
                 aria-label={`${product.name} 크게 보기`}
                 onClick={() => openViewer(viewerImages, i)}
-                className="cursor-pointer p-[15px]"
+                className="group cursor-pointer p-[15px]"
               >
-                <SmartImage
-                  src={product.thumb}
-                  alt={product.name}
-                  width={326}
-                  height={361}
-                  className="h-[263px] w-full object-cover md-header:h-[361px]"
-                  sizes="(min-width: 992px) 340px, 100vw"
-                />
+                <div className="relative bottom-0 transition-all duration-500 group-hover:bottom-[20px] group-hover:shadow-[0_0_20px_#00000026]">
+                  <div className="h-[183px] w-full overflow-hidden">
+                    <SmartImage
+                      src={product.thumb}
+                      alt={product.name}
+                      width={324}
+                      height={183}
+                      className="h-[183px] w-full object-cover"
+                      sizes="(min-width: 640px) 340px, 100vw"
+                    />
+                  </div>
+                  <div className="w-full p-[10px] px-0 text-left">
+                    <p className="text-[14px] font-medium text-[#212121]">
+                      {product.name}
+                    </p>
+                    <p className="mt-[2px] text-[12px] leading-[1.7] text-[#999999]">
+                      {product.description}
+                    </p>
+                  </div>
+                </div>
               </button>
             ))}
           </div>

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import ViewableImage from "@/components/ui/ViewableImage";
-import InquiryForm from "@/components/forms/InquiryForm";
+import PartnershipInquiry from "@/components/mcell/PartnershipInquiry";
 import { oemBanner, oemBlocks, rnd, oemProof, proof } from "@/data/mcell";
-import { partnership } from "@/data/partnership";
 import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
@@ -158,27 +157,8 @@ export default function OemOdmPage() {
         </div>
       </section>
 
-      {/* PARTNERSHIP INQUIRY */}
-      <section className="bg-[#f7f7f7]">
-        <div className="container-site pt-[91px] pb-[451px] text-center">
-          <Appear animation="fadeIn" duration={0.7}>
-            <p className="text-[20px] font-bold text-navy-900">
-              {partnership.heading}
-            </p>
-            <h2 className="text-[30px] font-bold text-ink">
-              {partnership.title}
-            </h2>
-            <div className="mt-[6px] text-[18px] leading-[2] text-ink">
-              {partnership.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-          </Appear>
-          <div className="mt-[20px]">
-            <InquiryForm />
-          </div>
-        </div>
-      </section>
+      {/* PARTNERSHIP INQUIRY (+ 하단 무한 슬라이드) */}
+      <PartnershipInquiry />
     </>
   );
 }
