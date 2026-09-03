@@ -1,7 +1,8 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
-import type { SVGProps } from "react";
-import { company } from "@/data/site";
+import type { ComponentType, SVGProps } from "react";
+import { company as defaultCompany } from "@/data/site";
+import type { ResolvedSiteSettings } from "@/lib/settings";
 
 function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -36,13 +37,34 @@ function YouTubeIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-const socialLinks = [
-  { label: "Facebook", href: "#", Icon: FacebookIcon },
-  { label: "Instagram", href: "#", Icon: InstagramIcon },
-  { label: "YouTube", href: "#", Icon: YouTubeIcon },
+const socialIconMap: Record<
+  string,
+  ComponentType<SVGProps<SVGSVGElement>>
+> = {
+  Facebook: FacebookIcon,
+  Instagram: InstagramIcon,
+  YouTube: YouTubeIcon,
+};
+
+const defaultSocials: ResolvedSiteSettings["socials"] = [
+  { label: "Facebook", href: "#" },
+  { label: "Instagram", href: "#" },
+  { label: "YouTube", href: "#" },
 ];
 
-export default function Footer() {
+export default function Footer({
+  settings,
+}: {
+  settings?: ResolvedSiteSettings;
+}) {
+  const company = settings?.company ?? defaultCompany;
+  const socialLinks = (settings?.socials ?? defaultSocials)
+    .map((s) => ({
+      label: s.label,
+      href: s.href,
+      Icon: socialIconMap[s.label],
+    }))
+    .filter((s) => s.Icon);
   return (
     <footer className="bg-[#242424]">
       <div className="container-site flex flex-col items-stretch pb-[20px] pt-[29px] lg:flex-row lg:justify-between lg:pb-[45px] lg:pt-[50px]">

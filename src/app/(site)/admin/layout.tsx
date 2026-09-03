@@ -14,6 +14,7 @@ const tabs = [
   { href: "/admin/inquiries", label: "문의 관리" },
   { href: "/admin/boards", label: "게시판 관리" },
   { href: "/admin/pages", label: "페이지 콘텐츠" },
+  { href: "/admin/settings", label: "사이트 설정" },
 ];
 
 export default async function AdminLayout({

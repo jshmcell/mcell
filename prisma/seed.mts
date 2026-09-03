@@ -108,7 +108,31 @@ async function main() {
     console.log("SUPERUSER_EMAIL not set — skipping");
   }
 
-  // 2. Board posts (idempotent: skip if board already has rows)
+  // 2. Site settings defaults (idempotent: only insert keys that are absent)
+  {
+    const defaults: Array<[string, string, "company" | "social", string, string]> = [
+      ["company.name", "엠셀", "company", "회사명", "string"],
+      ["company.address", "본점 ) 경기도 성남시 수정구 달래내로 46 성남글로벌융합센터 A401호 Mcell", "company", "본점 주소", "textarea"],
+      ["company.lab", "연구실 ) 경기도 안성시 삼죽면 덕계실2길 64", "company", "연구실 주소", "textarea"],
+      ["company.tel", "+8270-4333-5233", "company", "전화번호", "tel"],
+      ["company.fax", "+82-50-4180-9916", "company", "팩스", "tel"],
+      ["company.email", "contact@mcell.co.kr", "company", "이메일", "email"],
+      ["social.facebook", "#", "social", "Facebook", "url"],
+      ["social.instagram", "#", "social", "Instagram", "url"],
+      ["social.youtube", "#", "social", "YouTube", "url"],
+    ];
+    for (const [key, value, group, label, kind] of defaults) {
+      const exists = await prisma.siteSetting.findUnique({ where: { key } });
+      if (!exists) {
+        await prisma.siteSetting.create({
+          data: { key, value, group, label, kind },
+        });
+      }
+    }
+    console.log("site settings: ensured defaults");
+  }
+
+  // 3. Board posts (idempotent: skip if board already has rows)
   for (const [board, posts] of staticPosts) {
     const count = await prisma.boardPost.count({ where: { board } });
     if (count > 0) {

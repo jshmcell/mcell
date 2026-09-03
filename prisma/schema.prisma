@@ -143,6 +143,20 @@ model Verification {
   @@map("verification")
 }
 
+/// 사이트 설정 — 회사/연락처/소셜 등 관리자 편집 가능 키.
+/// value 가 비어 있으면 src/data/site.ts 의 기본값이 사용된다.
+model SiteSetting {
+  key       String   @id // "company.name" | "company.address" | ... | "social.facebook"
+  group     String   // "company" | "social"
+  label     String
+  value     String   @default("")
+  kind      String   @default("string") // "string" | "textarea" | "url" | "email" | "tel"
+  updatedBy String?
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("site_setting")
+}
+
 /// 동의 감사 기록 (이용약관/개인정보/14세 — 가입 시점 스냅샷)
 model UserConsent {
   id       String   @id @default(cuid())

@@ -16,23 +16,40 @@ export type HeaderUser = {
   image: string | null;
 };
 
-export default function Header({ user }: { user?: HeaderUser | null }) {
+export type HeaderSettings = {
+  companyName: string;
+};
+
+export default function Header({
+  user,
+  settings,
+}: {
+  user?: HeaderUser | null;
+  settings?: HeaderSettings | null;
+}) {
+  const companyName = settings?.companyName || company.name;
   return (
     <>
       {/* PC: always navy, in normal flow, sticks to top on scroll */}
       <div className="hidden md-header:block">
-        <PcHeader user={user ?? null} />
+        <PcHeader user={user ?? null} companyName={companyName} />
       </div>
       {/* Mobile: white bar + navy chip nav, in normal flow */}
       <div className="md-header:hidden">
-        <MobileHeader />
+        <MobileHeader companyName={companyName} />
         <MobileChipNav />
       </div>
     </>
   );
 }
 
-function PcHeader({ user }: { user: HeaderUser | null }) {
+function PcHeader({
+  user,
+  companyName,
+}: {
+  user: HeaderUser | null;
+  companyName: string;
+}) {
   const searchOpen = useUiStore((s) => s.searchOpen);
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const pathname = usePathname();
@@ -45,10 +62,10 @@ function PcHeader({ user }: { user: HeaderUser | null }) {
       style={{ height: HEADER_HEIGHT }}
     >
       <div className="container-wide flex h-full items-center">
-        <Link href="/" className="shrink-0" aria-label={company.name}>
+        <Link href="/" className="shrink-0" aria-label={companyName}>
           <SmartImage
             src={company.logoWhite}
-            alt={company.name}
+            alt={companyName}
             width={129}
             height={48}
             priority
@@ -179,7 +196,7 @@ function PcHeader({ user }: { user: HeaderUser | null }) {
   );
 }
 
-function MobileHeader() {
+function MobileHeader({ companyName }: { companyName: string }) {
   const toggleMobileMenu = useUiStore((s) => s.toggleMobileMenu);
   const toggleSearch = useUiStore((s) => s.toggleSearch);
   const searchOpen = useUiStore((s) => s.searchOpen);
@@ -210,12 +227,12 @@ function MobileHeader() {
 
         <Link
           href="/"
-          aria-label={company.name}
+          aria-label={companyName}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <SmartImage
             src={company.logoColor}
-            alt={company.name}
+            alt={companyName}
             width={100}
             height={37}
             priority
