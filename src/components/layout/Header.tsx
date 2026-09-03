@@ -120,9 +120,23 @@ function PcHeader({ user }: { user: HeaderUser | null }) {
           <div className="flex items-center text-[14px] text-white">
             {user ? (
               <>
-                <span className="max-w-[120px] truncate" title={user.name}>
+                <Link
+                  href="/account"
+                  className="max-w-[120px] truncate transition-colors duration-300 hover:text-[#e5e5e5]"
+                  title={user.name}
+                >
                   {user.name}님
-                </span>
+                </Link>
+                <span
+                  className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
+                  aria-hidden
+                />
+                <Link
+                  href="/account"
+                  className="transition-colors duration-300 hover:text-[#e5e5e5]"
+                >
+                  마이페이지
+                </Link>
                 <span
                   className="mx-[12.5px] inline-block h-[11px] w-px bg-[#f6f6f6]/60"
                   aria-hidden

@@ -48,15 +48,24 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
               <p className="text-[14px] text-white">
                 {user.name}님, 안녕하세요.
               </p>
-              <form action={signOutAction}>
-                <button
-                  type="submit"
+              <div className="mt-2 flex items-center gap-2">
+                <Link
+                  href="/account"
                   onClick={() => toggleMobileMenu(false)}
-                  className="mt-2 inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
+                  className="inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
                 >
-                  로그아웃
-                </button>
-              </form>
+                  마이페이지
+                </Link>
+                <form action={signOutAction}>
+                  <button
+                    type="submit"
+                    onClick={() => toggleMobileMenu(false)}
+                    className="inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
+                  >
+                    로그아웃
+                  </button>
+                </form>
+              </div>
             </>
           ) : (
             <>
