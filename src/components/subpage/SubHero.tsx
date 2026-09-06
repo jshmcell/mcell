@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { NavChild } from "@/data/site";
 import { navItems } from "@/data/site";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
 import Appear from "@/components/ui/Appear";
 import { cn } from "@/lib/cn";
 
@@ -13,13 +15,14 @@ interface SubHeroProps {
   compact?: boolean;
 }
 
-export default function SubHero({
+export default async function SubHero({
   groupLabel,
   title,
   children,
   currentHref,
   compact = false,
 }: SubHeroProps) {
+  const locale = await getLocale();
   const items =
     children ?? navItems.find((n) => n.label === groupLabel)?.children ?? [];
   const currentItem = items.find((item) => item.href === currentHref);
@@ -57,7 +60,7 @@ export default function SubHero({
                   return (
                     <li key={item.href}>
                       <Link
-                        href={item.href}
+                        href={localizeHref(item.href, locale)}
                         aria-current={active ? "page" : undefined}
                         className={cn(
                           "mr-0 flex items-center rounded-full px-[16px] py-[4px] text-[13px] leading-[21px] transition-colors duration-300 md-header:mr-[5px] md-header:text-[15px] md-header:leading-[24px]",
@@ -85,7 +88,7 @@ export default function SubHero({
             <ol className="flex items-start text-[13px] leading-[21px]">
               <li>
                 <Link
-                  href={groupHref}
+                  href={localizeHref(groupHref, locale)}
                   className="text-[13px] leading-[21px] text-ink/70 transition-colors duration-300 hover:text-ink"
                 >
                   {groupLabel}
@@ -104,7 +107,7 @@ export default function SubHero({
                     <path d="m1 1 4 5-4 5" />
                   </svg>
                   <Link
-                    href={currentItem.href}
+                    href={localizeHref(currentItem.href, locale)}
                     aria-current="page"
                     className="pl-[5px] text-[13px] leading-[21px] text-navy-900"
                   >

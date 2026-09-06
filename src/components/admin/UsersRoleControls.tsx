@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { setUserRole } from "@/lib/actions/admin-users";
+import { useLocale } from "@/i18n/client";
+import { adminDict } from "@/i18n/admin";
 
 /**
  * 권한 관리 컨트롤:
@@ -21,12 +23,13 @@ export default function UsersRoleControls({
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+  const t = adminDict[useLocale()].roleControls;
 
   function change(next: "NORMAL" | "ADMIN") {
     setMessage(null);
     startTransition(async () => {
       const res = await setUserRole(email, next);
-      if (!res.ok) setMessage(res.message ?? "실패");
+      if (!res.ok) setMessage(res.message ?? t.failed);
       else router.refresh();
     });
   }
@@ -40,11 +43,11 @@ export default function UsersRoleControls({
           onClick={() => change("ADMIN")}
           className="h-[28px] rounded-[3px] border border-navy-900/30 px-2 text-[12px] text-navy-900 transition-colors hover:bg-navy-900 hover:text-white disabled:opacity-50"
         >
-          {pending ? "처리 중..." : "관리자로 승격"}
+          {pending ? t.processing : t.promote}
         </button>
       ) : (
         <>
-          <span className="text-[12px] text-ink/40">관리자</span>
+          <span className="text-[12px] text-ink/40">{t.adminBadge}</span>
           {isSuperuserActor && (
             <button
               type="button"
@@ -52,7 +55,7 @@ export default function UsersRoleControls({
               onClick={() => change("NORMAL")}
               className="h-[28px] rounded-[3px] border border-black/15 px-2 text-[12px] text-ink/70 transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d] disabled:opacity-50"
             >
-              {pending ? "처리 중..." : "강등"}
+              {pending ? t.processing : t.demote}
             </button>
           )}
         </>

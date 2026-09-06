@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { getLocale } from "@/i18n/server";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -21,9 +22,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
   return (
-    <html lang="ko" className={`${pretendard.variable} h-full antialiased`}>
+    <html lang={locale} className={`${pretendard.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

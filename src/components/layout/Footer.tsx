@@ -2,6 +2,8 @@ import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import type { ComponentType, SVGProps } from "react";
 import { company as defaultCompany } from "@/data/site";
+import { chromeDict } from "@/i18n/chrome";
+import { localizeHref, type Locale } from "@/i18n/config";
 import type { ResolvedSiteSettings } from "@/lib/settings";
 
 function FacebookIcon(props: SVGProps<SVGSVGElement>) {
@@ -54,9 +56,12 @@ const defaultSocials: ResolvedSiteSettings["socials"] = [
 
 export default function Footer({
   settings,
+  locale = "ko",
 }: {
   settings?: ResolvedSiteSettings;
+  locale?: Locale;
 }) {
+  const t = chromeDict[locale];
   const company = settings?.company ?? defaultCompany;
   const socialLinks = (settings?.socials ?? defaultSocials)
     .map((s) => ({
@@ -99,14 +104,17 @@ export default function Footer({
             ))}
           </div>
           <p className="mt-[18px] flex justify-end gap-[11px] text-[15px] leading-[18px] text-[#949494] lg:mt-[33px]">
-            <Link href="/policy" className="transition-colors hover:text-white">
-              이용약관
-            </Link>
             <Link
-              href="/privacy"
+              href={localizeHref("/policy", locale)}
               className="transition-colors hover:text-white"
             >
-              개인정보처리방침
+              {t.footer.terms}
+            </Link>
+            <Link
+              href={localizeHref("/privacy", locale)}
+              className="transition-colors hover:text-white"
+            >
+              {t.footer.privacy}
             </Link>
           </p>
         </div>

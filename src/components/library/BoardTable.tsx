@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import type { PublicPost } from "@/lib/boards";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 /**
  * 게시판 리스트 — 원본 /40·/45·/46 보드 위젯과 동일 (같은 위젯 재사용).
@@ -41,6 +43,7 @@ export default function BoardTable({
   boardKey: string;
 }) {
   const base = BOARD_BASE[boardKey];
+  const locale = useLocale();
 
   return (
     <section className="bg-white">
@@ -51,7 +54,7 @@ export default function BoardTable({
             {label} <span>{posts.length}</span>
           </p>
           <Link
-            href="/login"
+            href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white md-header:hidden"
           >
             글쓰기
@@ -108,7 +111,7 @@ export default function BoardTable({
               </div>
               <div className="w-[700px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-left text-[14px] leading-[24px]">
                 <Link
-                  href={`${base}/${post.id}`}
+                  href={localizeHref(`${base}/${post.id}`, locale)}
                   className="line-clamp-1 text-[#363636] transition-colors hover:text-navy-900"
                 >
                   {post.title}
@@ -135,7 +138,7 @@ export default function BoardTable({
           {posts.map((post) => (
             <div key={post.id} className="pt-[11px] pb-[13px]">
               <Link
-                href={`${base}/${post.id}`}
+                href={localizeHref(`${base}/${post.id}`, locale)}
                 className="line-clamp-2 block text-[15px] leading-[25px] text-[#363636]"
               >
                 {post.title}
@@ -153,7 +156,7 @@ export default function BoardTable({
         {/* 하단 글쓰기 */}
         <div className="mt-[13px] flex justify-end md-header:mt-[15px]">
           <Link
-            href="/login"
+            href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             글쓰기

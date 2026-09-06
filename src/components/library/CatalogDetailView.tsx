@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import type { PublicPost } from "@/lib/boards";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 /**
  * 카달로그 게시물 뷰 — 원본 /40 뷰 페이지와 동일.
@@ -16,6 +18,7 @@ import type { PublicPost } from "@/lib/boards";
  * 공유: navigator.share (미지원 브라우저는 클립보드 복사), 인쇄: window.print().
  */
 export default function CatalogDetailView({ post }: { post: PublicPost }) {
+  const locale = useLocale();
   const onShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -185,7 +188,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
           />
           <div className="flex justify-end">
             <Link
-              href="/login"
+              href={localizeHref("/login", locale)}
               className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
             >
               작성
@@ -196,13 +199,13 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
         {/* 목록/글쓰기 */}
         <div className="mt-[20px] flex items-center justify-between">
           <Link
-            href="/library/catalog"
+            href={localizeHref("/library/catalog", locale)}
             className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             목록
           </Link>
           <Link
-            href="/login"
+            href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             글쓰기

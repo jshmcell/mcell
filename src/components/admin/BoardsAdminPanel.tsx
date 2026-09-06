@@ -8,6 +8,9 @@ import {
   deleteBoardPost,
   toggleBoardPostPublished,
 } from "@/lib/actions/admin-boards";
+import { useLocale } from "@/i18n/client";
+import { adminDict, type AdminDict } from "@/i18n/admin";
+import { localizeHref } from "@/i18n/config";
 
 type Attachment = { name: string; size: string; href: string };
 export type AdminPost = {
@@ -27,13 +30,6 @@ type BoardMeta = { key: string; label: string; base: string };
 const inputCls =
   "h-[40px] w-full rounded-[3px] border border-black/10 bg-white px-3 text-[14px] outline-none focus:border-navy-700";
 
-const BOARD_DEFAULT_CATEGORY: Record<string, string> = {
-  notices: "공지사항",
-  updates: "소식",
-  catalog: "카달로그",
-  portfolio: "포트폴리오",
-};
-
 export default function BoardsAdminPanel({
   boards,
   activeKey,
@@ -47,6 +43,8 @@ export default function BoardsAdminPanel({
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+  const locale = useLocale();
+  const t = adminDict[locale].boards;
 
   const active = boards.find((b) => b.key === activeKey)!;
 
@@ -54,7 +52,7 @@ export default function BoardsAdminPanel({
     setMessage(null);
     startTransition(async () => {
       const res = await fn();
-      if (!res.ok) setMessage(res.message ?? "실패");
+      if (!res.ok) setMessage(res.message ?? t.failed);
       else {
         setEditing(null);
         router.refresh();
@@ -69,7 +67,7 @@ export default function BoardsAdminPanel({
         {boards.map((b) => (
           <a
             key={b.key}
-            href={`/admin/boards?board=${b.key}`}
+            href={`${localizeHref("/admin/boards", locale)}?board=${b.key}`}
             className={
               b.key === activeKey
                 ? "rounded-[3px] bg-navy-900 px-4 py-2 text-[13px] text-white"
@@ -90,11 +88,12 @@ export default function BoardsAdminPanel({
       {/* 편집 폼 */}
       {editing && (
         <PostForm
+          t={t}
           boardLabel={active.label}
           initial={
             editing === "new"
               ? {
-                  category: BOARD_DEFAULT_CATEGORY[activeKey] ?? active.label,
+                  category: t.defaultCategory[activeKey] ?? active.label,
                   title: "",
                   body: "",
                   published: true,
@@ -131,7 +130,7 @@ export default function BoardsAdminPanel({
               onClick={() => setEditing("new")}
               className="h-[38px] rounded-[3px] bg-navy-900 px-4 text-[13px] text-white"
             >
-              새 게시물
+              {t.newPost}
             </button>
           </div>
 
@@ -139,11 +138,11 @@ export default function BoardsAdminPanel({
             <table className="w-full min-w-[760px] text-left text-[13px]">
               <thead>
                 <tr className="border-b border-black/10 bg-black/[0.02] text-ink/60">
-                  <th className="px-4 py-3 font-medium">제목</th>
-                  <th className="px-4 py-3 font-medium">상태</th>
-                  <th className="px-4 py-3 font-medium">작성일</th>
-                  <th className="px-4 py-3 font-medium">조회</th>
-                  <th className="px-4 py-3 font-medium">관리</th>
+                  <th className="px-4 py-3 font-medium">{t.thTitle}</th>
+                  <th className="px-4 py-3 font-medium">{t.thStatus}</th>
+                  <th className="px-4 py-3 font-medium">{t.thDate}</th>
+                  <th className="px-4 py-3 font-medium">{t.thViews}</th>
+                  <th className="px-4 py-3 font-medium">{t.thManage}</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,7 +161,7 @@ export default function BoardsAdminPanel({
                         onClick={() =>
                           startTransition(async () => {
                             const res = await toggleBoardPostPublished(p.id, !p.published);
-                            if (!res.ok) setMessage(res.message ?? "실패");
+                            if (!res.ok) setMessage(res.message ?? t.failed);
                             else router.refresh();
                           })
                         }
@@ -172,7 +171,7 @@ export default function BoardsAdminPanel({
                             : "rounded-[3px] bg-black/5 px-2 py-0.5 text-[12px] text-ink/50"
                         }
                       >
-                        {p.published ? "공개" : "숨김"}
+                        {p.published ? t.published : t.hidden}
                       </button>
                     </td>
                     <td className="px-4 py-3 text-ink/60">{p.createdAt}</td>
@@ -184,22 +183,22 @@ export default function BoardsAdminPanel({
                           onClick={() => setEditing(p)}
                           className="h-[28px] rounded-[3px] border border-black/15 px-2 text-[12px] text-ink hover:border-navy-700 hover:text-navy-900"
                         >
-                          수정
+                          {t.edit}
                         </button>
                         <button
                           type="button"
                           disabled={pending}
                           onClick={() => {
-                            if (!confirm("이 게시물을 삭제할까요?")) return;
+                            if (!confirm(t.confirmDelete)) return;
                             startTransition(async () => {
                               const res = await deleteBoardPost(p.id);
-                              if (!res.ok) setMessage(res.message ?? "실패");
+                              if (!res.ok) setMessage(res.message ?? t.failed);
                               else router.refresh();
                             });
                           }}
                           className="h-[28px] rounded-[3px] border border-black/15 px-2 text-[12px] text-ink/70 hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
                         >
-                          삭제
+                          {t.del}
                         </button>
                       </div>
                     </td>
@@ -208,7 +207,7 @@ export default function BoardsAdminPanel({
                 {posts.length === 0 && (
                   <tr>
                     <td colSpan={5} className="px-4 py-8 text-center text-ink/50">
-                      게시물이 없습니다. [새 게시물]로 추가하세요.
+                      {t.empty}
                     </td>
                   </tr>
                 )}
@@ -222,12 +221,14 @@ export default function BoardsAdminPanel({
 }
 
 function PostForm({
+  t,
   boardLabel,
   initial,
   pending,
   onSave,
   onCancel,
 }: {
+  t: AdminDict["boards"];
   boardLabel: string;
   initial: {
     category: string;
@@ -276,7 +277,7 @@ function PostForm({
     >
       <div className="flex items-center justify-between">
         <h2 className="text-[15px] font-bold text-ink">
-          {boardLabel} — 게시물 {initial.title ? "수정" : "작성"}
+          {boardLabel} — {initial.title ? t.formEdit : t.formNew}
         </h2>
         <label className="flex cursor-pointer items-center gap-2 text-[13px] text-ink">
           <input
@@ -285,20 +286,20 @@ function PostForm({
             onChange={(e) => setPublished(e.target.checked)}
             className="h-[15px] w-[15px] accent-navy-900"
           />
-          공개
+          {t.published}
         </label>
       </div>
 
       <input
         className={inputCls}
-        placeholder="카테고리 (예: 공지사항)"
+        placeholder={t.categoryPh}
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         required
       />
       <input
         className={inputCls}
-        placeholder="제목"
+        placeholder={t.titlePh}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
@@ -306,7 +307,7 @@ function PostForm({
       <textarea
         rows={10}
         className="w-full rounded-[3px] border border-black/10 bg-white p-3 text-[14px] leading-6 outline-none focus:border-navy-700"
-        placeholder="본문 (HTML 허용)"
+        placeholder={t.bodyPh}
         value={body}
         onChange={(e) => setBody(e.target.value)}
       />
@@ -314,19 +315,19 @@ function PostForm({
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
         <input
           className={inputCls}
-          placeholder="첨부파일 이름"
+          placeholder={t.attNamePh}
           value={attName}
           onChange={(e) => setAttName(e.target.value)}
         />
         <input
           className={inputCls}
-          placeholder="크기 표시 (예: 14295KB)"
+          placeholder={t.attSizePh}
           value={attSize}
           onChange={(e) => setAttSize(e.target.value)}
         />
         <input
           className={inputCls}
-          placeholder="파일 경로 (예: /assets/pdf/mcell-catalog.pdf)"
+          placeholder={t.attHrefPh}
           value={attHref}
           onChange={(e) => setAttHref(e.target.value)}
         />
@@ -338,14 +339,14 @@ function PostForm({
           disabled={pending}
           className="h-[40px] rounded-[3px] bg-navy-900 px-6 text-[13px] text-white disabled:opacity-50"
         >
-          {pending ? "처리 중..." : "저장"}
+          {pending ? t.processing : t.save}
         </button>
         <button
           type="button"
           onClick={onCancel}
           className="h-[40px] rounded-[3px] border border-black/15 px-6 text-[13px] text-ink hover:bg-black/5"
         >
-          취소
+          {t.cancel}
         </button>
       </div>
     </form>

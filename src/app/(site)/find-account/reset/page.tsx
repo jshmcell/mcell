@@ -7,12 +7,15 @@ import PasswordInput from "@/components/auth/PasswordInput";
 import Button from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
 import { PASSWORD_HINT } from "@/lib/auth-schemas";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 const inputCls =
   "h-[46px] w-full border border-black/15 px-4 text-[14px] outline-none transition-colors placeholder:text-ink/40 focus:border-navy-700";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const locale = useLocale();
   const token = useSearchParams().get("token") ?? "";
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -65,7 +68,7 @@ export default function ResetPasswordPage() {
               type="button"
               className="mt-6 h-[46px] w-full"
               onClick={() => {
-                router.push("/login");
+                router.push(localizeHref("/login", locale));
                 router.refresh();
               }}
             >
@@ -77,7 +80,7 @@ export default function ResetPasswordPage() {
             올바르지 않은 접근입니다.
             <br />
             <a
-              href="/find-account"
+              href={localizeHref("/find-account", locale)}
               className="text-navy-900 underline-offset-4 hover:underline"
             >
               비밀번호 찾기

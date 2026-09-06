@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUiStore } from "@/lib/store";
-import { navItems } from "@/data/site";
+import { LocaleMenu, useLocale } from "@/i18n/client";
+import { chromeDict } from "@/i18n/chrome";
+import {
+  localizeHref,
+  localizedNavItems,
+  stripLocalePrefix,
+} from "@/i18n/config";
 import { cn } from "@/lib/cn";
 import { signOutAction } from "@/lib/actions/signout";
 import type { HeaderUser } from "@/components/layout/Header";
@@ -13,9 +19,12 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
   const open = useUiStore((s) => s.mobileMenuOpen);
   const toggleMobileMenu = useUiStore((s) => s.toggleMobileMenu);
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = chromeDict[locale];
+  const navItems = localizedNavItems[locale];
   const [expanded, setExpanded] = useState<string | null>(null);
   // 현재 페이지 정확히 일치 항목만 하이라이트 (PC 헤더와 동일 규칙)
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) => stripLocalePrefix(pathname ?? "/") === href;
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -46,36 +55,46 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
           {user ? (
             <>
               <p className="text-[14px] text-white">
-                {user.name}님, 안녕하세요.
+                {user.name}
+                {t.header.helloSuffix}
               </p>
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-2 flex flex-wrap items-center gap-2">
                 <Link
-                  href="/account"
+                  href={localizeHref("/account", locale)}
                   onClick={() => toggleMobileMenu(false)}
                   className="inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
                 >
-                  마이페이지
+                  {t.header.mypage}
                 </Link>
+                {user.isAdmin && (
+                  <Link
+                    href={localizeHref("/admin", locale)}
+                    onClick={() => toggleMobileMenu(false)}
+                    className="inline-block rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-[12px] font-bold text-white"
+                  >
+                    {t.header.admin}
+                  </Link>
+                )}
                 <form action={signOutAction}>
                   <button
                     type="submit"
                     onClick={() => toggleMobileMenu(false)}
                     className="inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
                   >
-                    로그아웃
+                    {t.header.logout}
                   </button>
                 </form>
               </div>
             </>
           ) : (
             <>
-              <p className="text-[14px] text-white">로그인이 필요합니다.</p>
+              <p className="text-[14px] text-white">{t.header.needLogin}</p>
               <Link
-                href="/login"
+                href={localizeHref("/login", locale)}
                 onClick={() => toggleMobileMenu(false)}
                 className="mt-2 inline-block rounded-sm border border-white/20 px-3 py-1.5 text-[12px] text-white"
               >
-                로그인
+                {t.header.login}
               </Link>
             </>
           )}
@@ -85,12 +104,12 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
           <ul>
             {navItems.map((item) => {
               const hasChildren = !!item.children?.length;
-              const isOpen = expanded === item.label;
+              const isOpen = expanded === item.href;
               return (
-                <li key={item.label}>
+                <li key={item.href}>
                   <div className="flex items-center">
                     <Link
-                      href={item.href}
+                      href={localizeHref(item.href, locale)}
                       onClick={() => toggleMobileMenu(false)}
                       className={cn(
                         "flex-1 px-5 py-[9px] text-[22px] text-white",
@@ -102,9 +121,9 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
                     {hasChildren && (
                       <button
                         type="button"
-                        aria-label={`${item.label} 하위메뉴 열기`}
+                        aria-label={`${item.label} ${t.header.openSubmenu}`}
                         aria-expanded={isOpen}
-                        onClick={() => setExpanded(isOpen ? null : item.label)}
+                        onClick={() => setExpanded(isOpen ? null : item.href)}
                         className="flex h-12 w-12 items-center justify-center text-white"
                       >
                         <svg
@@ -129,7 +148,7 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
                       {item.children!.map((child) => (
                         <li key={child.href}>
                           <Link
-                            href={child.href}
+                            href={localizeHref(child.href, locale)}
                             onClick={() => toggleMobileMenu(false)}
                             className={cn(
                               "block py-2 pl-[30px] pr-[50px] text-[21px] text-white",
@@ -148,12 +167,14 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
           </ul>
         </nav>
 
-        <button
-          type="button"
-          aria-label="메뉴 닫기"
-          onClick={() => toggleMobileMenu(false)}
-          className="sticky bottom-0 left-0 flex h-12 w-full items-center justify-center gap-1.5 bg-navy-900 text-[16px] text-white"
-        >
+        <div className="sticky bottom-0 left-0 flex w-full items-center justify-between bg-navy-900 px-5">
+          <LocaleMenu />
+          <button
+            type="button"
+            aria-label={t.header.closeMenu}
+            onClick={() => toggleMobileMenu(false)}
+            className="flex h-12 items-center justify-center gap-1.5 text-[16px] text-white"
+          >
           <svg
             width="16"
             height="16"
@@ -164,8 +185,9 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
           >
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
-          닫기
-        </button>
+          {t.close}
+          </button>
+        </div>
       </aside>
     </div>
   );

@@ -4,12 +4,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 const inputCls =
   "h-[46px] w-full border border-black/15 px-4 text-[14px] outline-none transition-colors placeholder:text-ink/40 focus:border-navy-700";
 
 export default function FindAccountPage() {
   const router = useRouter();
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -21,7 +24,7 @@ export default function FindAccountPage() {
       // Enumeration-safe: 응답은 항상 성공처럼 처리 (원본도 존재 여부 노출 안 함)
       await authClient.requestPasswordReset({
         email: email.trim(),
-        redirectTo: "/find-account/reset",
+        redirectTo: localizeHref("/find-account/reset", locale),
       });
     } finally {
       setSubmitting(false);
@@ -47,7 +50,7 @@ export default function FindAccountPage() {
               type="button"
               className="mt-6 h-[46px] w-full"
               onClick={() => {
-                router.push("/login");
+                router.push(localizeHref("/login", locale));
                 router.refresh();
               }}
             >
@@ -85,7 +88,7 @@ export default function FindAccountPage() {
         <p className="mt-6 text-center text-[13px] text-ink/60">
           계정이 없으신가요?{" "}
           <a
-            href="/signup"
+            href={localizeHref("/signup", locale)}
             className="text-navy-900 underline-offset-4 hover:underline"
           >
             회원가입

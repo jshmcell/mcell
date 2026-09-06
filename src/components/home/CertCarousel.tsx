@@ -5,15 +5,20 @@ import SmartImage from "@/components/ui/SmartImage";
 import useEmblaCarousel from "embla-carousel-react";
 import Reveal from "@/components/ui/Reveal";
 import { useImageViewerStore } from "@/lib/store";
-import { certifications } from "@/data/home";
+import { certifications as defaultContent } from "@/data/home";
+import type { ResolvedHome } from "@/lib/home-content";
 
-/** 라이트박스용 원본 이미지 목록 (인증서 전체) */
-const viewerImages = certifications.images.map((img) => ({
-  src: img.full,
-  alt: "엠셀 인증서",
-}));
-
-export default function CertCarousel() {
+export default function CertCarousel({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["certs"];
+}) {
+  const certifications = content;
+  /** 라이트박스용 원본 이미지 목록 (인증서 전체) */
+  const viewerImages = certifications.images.map((img) => ({
+    src: img.full,
+    alt: "엠셀 인증서",
+  }));
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "start",

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import SubHero from "@/components/subpage/SubHero";
 import Button, { ButtonLink } from "@/components/ui/Button";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
 import { getActor } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
 import { signOutAction } from "@/lib/actions/signout";
@@ -18,7 +20,8 @@ const itemLabelCls = "shrink-0 text-ink/60";
 
 export default async function AccountPage() {
   const actor = await getActor();
-  if (!actor) redirect("/login");
+  const locale = await getLocale();
+  if (!actor) redirect(localizeHref("/login", locale));
 
   // 내 문의 접수 이력 (파트너십 등)
   const myInquiries = await prisma.inquiry.findMany({
@@ -52,7 +55,10 @@ export default async function AccountPage() {
             {/* 대시보드 진입 (관리자만) */}
             {actor.isAdmin && (
               <div className="mt-8">
-                <ButtonLink href="/admin" className="h-[46px] px-8">
+                <ButtonLink
+                  href={localizeHref("/admin", locale)}
+                  className="h-[46px] px-8"
+                >
                   관리자 대시보드
                 </ButtonLink>
               </div>
@@ -108,7 +114,7 @@ export default async function AccountPage() {
                 </Button>
               </form>
               <Link
-                href="/find-account"
+                href={localizeHref("/find-account", locale)}
                 className="flex h-[46px] items-center px-6 text-sm text-ink/60 underline-offset-4 hover:underline"
               >
                 비밀번호 변경은 로그아웃 후 찾기 이용

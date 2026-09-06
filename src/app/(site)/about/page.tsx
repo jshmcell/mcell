@@ -5,12 +5,15 @@ import Appear from "@/components/ui/Appear";
 import { ButtonLink } from "@/components/ui/Button";
 import { ceo } from "@/data/about";
 import { contact } from "@/data/contact";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "About Us",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const locale = await getLocale();
   return (
     <>
       <SubHero groupLabel="About" title="About Us" currentHref="/about" />
@@ -59,7 +62,7 @@ export default function AboutPage() {
             </div>
             <Appear duration={2} className="md-header:self-center">
               <ButtonLink
-                href="/partnership"
+                href={localizeHref("/partnership", locale)}
                 variant="outline"
                 className="shrink-0 rounded-full border-white px-[50px] py-[12px] text-[17px] hover:bg-white/10"
               >

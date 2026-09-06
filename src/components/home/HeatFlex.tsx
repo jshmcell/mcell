@@ -1,9 +1,18 @@
 import SmartImage from "@/components/ui/SmartImage";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
-import { heatFlex } from "@/data/home";
+import { heatFlex as defaultContent } from "@/data/home";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function HeatFlex() {
+export default async function HeatFlex({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["heatFlex"];
+}) {
+  const heatFlex = content;
+  const locale = await getLocale();
   return (
     <section className="relative overflow-hidden">
       <div
@@ -33,7 +42,7 @@ export default function HeatFlex() {
           </Reveal>
           <div className="mt-[31px]">
             <ButtonLink
-              href={heatFlex.cta.href}
+              href={localizeHref(heatFlex.cta.href, locale)}
               variant="outline"
               className="h-[43px] rounded-[4px] px-[30px] py-[10px] text-[15px]"
             >
@@ -61,7 +70,7 @@ export default function HeatFlex() {
           <div className="mt-[24px]">
             <Reveal direction="up" duration={0.7} delay={0.3}>
               <ButtonLink
-                href={heatFlex.cta.href}
+                href={localizeHref(heatFlex.cta.href, locale)}
                 variant="outline"
                 className="h-[38px] rounded-[4px] px-[34px] py-[8px] text-[14px]"
               >

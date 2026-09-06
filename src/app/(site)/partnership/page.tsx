@@ -6,8 +6,10 @@ import InfiniteSlider from "@/components/ui/InfiniteSlider";
 import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { partnership } from "@/data/partnership";
+import { EN_PARTNERSHIP } from "@/data/content-en";
 import { partnerStrip, partnerStripFull, partnershipBadge } from "@/data/mcell";
-import { getPageContents } from "@/lib/content";
+import { getLocale } from "@/i18n/server";
+import { getContentRows, pickLines, pickText } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "제휴 및 문의",
@@ -23,12 +25,29 @@ export const dynamic = "force-dynamic";
  * 헤딩/타이틀은 관리자 페이지 콘텐츠 오버라이드 가능 (page_content).
  */
 export default async function PartnershipPage() {
-  const overrides = await getPageContents([
+  const locale = await getLocale();
+  const rows = await getContentRows([
     "partnership.heading",
     "partnership.title",
+    "partnership.lines",
+    "partnership.banner",
   ]);
-  const heading = overrides["partnership.heading"] || partnership.heading;
-  const title = overrides["partnership.title"] || partnership.title;
+  const heading = pickText(rows, "partnership.heading", locale, EN_PARTNERSHIP.heading ?? partnership.heading);
+  const title = pickText(
+    rows,
+    "partnership.title",
+    locale,
+    locale === "en" ? (EN_PARTNERSHIP.title ?? partnership.title) : partnership.title,
+  );
+  const lines = pickLines(
+    rows,
+    "partnership.lines",
+    locale,
+    locale === "en" && EN_PARTNERSHIP.lines
+      ? EN_PARTNERSHIP.lines.split(/\r?\n/)
+      : partnership.lines,
+  );
+  const banner = pickText(rows, "partnership.banner", locale, partnership.banner);
 
   return (
     <>
@@ -38,7 +57,7 @@ export default async function PartnershipPage() {
         currentHref="/partnership"
         compact
       />
-      <SubPageBanner image={partnership.banner} overlay />
+      <SubPageBanner image={banner} overlay />
 
       <section className="bg-[#f7f7f7]">
         <div className="container-site pt-[30px] text-center">
@@ -52,7 +71,7 @@ export default async function PartnershipPage() {
               {title}
             </h2>
             <div className="text-[15px] leading-[30px] text-ink md-header:text-[18px] md-header:leading-[30px]">
-              {partnership.lines.map((line) => (
+              {lines.map((line) => (
                 <p key={line}>{line}</p>
               ))}
             </div>

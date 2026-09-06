@@ -23,6 +23,14 @@ const oldRoutes: [string, string][] = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+      },
+    ],
+  },
   async redirects() {
     return oldRoutes.map(([source, destination]) => ({
       source,

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import { getLocale } from "@/i18n/server";
+import { adminDict } from "@/i18n/admin";
+import { localizeHref } from "@/i18n/config";
 import { getActor } from "@/lib/roles";
 
 export const metadata: Metadata = {
@@ -8,57 +12,64 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-const tabs = [
-  { href: "/admin", label: "현황", exact: true },
-  { href: "/admin/users", label: "회원 관리" },
-  { href: "/admin/inquiries", label: "문의 관리" },
-  { href: "/admin/boards", label: "게시판 관리" },
-  { href: "/admin/pages", label: "페이지 콘텐츠" },
-  { href: "/admin/settings", label: "사이트 설정" },
-];
-
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const actor = await getActor();
-  if (!actor) redirect("/login");
-  if (!actor.isAdmin) redirect("/account");
+  const locale = await getLocale();
+  const t = adminDict[locale];
+  if (!actor) redirect(localizeHref("/login", locale));
+  if (!actor.isAdmin) redirect(localizeHref("/account", locale));
 
-  const label = actor.isSuperuser ? "슈퍼관리자" : "관리자";
+  const label = actor.isSuperuser ? t.layout.superLabel : t.layout.adminLabel;
 
   return (
     <div className="min-h-[calc(100vh-108px)] bg-[#f7f7f7]">
-      <div className="container-site py-10">
+      <div className="px-4 py-6 md-header:px-8 md-header:py-10">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-[22px] font-bold text-ink">관리자 대시보드</h1>
+            <h1 className="text-[22px] font-bold text-ink">{t.layout.title}</h1>
             <p className="mt-1 text-[13px] text-ink/60">
               {actor.name} ({label}) · {actor.email}
             </p>
           </div>
           <Link
-            href="/account"
+            href={localizeHref("/account", locale)}
             className="text-[13px] text-ink/60 underline-offset-4 hover:underline"
           >
-            마이페이지로 돌아가기
+            {t.layout.backToAccount}
           </Link>
         </div>
 
-        <nav className="mt-6 flex flex-wrap gap-2 border-b border-black/10 pb-3">
-          {tabs.map((t) => (
-            <Link
-              key={t.href}
-              href={t.href}
-              className="rounded-[3px] border border-black/10 bg-white px-4 py-2 text-[13px] text-ink transition-colors hover:border-navy-700 hover:text-navy-900"
-            >
-              {t.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="mt-6 hidden md-header:mt-8 md-header:flex md-header:flex-row md-header:items-start md-header:gap-8">
+          <AdminSidebar />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
 
-        <div className="mt-8">{children}</div>
+        {/* 관리자는 데스크톱 전용 — 작은 화면에서는 안내만 표시 */}
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-[6px] border border-black/10 bg-white px-6 py-16 text-center md-header:hidden">
+          <svg
+            width="36"
+            height="36"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            className="text-ink/40"
+            aria-hidden
+          >
+            <rect x="2" y="4" width="20" height="13" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+          </svg>
+          <p className="text-[16px] font-bold text-ink">
+            {t.layout.desktopOnly}
+          </p>
+          <p className="max-w-[320px] text-[13px] leading-6 text-ink/60">
+            {t.layout.desktopOnlyHint}
+          </p>
+        </div>
       </div>
     </div>
   );

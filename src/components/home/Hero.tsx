@@ -2,10 +2,9 @@
 
 import SmartImage from "@/components/ui/SmartImage";
 import { motion } from "framer-motion";
-import { heroSlides } from "@/data/home";
+import { heroSlides, type HeroSlide } from "@/data/home";
 
-export default function Hero() {
-  const slide = heroSlides[0];
+export default function Hero({ slide = heroSlides[0] }: { slide?: HeroSlide }) {
 
   return (
     <>

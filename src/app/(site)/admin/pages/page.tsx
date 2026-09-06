@@ -1,17 +1,27 @@
 import { prisma } from "@/lib/prisma";
-import { CONTENT_KEYS } from "@/lib/content-keys";
-import PagesContentPanel from "@/components/admin/PagesContentPanel";
+import { CONTENT_DEFS, type ContentGroup } from "@/lib/content-registry";
+import PagesEditor, {
+  type ContentValues,
+} from "@/components/admin/PagesEditor";
 
-/** /admin/pages — 페이지 문구 관리 (DB 오버라이드) */
-export default async function AdminPagesPage() {
+/** /admin/pages — 페이지 콘텐츠 관리 (문구/이미지/영상, 언어별, 섹션 미리보기) */
+export default async function AdminPagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ group?: string }>;
+}) {
+  const { group } = await searchParams;
+  const activeGroup: ContentGroup =
+    group === "shop" || group === "partnership" ? group : "home";
+  const defs = CONTENT_DEFS.filter((d) => d.group === activeGroup);
+
   const rows = await prisma.pageContent.findMany();
-  const values: Record<string, string> = {};
-  for (const r of rows) values[r.key] = r.value;
+  const values: ContentValues = {};
+  for (const r of rows) {
+    const entry = (values[r.key] ??= {});
+    if (r.locale === "en") entry.en = r.value;
+    else entry.ko = r.value;
+  }
 
-  return (
-    <PagesContentPanel
-      defs={CONTENT_KEYS.map((k) => ({ key: k.key, label: k.label }))}
-      values={values}
-    />
-  );
+  return <PagesEditor group={activeGroup} defs={defs} values={values} />;
 }

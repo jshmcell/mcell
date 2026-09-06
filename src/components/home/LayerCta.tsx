@@ -1,8 +1,17 @@
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
-import { layerSection } from "@/data/home";
+import { layerSection as defaultContent } from "@/data/home";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function LayerCta() {
+export default async function LayerCta({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["layer"];
+}) {
+  const layerSection = content;
+  const locale = await getLocale();
   return (
     <section className="relative overflow-hidden">
       <div
@@ -38,16 +47,16 @@ export default function LayerCta() {
         {/* original: button is static on PC, fadeInUp 1.2s/0.3s on mobile */}
         <div className="mt-[30px] hidden md-header:block">
           <ButtonLink
-            href={layerSection.cta.href}
+            href={localizeHref(layerSection.cta.href, locale)}
             className="h-[43px] rounded-[4px] px-[30px] py-[10px] text-[15px]"
           >
             {layerSection.cta.label}
           </ButtonLink>
         </div>
         <div className="mt-[15px] text-center md-header:hidden">
-          <Reveal direction="up" duration={1.2} delay={0.3}>
-            <ButtonLink
-              href={layerSection.cta.href}
+            <Reveal direction="up" duration={1.2} delay={0.3}>
+              <ButtonLink
+                href={localizeHref(layerSection.cta.href, locale)}
               className="h-[38px] rounded-[2px] px-[30px] py-[8px] text-[14px]"
             >
               {layerSection.cta.label}

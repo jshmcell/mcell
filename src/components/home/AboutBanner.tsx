@@ -1,9 +1,18 @@
 import SmartImage from "@/components/ui/SmartImage";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
-import { aboutBanner } from "@/data/home";
+import { aboutBanner as defaultContent } from "@/data/home";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function AboutBanner() {
+export default async function AboutBanner({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["aboutBanner"];
+}) {
+  const aboutBanner = content;
+  const locale = await getLocale();
   return (
     <section className="relative overflow-hidden">
       <SmartImage
@@ -27,7 +36,7 @@ export default function AboutBanner() {
         {/* original: button has no entrance animation, sits flush right */}
         <div className="mt-[93px] flex justify-end md-header:mt-[71px]">
           <ButtonLink
-            href={aboutBanner.cta.href}
+            href={localizeHref(aboutBanner.cta.href, locale)}
             variant="outline"
             className="h-[42px] rounded-[4px] px-[40px] py-[10px] text-[14px]"
           >

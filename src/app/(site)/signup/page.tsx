@@ -8,11 +8,13 @@ import Button from "@/components/ui/Button";
 import { signupPolicyAgreement, signupPrivacyAgreement } from "@/data/auth";
 import { PASSWORD_HINT } from "@/lib/auth-schemas";
 import { checkEmailAvailability, signUpWithConsent } from "@/lib/actions/auth";
+import { useLocale } from "@/i18n/client";
 
 const inputCls =
   "h-[46px] w-full border border-black/15 px-4 text-[14px] outline-none transition-colors placeholder:text-ink/40 focus:border-navy-700";
 
 export default function SignupPage() {
+  const locale = useLocale();
   // Steps live in React state only (no searchparams) — refresh/deep-link
   // always lands on the agreement step, so the gate is structurally unskippable.
   const [step, setStep] = useState<"agreement" | "form">("agreement");
@@ -68,6 +70,7 @@ export default function SignupPage() {
       fd.set("policyAgree", String(policyAgree));
       fd.set("privacyAgree", String(privacyAgree));
       fd.set("age14Agree", String(age14Agree));
+      fd.set("locale", locale);
 
       const res = await signUpWithConsent(null, fd);
       // Action redirects on success; a returned value means failure.

@@ -1,18 +1,26 @@
 import { prisma } from "@/lib/prisma";
 
+export { pickLines, pickText, type ContentRows } from "@/lib/content-resolve";
+
+/** key → per-locale DB values (only keys that have overrides appear). */
+export type DbContentRows = Record<string, { ko?: string; en?: string }>;
+
 /**
- * 페이지 콘텐츠 오버라이드 조회 — key → value.
- * 값이 없는 키는 결과에 포함되지 않으므로 호출부가
- * `overrides[key] || dataFile기본값` 패턴으로 사용한다.
+ * 콘텐츠 오버라이드 조회 — 요청한 키들의 ko/en 값을 묶어서 반환.
+ * 호출부는 pickText/pickLines 로 `en → ko → 데이터 파일 기본값` 폴백을 적용한다.
  */
-export async function getPageContents(
+export async function getContentRows(
   keys: string[],
-): Promise<Record<string, string>> {
+): Promise<Record<string, { ko?: string; en?: string }>> {
   if (keys.length === 0) return {};
   const rows = await prisma.pageContent.findMany({
     where: { key: { in: keys } },
   });
-  const out: Record<string, string> = {};
-  for (const r of rows) out[r.key] = r.value;
+  const out: Record<string, { ko?: string; en?: string }> = {};
+  for (const r of rows) {
+    const entry = (out[r.key] ??= {});
+    if (r.locale === "en") entry.en = r.value;
+    else entry.ko = r.value;
+  }
   return out;
 }

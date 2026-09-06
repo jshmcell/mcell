@@ -3,12 +3,8 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { setInquiryStatus } from "@/lib/actions/admin-inquiries";
-
-const options = [
-  { value: "new", label: "미처리" },
-  { value: "in_progress", label: "처리중" },
-  { value: "done", label: "완료" },
-];
+import { useLocale } from "@/i18n/client";
+import { adminDict } from "@/i18n/admin";
 
 export default function InquiriesStatusControls({
   id,
@@ -20,13 +16,19 @@ export default function InquiriesStatusControls({
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+  const t = adminDict[useLocale()].inquiries;
+  const options = [
+    { value: "new", label: t.statusLabels.new },
+    { value: "in_progress", label: t.statusLabels.in_progress },
+    { value: "done", label: t.statusLabels.done },
+  ];
 
   function change(next: string) {
     if (next === status) return;
     setMessage(null);
     startTransition(async () => {
       const res = await setInquiryStatus(id, next);
-      if (!res.ok) setMessage(res.message ?? "실패");
+      if (!res.ok) setMessage(res.message ?? t.failed);
       else router.refresh();
     });
   }

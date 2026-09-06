@@ -5,12 +5,16 @@ import { useState } from "react";
 import PasswordInput from "@/components/auth/PasswordInput";
 import Button from "@/components/ui/Button";
 import { authClient } from "@/lib/auth-client";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 const inputCls =
   "h-[46px] w-full border border-black/15 px-4 text-[14px] outline-none transition-colors placeholder:text-ink/40 focus:border-navy-700";
 
 export default function LoginPage() {
   const router = useRouter();
+  const locale = useLocale();
+  const homeHref = localizeHref("/", locale);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // 원본: 로그인상태유지 기본 체크됨
@@ -25,7 +29,7 @@ export default function LoginPage() {
     const { error: authError } = await authClient.signIn.email({
       email: email.trim(),
       password,
-      callbackURL: "/",
+      callbackURL: homeHref,
       rememberMe,
     });
     setSubmitting(false);
@@ -34,7 +38,7 @@ export default function LoginPage() {
       setError("아이디 또는 비밀번호가 올바르지 않습니다.");
       return;
     }
-    router.push("/");
+    router.push(homeHref);
     router.refresh();
   }
 
@@ -109,7 +113,7 @@ export default function LoginPage() {
         <p className="mt-6 text-center text-[13px] text-ink/60">
           계정이 없으신가요?{" "}
           <a
-            href="/signup"
+            href={localizeHref("/signup", locale)}
             className="text-navy-900 underline-offset-4 hover:underline"
           >
             회원가입
@@ -117,7 +121,7 @@ export default function LoginPage() {
         </p>
         <p className="mt-2 text-center text-[13px] text-ink/50">
           <a
-            href="/find-account"
+            href={localizeHref("/find-account", locale)}
             className="underline-offset-4 hover:underline"
           >
             아이디 · 비밀번호 찾기

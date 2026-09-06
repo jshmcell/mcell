@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { getActor, isSuperuserEmail } from "@/lib/roles";
+import { getLocale } from "@/i18n/server";
+import { adminDict } from "@/i18n/admin";
+import { localizeHref } from "@/i18n/config";
 import UsersRoleControls from "@/components/admin/UsersRoleControls";
 
 /** /admin/users — 회원 목록 + 권한 관리 */
@@ -11,6 +14,8 @@ export default async function AdminUsersPage({
   const { q } = await searchParams;
   const actor = await getActor();
   if (!actor) return null;
+  const locale = await getLocale();
+  const t = adminDict[locale].users;
 
   const users = await prisma.user.findMany({
     where: q
@@ -34,19 +39,19 @@ export default async function AdminUsersPage({
 
   return (
     <div>
-      <form className="flex gap-2" action="/admin/users">
+      <form className="flex gap-2" action={localizeHref("/admin/users", locale)}>
         <input
           type="search"
           name="q"
           defaultValue={q ?? ""}
-          placeholder="이메일 또는 이름 검색"
+          placeholder={t.searchPlaceholder}
           className="h-[40px] w-[280px] rounded-[3px] border border-black/10 bg-white px-3 text-[14px] outline-none focus:border-navy-700"
         />
         <button
           type="submit"
           className="h-[40px] rounded-[3px] bg-navy-900 px-4 text-[13px] text-white"
         >
-          검색
+          {t.search}
         </button>
       </form>
 
@@ -54,11 +59,11 @@ export default async function AdminUsersPage({
         <table className="w-full min-w-[720px] text-left text-[13px]">
           <thead>
             <tr className="border-b border-black/10 bg-black/[0.02] text-ink/60">
-              <th className="px-4 py-3 font-medium">이메일</th>
-              <th className="px-4 py-3 font-medium">이름</th>
-              <th className="px-4 py-3 font-medium">권한</th>
-              <th className="px-4 py-3 font-medium">가입일</th>
-              <th className="px-4 py-3 font-medium">관리</th>
+              <th className="px-4 py-3 font-medium">{t.thEmail}</th>
+              <th className="px-4 py-3 font-medium">{t.thName}</th>
+              <th className="px-4 py-3 font-medium">{t.thRole}</th>
+              <th className="px-4 py-3 font-medium">{t.thJoined}</th>
+              <th className="px-4 py-3 font-medium">{t.thManage}</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +83,7 @@ export default async function AdminUsersPage({
                             : "rounded-[3px] bg-black/5 px-2 py-0.5 text-[12px] text-ink/70"
                       }
                     >
-                      {su ? "슈퍼관리자" : u.role === "ADMIN" ? "관리자" : "일반회원"}
+                      {su ? t.super : u.role === "ADMIN" ? t.admin : t.normal}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-ink/60">
@@ -86,7 +91,7 @@ export default async function AdminUsersPage({
                   </td>
                   <td className="px-4 py-3">
                     {su ? (
-                      <span className="text-[12px] text-ink/40">변경 불가</span>
+                      <span className="text-[12px] text-ink/40">{t.locked}</span>
                     ) : (
                       <UsersRoleControls
                         email={u.email}
@@ -101,7 +106,7 @@ export default async function AdminUsersPage({
             {users.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-ink/50">
-                  검색 결과가 없습니다.
+                  {t.empty}
                 </td>
               </tr>
             )}

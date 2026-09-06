@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { checkEmailSchema, signupSchema } from "@/lib/auth-schemas";
 import { AGREEMENT_VERSIONS } from "@/data/auth";
+import { isLocale, localizeHref } from "@/i18n/config";
 
 export type ActionState = {
   ok: boolean;
@@ -53,6 +54,8 @@ export async function signUpWithConsent(
   _prev: ActionState | null,
   formData: FormData,
 ): Promise<ActionState> {
+  const localeRaw = formData.get("locale");
+  const locale = isLocale(localeRaw) ? localeRaw : "ko";
   const raw = {
     email: formData.get("email"),
     password: formData.get("password"),
@@ -136,5 +139,5 @@ export async function signUpWithConsent(
     };
   }
 
-  redirect("/");
+  redirect(localizeHref("/", locale));
 }

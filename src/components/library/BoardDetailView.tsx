@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import type { PublicPost } from "@/lib/boards";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 const BOARD_BASE: Record<string, string> = {
   notices: "/news/notices",
@@ -31,6 +33,7 @@ export default function BoardDetailView({
   next: { id: string; title: string } | null;
 }) {
   const base = BOARD_BASE[boardKey];
+  const locale = useLocale();
 
   const onShare = async () => {
     const url = window.location.href;
@@ -122,7 +125,7 @@ export default function BoardDetailView({
         <div className="mt-[10px]">
           {prev && (
             <Link
-              href={`${base}/${prev.id}`}
+              href={localizeHref(`${base}/${prev.id}`, locale)}
               className="flex h-[44px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
               <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
@@ -133,7 +136,7 @@ export default function BoardDetailView({
           )}
           {next && (
             <Link
-              href={`${base}/${next.id}`}
+              href={localizeHref(`${base}/${next.id}`, locale)}
               className="flex h-[43px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
               <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
@@ -147,7 +150,7 @@ export default function BoardDetailView({
         {/* 목록 버튼 */}
         <div className="mt-[15px] flex justify-end">
           <Link
-            href={base}
+            href={localizeHref(base, locale)}
             className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
             목록

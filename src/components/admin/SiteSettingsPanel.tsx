@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { saveSiteSetting } from "@/lib/actions/admin-settings";
 import type { SiteSettingDef, SiteSettingKind } from "@/lib/site-settings";
+import { useLocale } from "@/i18n/client";
+import { adminDict } from "@/i18n/admin";
 
 const inputCls =
   "w-full rounded-[3px] border border-black/10 bg-white px-3 py-2 text-[14px] outline-none focus:border-navy-700";
@@ -14,6 +16,7 @@ function Field({
   saved,
   onDraft,
   onSave,
+  t,
 }: {
   def: SiteSettingDef;
   value: string;
@@ -21,6 +24,7 @@ function Field({
   saved: boolean;
   onDraft: (key: string, value: string) => void;
   onSave: (key: string) => void;
+  t: { save: string; saving: string; saved: string };
 }) {
   const multiline = def.kind === "textarea";
   return (
@@ -53,9 +57,9 @@ function Field({
           onClick={() => onSave(def.key)}
           className="h-[34px] rounded-[3px] bg-navy-900 px-4 text-[12px] text-white disabled:opacity-50"
         >
-          {pending ? "처리 중..." : "저장"}
+          {pending ? t.saving : t.save}
         </button>
-        {saved && <span className="text-[12px] text-[#1a9c46]">저장됨</span>}
+        {saved && <span className="text-[12px] text-[#1a9c46]">{t.saved}</span>}
       </div>
     </div>
   );
@@ -74,10 +78,7 @@ function inputType(kind: SiteSettingKind): string {
   }
 }
 
-const GROUP_LABELS: Record<string, string> = {
-  company: "회사 및 연락처 정보",
-  social: "소셜 링크",
-};
+const GROUP_ORDER = ["company", "social"] as const;
 
 export default function SiteSettingsPanel({
   defs,
@@ -90,14 +91,15 @@ export default function SiteSettingsPanel({
   const [savedKeys, setSavedKeys] = useState<Set<string>>(new Set());
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
+  const t = adminDict[useLocale()].settings;
 
-  const groups = ["company", "social"] as const;
+  const groups = GROUP_ORDER;
 
   function save(key: string) {
     setMessage(null);
     startTransition(async () => {
       const res = await saveSiteSetting(key, drafts[key] ?? "");
-      if (!res.ok) setMessage(res.message ?? "실패");
+      if (!res.ok) setMessage(res.message ?? t.failed);
       else setSavedKeys((s) => new Set(s).add(key));
     });
   }
@@ -115,7 +117,7 @@ export default function SiteSettingsPanel({
         return (
           <section key={group}>
             <h2 className="mb-3 text-[15px] font-bold text-ink">
-              {GROUP_LABELS[group]}
+              {t.groups[group]}
             </h2>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               {groupDefs.map((def) => (
@@ -134,16 +136,14 @@ export default function SiteSettingsPanel({
                     });
                   }}
                   onSave={save}
+                  t={t}
                 />
               ))}
             </div>
           </section>
         );
       })}
-      <p className="text-[12px] text-ink/50">
-        값이 비어 있으면 데이터 파일의 기본 문구가 표시됩니다. 입력한 값은 사이트
-        모든 페이지의 헤더·푸터에 반영됩니다.
-      </p>
+      <p className="text-[12px] text-ink/50">{t.footnote}</p>
     </div>
   );
 }

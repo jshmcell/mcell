@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/i18n/client";
+import { localizeHref } from "@/i18n/config";
 
 /**
  * 404 콘텐츠 — not-found.tsx는 서버 컴포넌트이므로 뒤로가기 버튼만 클라이언트 분리.
  */
 export default function NotFoundActions() {
+  const locale = useLocale();
   return (
     <div className="mt-[30px] flex items-center gap-[10px]">
       <Link
-        href="/"
+        href={localizeHref("/", locale)}
         className="flex h-[42px] w-[130px] items-center justify-center rounded-[2px] bg-[#363636] text-[13px] text-white transition-colors hover:bg-navy-900"
       >
         홈으로 가기

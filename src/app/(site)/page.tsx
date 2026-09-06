@@ -7,19 +7,25 @@ import CertCarousel from "@/components/home/CertCarousel";
 import AboutBanner from "@/components/home/AboutBanner";
 import Production from "@/components/home/Production";
 import HeatFlex from "@/components/home/HeatFlex";
+import { getLocale } from "@/i18n/server";
+import { getHomeContent } from "@/lib/home-content";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const locale = await getLocale();
+  const c = await getHomeContent(locale);
   return (
     <>
-      <Hero />
-      <TechIntro />
-      <FeatureGrid />
-      <LayerCta />
-      <Industries />
-      <CertCarousel />
-      <AboutBanner />
-      <Production />
-      <HeatFlex />
+      <Hero slide={c.hero[0]} />
+      <TechIntro content={c.tech} />
+      <FeatureGrid cards={c.features} />
+      <LayerCta content={c.layer} />
+      <Industries content={c.industries} />
+      <CertCarousel content={c.certs} />
+      <AboutBanner content={c.aboutBanner} />
+      <Production content={c.production} />
+      <HeatFlex content={c.heatFlex} />
     </>
   );
 }

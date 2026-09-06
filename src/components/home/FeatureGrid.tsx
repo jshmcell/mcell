@@ -1,10 +1,15 @@
 import Reveal from "@/components/ui/Reveal";
-import { featureCards } from "@/data/home";
+import { featureCards as defaultCards, type FeatureCard } from "@/data/home";
 
 // original stagger: card 1 = 0s, card 2 = 0.2s, then 0.1s steps
 const DELAYS = [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
 
-export default function FeatureGrid() {
+export default function FeatureGrid({
+  cards = defaultCards,
+}: {
+  cards?: FeatureCard[];
+}) {
+  const featureCards = cards;
   return (
     <section className="bg-navy-900">
       <div className="container-site pb-[19px] pt-[18px] md-header:pb-[110px] md-header:pt-[110px]">

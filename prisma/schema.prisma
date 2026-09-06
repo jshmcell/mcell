@@ -70,12 +70,17 @@ model BoardAttachment {
   @@map("board_attachment")
 }
 
-/// 페이지 콘텐츠 오버라이드 (관리자 수정 가능 문구; 없으면 TS 데이터 파일 기본값 사용)
+/// 페이지 콘텐츠 오버라이드 (관리자 수정 가능 문구/미디어; 없으면 TS 데이터 파일 기본값 사용)
+/// kind별 locale 규칙: text/textarea/image/video = "ko"/"en" 행 (en 비어 있으면 ko 폴백),
+/// url = 언어 공통이므로 "ko" 행 하나만 사용한다.
 model PageContent {
-  key       String   @id
+  key       String
+  locale    String   @default("ko")
   value     String
   updatedBy String?
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([key, locale])
   @@map("page_content")
 }
 

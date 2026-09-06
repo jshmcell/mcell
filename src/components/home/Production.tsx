@@ -1,8 +1,14 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
-import { production } from "@/data/home";
+import { production as defaultContent } from "@/data/home";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function Production() {
+export default function Production({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["production"];
+}) {
+  const production = content;
   return (
     <section className="bg-white">
       <div className="container-site pb-[48px] pt-[48px] md-header:pb-[95px] md-header:pt-[110px]">

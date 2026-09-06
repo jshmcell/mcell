@@ -1,9 +1,18 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
-import { industries } from "@/data/home";
+import { industries as defaultContent } from "@/data/home";
+import { getLocale } from "@/i18n/server";
+import { localizeHref } from "@/i18n/config";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function Industries() {
+export default async function Industries({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["industries"];
+}) {
+  const industries = content;
+  const locale = await getLocale();
   return (
     <section className="bg-[#f5f4f4]">
       <div className="container-site pb-[48px] pt-[102px] md-header:pb-[110px] md-header:pt-[110px]">
@@ -22,7 +31,7 @@ export default function Industries() {
               {industries.items.map((item) => (
                 <Link
                   key={item.label}
-                  href="/shop"
+                  href={localizeHref("/shop", locale)}
                   className="group relative block transition-transform duration-300 ease-out hover:-translate-y-[17px]"
                 >
                   {/* thumb ↔ full image crossfade on hover (imweb gallery behavior) */}

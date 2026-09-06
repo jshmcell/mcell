@@ -2,7 +2,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MobileDrawer from "@/components/layout/MobileDrawer";
 import ImageViewer from "@/components/ui/ImageViewer";
+import { getLocale } from "@/i18n/server";
 import { getCurrentUser } from "@/lib/session";
+import { getActor } from "@/lib/roles";
 import { getSiteSettings } from "@/lib/settings";
 
 export default async function SiteLayout({
@@ -10,15 +12,22 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
-  const settings = await getSiteSettings();
+  const [user, actor, settings, locale] = await Promise.all([
+    getCurrentUser(),
+    getActor(),
+    getSiteSettings(),
+    getLocale(),
+  ]);
+  const headerUser = user
+    ? { ...user, isAdmin: actor?.isAdmin ?? false }
+    : null;
 
   return (
     <>
-      <Header user={user} settings={{ companyName: settings.company.name }} />
-      <MobileDrawer user={user} />
+      <Header user={headerUser} settings={{ companyName: settings.company.name }} />
+      <MobileDrawer user={headerUser} />
       <main className="flex-1">{children}</main>
-      <Footer settings={settings} />
+      <Footer settings={settings} locale={locale} />
       <ImageViewer />
     </>
   );

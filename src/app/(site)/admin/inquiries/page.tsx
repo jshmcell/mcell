@@ -1,11 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import { getLocale } from "@/i18n/server";
+import { adminDict } from "@/i18n/admin";
+import { localizeHref } from "@/i18n/config";
 import InquiriesStatusControls from "@/components/admin/InquiriesStatusControls";
-
-const statusLabels: Record<string, string> = {
-  new: "미처리",
-  in_progress: "처리중",
-  done: "완료",
-};
 
 /** /admin/inquiries — 접수된 모든 폼 데이터 */
 export default async function AdminInquiriesPage({
@@ -14,6 +11,8 @@ export default async function AdminInquiriesPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status } = await searchParams;
+  const locale = await getLocale();
+  const t = adminDict[locale].inquiries;
   const where =
     status && ["new", "in_progress", "done"].includes(status)
       ? { status }
@@ -28,15 +27,14 @@ export default async function AdminInquiriesPage({
   return (
     <div>
       <div className="flex gap-2">
-        {[
-          { key: "", label: "전체" },
-          { key: "new", label: "미처리" },
-          { key: "in_progress", label: "처리중" },
-          { key: "done", label: "완료" },
-        ].map((f) => (
+        {t.filters.map((f) => (
           <a
             key={f.key}
-            href={f.key ? `/admin/inquiries?status=${f.key}` : "/admin/inquiries"}
+            href={
+              f.key
+                ? `${localizeHref("/admin/inquiries", locale)}?status=${f.key}`
+                : localizeHref("/admin/inquiries", locale)
+            }
             className={
               (status ?? "") === f.key
                 ? "rounded-[3px] bg-navy-900 px-4 py-2 text-[13px] text-white"
@@ -65,7 +63,7 @@ export default async function AdminInquiriesPage({
                         : "rounded-[3px] bg-[#1a9c46]/10 px-2 py-0.5 text-[12px] text-[#1a9c46]"
                   }
                 >
-                  {statusLabels[q.status] ?? q.status}
+                  {t.statusLabels[q.status] ?? q.status}
                 </span>
               </div>
               <span className="text-[12px] text-ink/50">
@@ -74,12 +72,12 @@ export default async function AdminInquiriesPage({
             </div>
 
             <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-[13px] sm:grid-cols-2">
-              <p><span className="text-ink/50">업체명: </span>{q.company ?? "—"}</p>
-              <p><span className="text-ink/50">담당자: </span>{q.manager ?? "—"}</p>
-              <p><span className="text-ink/50">연락처: </span>{q.phone ?? "—"}</p>
-              <p><span className="text-ink/50">이메일: </span>{q.email ?? "—"}</p>
-              <p className="sm:col-span-2"><span className="text-ink/50">주소: </span>{q.address ?? "—"}</p>
-              <p><span className="text-ink/50">OEM/ODM: </span>{q.oemType ?? "—"}</p>
+              <p><span className="text-ink/50">{t.company}</span>{q.company ?? "—"}</p>
+              <p><span className="text-ink/50">{t.manager}</span>{q.manager ?? "—"}</p>
+              <p><span className="text-ink/50">{t.phone}</span>{q.phone ?? "—"}</p>
+              <p><span className="text-ink/50">{t.email}</span>{q.email ?? "—"}</p>
+              <p className="sm:col-span-2"><span className="text-ink/50">{t.address}</span>{q.address ?? "—"}</p>
+              <p><span className="text-ink/50">{t.oem}</span>{q.oemType ?? "—"}</p>
             </div>
             {q.content && (
               <p className="mt-3 whitespace-pre-wrap rounded-[3px] bg-black/[0.02] p-3 text-[13px] leading-6 text-ink">
@@ -94,7 +92,7 @@ export default async function AdminInquiriesPage({
         ))}
         {inquiries.length === 0 && (
           <p className="rounded-[4px] border border-black/10 bg-white p-8 text-center text-[14px] text-ink/50">
-            문의 내역이 없습니다.
+            {t.empty}
           </p>
         )}
       </div>

@@ -1,8 +1,14 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Reveal from "@/components/ui/Reveal";
-import { techIntro } from "@/data/home";
+import { techIntro as defaultContent } from "@/data/home";
+import type { ResolvedHome } from "@/lib/home-content";
 
-export default function TechIntro() {
+export default function TechIntro({
+  content = defaultContent,
+}: {
+  content?: ResolvedHome["tech"];
+}) {
+  const techIntro = content;
   return (
     <section className="relative overflow-hidden">
       <div
