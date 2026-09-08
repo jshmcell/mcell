@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import SmartImage from "@/components/ui/SmartImage";
 import {
   HomeSectionPreview,
@@ -82,6 +82,70 @@ function aboutSectionOfKey(key: string) {
   if (key.startsWith("about.contact.banner.")) return "contactBanner";
   if (key.startsWith("about.contact.")) return "contact";
   return null;
+}
+
+/* ── 그룹별 페이지 구분 헤더 (편집 섹션 목록에만 시각적 구분 제공) ──────────── */
+
+interface PageDivider {
+  /** i18n/admin.ts content.pageLabels 키 */
+  labelKey: string;
+  route: string;
+  /** 이 페이지에 속하는 콘텐츠 키 prefix (섹션 목록 순회 시 page index 결정) */
+  prefixes: string[];
+}
+
+/** mcell → [메인 페이지, OEM/ODM 페이지] (섹션은 레지스트리 표시 순서와 동일) */
+const MCELL_PAGES: PageDivider[] = [
+  {
+    labelKey: "mcellMain",
+    route: "/mcell",
+    prefixes: [
+      "mcell.hero.",
+      "mcell.stats.",
+      "mcell.tech.",
+      "mcell.products.",
+      "mcell.comparisons.",
+      "mcell.industries.",
+      "mcell.cooperation.",
+      "mcell.platform.",
+    ],
+  },
+  {
+    labelKey: "mcellOem",
+    route: "/mcell/oem-odm",
+    prefixes: [
+      "mcell.oemBanner.",
+      "mcell.oemBlocks.",
+      "mcell.rnd.",
+      "mcell.oemProof.",
+      "mcell.proof.",
+    ],
+  },
+];
+
+/** about → [About, 연혁, 인증서, Contact] (섹션은 레지스트리 표시 순서와 동일) */
+const ABOUT_PAGES: PageDivider[] = [
+  {
+    labelKey: "aboutMain",
+    route: "/about",
+    prefixes: ["about.ceo.", "about.contact.banner."],
+  },
+  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history.", "about.historyImages."] },
+  { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs."] },
+  { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices."] },
+];
+
+/** 그룹 → 페이지 구분 정의 (미리보기 논리 없음 — 순수 표시 전용) */
+const GROUP_PAGES: Partial<Record<ContentGroup, PageDivider[]>> = {
+  mcell: MCELL_PAGES,
+  about: ABOUT_PAGES,
+};
+
+/** def.key → 소속 페이지 인덱스. 그룹에 페이지 정의가 없거나(단일 페이지 그룹) 매칭이 없으면 -1. */
+function pageIndexForGroup(group: ContentGroup, key: string): number {
+  const pages = GROUP_PAGES[group];
+  if (!pages) return -1;
+  return pages.findIndex((p) => p.prefixes.some((pfx) => key.startsWith(pfx)));
 }
 
 const inputCls =
@@ -605,14 +669,37 @@ export default function PagesEditor({
           </p>
         )}
         <div className="space-y-2">
-          {sections.map((sec) => {
+          {sections.map((sec, secIdx) => {
+            // mcell/about 그룹만 페이지 구분 헤더 표시 (단일 페이지 그룹은 기존 그대로)
+            const pageIdx =
+              pageIndexForGroup(group, sec.defs[0]?.key ?? "");
+            const prevSec = sections[secIdx - 1];
+            // 첫 섹션은 "이전 페이지 없음(-1)"으로 간주해 페이지 헤더도 표시한다
+            const prevPageIdx =
+              pageIdx < 0
+                ? pageIdx
+                : prevSec
+                  ? pageIndexForGroup(group, prevSec.defs[0]?.key ?? "")
+                  : -1;
+            const pages = GROUP_PAGES[group];
+            const showDivider = pageIdx >= 0 && pageIdx !== prevPageIdx;
+            const divider = showDivider && pages ? pages[pageIdx] : null;
             // 완전히 닫힌 상태 허용 — 열려 있는 첫 섹션만 표시, 모두 닫을 수 있음
             const open = openSection !== null && openSection === sec.key;
             return (
-              <div
-                key={sec.key}
-                className="overflow-hidden rounded-[4px] border border-black/10 bg-white"
-              >
+              <Fragment key={sec.key}>
+                {divider && (
+                  <div
+                    aria-hidden
+                    className="flex items-baseline gap-2 border-b border-black/5 px-1 pt-3 pb-2 text-[11px] font-bold tracking-wide text-ink/40 uppercase"
+                  >
+                    <span>{t.pageLabels[divider.labelKey]}</span>
+                    <span className="font-normal text-ink/30 normal-case">
+                      {divider.route}
+                    </span>
+                  </div>
+                )}
+                <div className="overflow-hidden rounded-[4px] border border-black/10 bg-white">
                 <button
                   type="button"
                   aria-expanded={open}
@@ -653,6 +740,7 @@ export default function PagesEditor({
                   </div>
                 )}
               </div>
+              </Fragment>
             );
           })}
         </div>

@@ -97,6 +97,8 @@ export interface AdminDict {
   content: {
     blurb: string;
     groups: Record<string, string>;
+    /** mcell/about 그룹의 페이지 구분 헤더 라벨 (key → localized label) */
+    pageLabels: Record<string, string>;
     kinds: Record<string, string>;
     ko: string;
     en: string;
@@ -252,6 +254,14 @@ const ko: AdminDict = {
       partnership: "제휴 및 문의",
       mcell: "기술력 소개",
       about: "회사 소개",
+    },
+    pageLabels: {
+      mcellMain: "메인 페이지",
+      mcellOem: "OEM/ODM 페이지",
+      aboutMain: "About 페이지",
+      aboutHistory: "연혁 페이지",
+      aboutCerts: "인증서 페이지",
+      aboutContact: "Contact 페이지",
     },
     kinds: {
       text: "텍스트",
@@ -417,6 +427,14 @@ const en: AdminDict = {
       partnership: "Partnership",
       mcell: "Technology",
       about: "About",
+    },
+    pageLabels: {
+      mcellMain: "Main page",
+      mcellOem: "OEM/ODM page",
+      aboutMain: "About page",
+      aboutHistory: "History page",
+      aboutCerts: "Certifications page",
+      aboutContact: "Contact page",
     },
     kinds: {
       text: "Text",
