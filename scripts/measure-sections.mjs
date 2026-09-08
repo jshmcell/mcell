@@ -2,7 +2,7 @@
 // usage: node scripts/measure-sections.mjs [url]
 import { chromium } from "playwright";
 
-const url = process.argv[2] || "http://localhost:3000/";
+const url = process.argv[2] || "http://localhost:4300/";
 const targets = [
   { label: "PC 1280x843", w: 1280, h: 843 },
   { label: "Mobile 375x667", w: 375, h: 667 },

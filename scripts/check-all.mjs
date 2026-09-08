@@ -7,7 +7,7 @@ for (const t of [
   { label: "Mobile", w: 375, h: 667 },
 ]) {
   const page = await browser.newPage({ viewport: { width: t.w, height: t.h } });
-  await page.goto("http://localhost:3000/", { waitUntil: "domcontentloaded" });
+  await page.goto("http://localhost:4300/", { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(400);
   const d = await page.evaluate(() => {
     const secs = [...document.querySelectorAll("main section, section")].filter(

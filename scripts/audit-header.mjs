@@ -3,7 +3,7 @@ import { chromium } from "playwright";
 
 const targets = [
   { name: "orig", url: "https://imweb3200977727.imweb.me/" },
-  { name: "new", url: "http://localhost:3000/" },
+  { name: "new", url: "http://localhost:4300/" },
 ];
 const widths = [1440, 1280, 992, 768, 375];
 
