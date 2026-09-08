@@ -48,7 +48,7 @@ function buildGroups(t: AdminDict, locale: string): SidebarGroup[] {
         {
           href: "/admin/pages",
           query: { group: "mcell" },
-          label: locale === "ko" ? "기술력 소개" : "Technology",
+          label: "MCell",
         },
         {
           href: "/admin/pages",

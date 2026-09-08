@@ -40,7 +40,10 @@ export async function savePageContent(
   }
 
   // 빈 값 = 오버라이드 삭제 (기본값으로 복귀)
-  const locales = def.kind === "url" ? (["ko", "en"] as const) : ([locale] as const);
+  const locales =
+    def.kind === "url" || def.kind === "historyList"
+      ? (["ko", "en"] as const)
+      : ([locale] as const);
   if (!v) {
     await prisma.pageContent.deleteMany({
       where: { key, locale: { in: [...locales] } },

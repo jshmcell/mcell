@@ -77,7 +77,8 @@ function mcellSectionOfKey(key: string) {
 function aboutSectionOfKey(key: string) {
   if (key.startsWith("about.ceo.")) return "ceo";
   if (key.startsWith("about.historyImages.")) return "historyImages";
-  if (key.startsWith("about.history.")) return "history";
+  // 정확한 키 about.history (동적 목록) + 기존 about.history.* 키 모두 연혁 섹션
+  if (key === "about.history" || key.startsWith("about.history.")) return "history";
   if (key.startsWith("about.certs.")) return "certifications";
   if (key.startsWith("about.contact.banner.")) return "contactBanner";
   if (key.startsWith("about.contact.")) return "contact";
@@ -130,7 +131,7 @@ const ABOUT_PAGES: PageDivider[] = [
     route: "/about",
     prefixes: ["about.ceo.", "about.contact.banner."],
   },
-  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history.", "about.historyImages."] },
+  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history", "about.historyImages."] },
   { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs."] },
   { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices."] },
 ];
@@ -242,6 +243,112 @@ function MediaField({
 
 /* ── field row ────────────────────────────────────────────────────────── */
 
+interface HistoryRow {
+  year: string;
+  items: string[];
+}
+
+/** about.history JSON 문자열 → 행 배열. 파싱 실패/형태 불일치 시 빈 배열. */
+function parseHistoryJson(value: string): HistoryRow[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((entry) => {
+        if (!entry || typeof entry !== "object") return null;
+        const e = entry as Record<string, unknown>;
+        const year = typeof e.year === "string" ? e.year : "";
+        const items = Array.isArray(e.items)
+          ? e.items.filter((x): x is string => typeof x === "string")
+          : [];
+        return { year, items };
+      })
+      .filter((x): x is HistoryRow => x !== null);
+  } catch {
+    return [];
+  }
+}
+
+/** 행 배열 → about.history JSON 문자열. */
+function serializeHistoryJson(rows: HistoryRow[]): string {
+  return JSON.stringify(rows.map((r) => ({ year: r.year, items: r.items })));
+}
+
+/** 연혁 동적 목록 편집기 — 연도 행 추가/삭제, 각 행 = 연도 입력 + 사건 textarea(줄바꿈 = 항목). */
+function HistoryListEditor({
+  value,
+  onChange,
+  t,
+}: {
+  value: string;
+  onChange: (json: string) => void;
+  t: { historyYear: string; historyItems: string; addYear: string; removeYear: string };
+}) {
+  const rows = useMemo(() => parseHistoryJson(value), [value]);
+
+  const updateRow = (i: number, patch: Partial<HistoryRow>) => {
+    onChange(serializeHistoryJson(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r))));
+  };
+  const removeRow = (i: number) => {
+    onChange(serializeHistoryJson(rows.filter((_, idx) => idx !== i)));
+  };
+  const addRow = () => {
+    onChange(serializeHistoryJson([...rows, { year: "", items: [""] }]));
+  };
+
+  return (
+    <div className="space-y-3">
+      {rows.length === 0 && (
+        <p className="text-[12px] text-ink/50">
+          {t.addYear}
+        </p>
+      )}
+      {rows.map((row, i) => (
+        <div key={i} className="rounded-[4px] border border-black/10 bg-[#fafafa] p-3">
+          <div className="flex items-end gap-2">
+            <label className="block min-w-0 flex-1">
+              <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                {t.historyYear}
+              </span>
+              <input
+                className={inputCls}
+                value={row.year}
+                onChange={(e) => updateRow(i, { year: e.target.value })}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => removeRow(i)}
+              className="h-[38px] shrink-0 rounded-[3px] border border-black/15 px-3 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
+            >
+              {t.removeYear}
+            </button>
+          </div>
+          <label className="mt-2 block">
+            <span className="mb-1 block text-[12px] font-medium text-ink/70">
+              {t.historyItems}
+            </span>
+            <textarea
+              rows={3}
+              className={cn(inputCls, "resize-y")}
+              value={row.items.join("\n")}
+              onChange={(e) => updateRow(i, { items: e.target.value.split("\n") })}
+            />
+          </label>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addRow}
+        className="h-[32px] rounded-[3px] border border-dashed border-black/20 px-4 text-[12px] text-ink/70 transition-colors hover:border-navy-700 hover:text-navy-900"
+      >
+        + {t.addYear}
+      </button>
+    </div>
+  );
+}
+
 function Row({
   def,
   values,
@@ -275,6 +382,10 @@ function Row({
     failed: string;
     invalidUrl: string;
     invalidVideo: string;
+    historyYear: string;
+    historyItems: string;
+    addYear: string;
+    removeYear: string;
   };
 }) {
   const uiLocale = useLocale();
@@ -327,6 +438,17 @@ function Row({
       </div>
 
       <div className="mt-3 space-y-3">
+        {def.kind === "historyList" && (
+          <HistoryListEditor
+            value={values.ko}
+            onChange={(json) => {
+              onDraft("ko", json);
+              onDraft("en", json);
+            }}
+            t={t}
+          />
+        )}
+
         {(def.kind === "text" || def.kind === "textarea") && (
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {(["ko", "en"] as const).map((loc) => (
@@ -514,7 +636,7 @@ export default function PagesEditor({
       // 초기값 = 데이터 파일 기본값 (placeholder 가 아니라 실제 값)
       init[`${def.key}:ko`] = values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "";
       init[`${def.key}:en`] =
-        def.kind === "url"
+        def.kind === "url" || def.kind === "historyList"
           ? (values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "")
           : (values[def.key]?.en ?? EN_DEFAULTS.get(def.key) ?? "");
     }
@@ -551,7 +673,7 @@ export default function PagesEditor({
     for (const def of defs) {
       rows[def.key] = {
         ko: drafts[`${def.key}:ko`] ?? "",
-        en: def.kind === "url" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
+        en: def.kind === "url" || def.kind === "historyList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
       };
     }
     return rows;
@@ -641,7 +763,7 @@ export default function PagesEditor({
     setMessage(null);
     setPendingRow(def.key);
     try {
-      if (def.kind === "url") {
+      if (def.kind === "url" || def.kind === "historyList") {
         const res = await savePageContent(def.key, "ko", drafts[`${def.key}:ko`] ?? "");
         if (!res.ok) throw new Error(res.message ?? t.failed);
       } else {

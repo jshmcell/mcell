@@ -7,7 +7,7 @@ import {
 } from "@/data/about";
 import { certifications as dCertifications, type Certification } from "@/data/certifications";
 import { contact as dContact } from "@/data/contact";
-import { pickText, type ContentRows } from "@/lib/content-resolve";
+import { pickLines, pickText, type ContentRows } from "@/lib/content-resolve";
 import { EN_ABOUT } from "@/data/content-en";
 
 /** DB/드래프트 오버라이드가 적용된 about 데이터 — data/about.ts 와 동일한 shape. */
@@ -54,16 +54,25 @@ export function resolveAboutFromRows(
       title: t("about.ceo.banner.title", dCeo.banner.title),
       quote: t("about.ceo.banner.quote", dCeo.banner.quote),
     },
-    paragraphs: dCeo.paragraphs.map((p, i) =>
-      t(`about.ceo.paragraphs.${i}`, p),
-    ),
+    // 단일 키(about.ceo.paragraphs) — 줄바꿈 = 문단 구분. 빈 줄은 빈 문자열로 보존
+    // (CeoIntro가 빈 문단을 &nbsp; 스페이서로 렌더링).
+    paragraphs: (() => {
+      const v = pickLines(
+        rows,
+        "about.ceo.paragraphs",
+        locale,
+        dCeo.paragraphs,
+      );
+      collect?.set("about.ceo.paragraphs", v.join("\n"));
+      return v;
+    })(),
     signature: t("about.ceo.signature", dCeo.signature),
   };
 
   return { ceo };
 }
 
-/** 순수 함수 — 서버(about-content.ts)와 관리자 미리보기(클라이언트) 양쪽에서 사용. */
+/** DB/드래프트 오버라이드가 적용된 연혁 데이터 — data/about.ts 와 동일한 shape. */
 export function resolveAboutHistoryFromRows(
   rows: ContentRows,
   locale: Locale,
@@ -77,13 +86,34 @@ export function resolveAboutHistoryFromRows(
     return v;
   };
 
-  const history = dHistory.map((item, i) => ({
-    ...item,
-    year: t(`about.history.${i}.year`, item.year),
-    events: item.events.map((event, j) =>
-      t(`about.history.${i}.events.${j}`, event),
-    ),
-  }));
+  // about.history — JSON 목록 [{"year":"2021","items":["...","..."]}, ...].
+  // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
+  const rawHistory = pickText(rows, "about.history", locale, "");
+  let history: HistoryItem[] = dHistory;
+  if (rawHistory) {
+    try {
+      const parsed = JSON.parse(rawHistory) as unknown;
+      if (Array.isArray(parsed)) {
+        const mapped = parsed
+          .map((entry) => {
+            if (!entry || typeof entry !== "object") return null;
+            const e = entry as Record<string, unknown>;
+            const year = typeof e.year === "string" ? e.year : "";
+            const items = Array.isArray(e.items)
+              ? e.items.filter((x): x is string => typeof x === "string")
+              : Array.isArray(e.events)
+                ? e.events.filter((x): x is string => typeof x === "string")
+                : [];
+            return { year, events: items };
+          })
+          .filter((x): x is HistoryItem => x !== null);
+        if (mapped.length > 0) history = mapped;
+      }
+    } catch {
+      // JSON 파싱 실패 → 기본값 유지
+    }
+  }
+  collect?.set("about.history", rawHistory || JSON.stringify(dHistory));
 
   const historyImages = {
     pc: t("about.historyImages.pc", dHistoryImages.pc),

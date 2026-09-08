@@ -100,6 +100,11 @@ export interface AdminDict {
     /** mcell/about 그룹의 페이지 구분 헤더 라벨 (key → localized label) */
     pageLabels: Record<string, string>;
     kinds: Record<string, string>;
+    /** 연혁 동적 목록 편집기 라벨 */
+    historyYear: string;
+    historyItems: string;
+    addYear: string;
+    removeYear: string;
     ko: string;
     en: string;
     sharedUrlNote: string;
@@ -252,7 +257,7 @@ const ko: AdminDict = {
       home: "홈",
       shop: "SHOP",
       partnership: "제휴 및 문의",
-      mcell: "기술력 소개",
+      mcell: "MCell",
       about: "회사 소개",
     },
     pageLabels: {
@@ -269,7 +274,12 @@ const ko: AdminDict = {
       image: "이미지",
       video: "영상",
       url: "링크",
+      historyList: "연혁 목록",
     },
+    historyYear: "연도",
+    historyItems: "사건 (줄바꿈 = 항목 구분)",
+    addYear: "연도 추가",
+    removeYear: "삭제",
     ko: "한국어",
     en: "English",
     sharedUrlNote: "링크는 언어 공통으로 저장됩니다.",
@@ -425,7 +435,7 @@ const en: AdminDict = {
       home: "Home",
       shop: "SHOP",
       partnership: "Partnership",
-      mcell: "Technology",
+      mcell: "MCell",
       about: "About",
     },
     pageLabels: {
@@ -442,7 +452,12 @@ const en: AdminDict = {
       image: "Image",
       video: "Video",
       url: "Link",
+      historyList: "History list",
     },
+    historyYear: "Year",
+    historyItems: "Events (one per line)",
+    addYear: "Add year",
+    removeYear: "Remove",
     ko: "Korean",
     en: "English",
     sharedUrlNote: "Links are saved once for both languages.",

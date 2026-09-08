@@ -4,7 +4,7 @@
  * (not a server-action module)
  */
 
-export type ContentKind = "text" | "textarea" | "image" | "video" | "url";
+export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList";
 export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about";
 
 export interface ContentDef {
@@ -267,19 +267,11 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.ceo.banner.bg", "about", aboutCeoSec, "배너 이미지", "Banner image", "image", ABOUT),
   d("about.ceo.banner.title", "about", aboutCeoSec, "제목", "Title", "text", ABOUT),
   d("about.ceo.banner.quote", "about", aboutCeoSec, "인용구", "Quote", "text", ABOUT),
-  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-    d(`about.ceo.paragraphs.${i}`, "about", aboutCeoSec, `문단 ${i + 1}`, `Paragraph ${i + 1}`, "textarea", ABOUT),
-  ),
+  d("about.ceo.paragraphs", "about", aboutCeoSec, "본문 (줄바꿈 = 문단 구분)", "Body (one paragraph per line)", "textarea", ABOUT),
   d("about.ceo.signature", "about", aboutCeoSec, "서명", "Signature", "text", ABOUT),
 
-  // ── ABOUT 연혁 (12) ──
-  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => [
-    d(`about.history.${i}.year`, "about", aboutHistorySec, `연도 ${i + 1}`, `Year ${i + 1}`, "text", ABOUT),
-    d(`about.history.${i}.events.0`, "about", aboutHistorySec, `연도 ${i + 1} 사건 1`, `Year ${i + 1} event 1`, "text", ABOUT),
-  ]).flat(),
-  // 2개 사건이 있는 연도만 (2020, 2021)
-  d("about.history.5.events.1", "about", aboutHistorySec, "연도 6 사건 2", "Year 6 event 2", "text", ABOUT),
-  d("about.history.6.events.1", "about", aboutHistorySec, "연도 7 사건 2", "Year 7 event 2", "text", ABOUT),
+  // ── ABOUT 연혁 (동적 목록 — JSON: [{"year":"2021","items":["...","..."]}, ...]) ──
+  d("about.history", "about", aboutHistorySec, "연혁 목록", "History list", "historyList", ABOUT),
 
   // ── ABOUT 연혁 이미지 ──
   d("about.historyImages.pc", "about", aboutHistoryImagesSec, "PC 이미지", "PC image", "image", ABOUT),
@@ -321,6 +313,7 @@ export const MAX_LENGTH: Record<ContentKind, number> = {
   image: 2000,
   video: 2000,
   url: 2000,
+  historyList: 20000,
 };
 
 /** image/video/url 값 검증 — 상대 /assets 경로, blob URL, http(s) 외부 URL 허용 */
