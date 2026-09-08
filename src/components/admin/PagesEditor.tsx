@@ -76,11 +76,13 @@ function mcellSectionOfKey(key: string) {
 /** 콘텐츠 키 prefix → about 미리보기 섹션. */
 function aboutSectionOfKey(key: string) {
   if (key.startsWith("about.ceo.")) return "ceo";
-  // 정확한 키 about.history (동적 목록) + 기존 about.history.* 키 모두 연혁 섹션
-  if (key === "about.history" || key.startsWith("about.history.")) return "history";
-  if (key.startsWith("about.certs.")) return "certifications";
+  // 정확한 키 about.history (동적 목록) + about.history.* / about.historyBanner.* 키 모두 연혁 섹션
+  if (key === "about.history" || key.startsWith("about.history.") || key.startsWith("about.historyBanner")) return "history";
+  // 인증서 배너(about.certsBanner.bg) + 인증서 항목(about.certs, about.certs.*)
+  if (key === "about.certs" || key.startsWith("about.certs.") || key.startsWith("about.certsBanner")) return "certifications";
   if (key.startsWith("about.contact.banner.")) return "contactBanner";
-  if (key.startsWith("about.contact.")) return "contact";
+  // Contact 페이지 상단 배너(about.contactBanner.bg) + 오피스 목록(about.contact.offices)
+  if (key.startsWith("about.contact.") || key.startsWith("about.contactBanner")) return "contact";
   return null;
 }
 
@@ -130,9 +132,9 @@ const ABOUT_PAGES: PageDivider[] = [
     route: "/about",
     prefixes: ["about.ceo.", "about.contact.banner."],
   },
-  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history"] },
-  { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs."] },
-  { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices"] },
+  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history", "about.historyBanner"] },
+  { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs", "about.certsBanner"] },
+  { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices", "about.contactBanner"] },
 ];
 
 /** 그룹 → 페이지 구분 정의 (미리보기 논리 없음 — 순수 표시 전용) */
@@ -274,7 +276,8 @@ function serializeHistoryJson(rows: HistoryRow[]): string {
   return JSON.stringify(rows.map((r) => ({ year: r.year, items: r.items })));
 }
 
-/** 연혁 동적 목록 편집기 — 연도 행 추가/삭제, 각 행 = 연도 입력 + 사건 textarea(줄바꿈 = 항목). */
+/** 연혁 동적 목록 편집기 — 연도 행 추가/삭제, 각 행 = 연도 입력 + 사건 textarea(줄바꿈 = 항목).
+ *  행은 기본적으로 접힌 상태(연도 + 항목 수만 표시)로 렌더링되고, 클릭하면 펼쳐져 편집한다. */
 function HistoryListEditor({
   value,
   onChange,
@@ -285,12 +288,14 @@ function HistoryListEditor({
   t: { historyYear: string; historyItems: string; addYear: string; removeYear: string };
 }) {
   const rows = useMemo(() => parseHistoryJson(value), [value]);
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   const updateRow = (i: number, patch: Partial<HistoryRow>) => {
     onChange(serializeHistoryJson(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r))));
   };
   const removeRow = (i: number) => {
     onChange(serializeHistoryJson(rows.filter((_, idx) => idx !== i)));
+    setExpanded((prev) => (prev === i ? null : prev));
   };
   const addRow = () => {
     // 새 행 연도 = 마지막 행 연도 + 1 (숫자 연도만), 없으면 현재 연도
@@ -299,51 +304,85 @@ function HistoryListEditor({
     const nextYear = Number.isNaN(lastNum)
       ? String(new Date().getFullYear())
       : String(lastNum + 1);
-    onChange(serializeHistoryJson([...rows, { year: nextYear, items: [""] }]));
+    const next = [...rows, { year: nextYear, items: [""] }];
+    onChange(serializeHistoryJson(next));
+    setExpanded(next.length - 1);
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       {rows.length === 0 && (
         <p className="text-[12px] text-ink/50">
           {t.addYear}
         </p>
       )}
-      {rows.map((row, i) => (
-        <div key={i} className="rounded-[4px] border border-black/10 bg-[#fafafa] p-3">
-          <div className="flex items-end gap-2">
-            <label className="block min-w-0 flex-1">
-              <span className="mb-1 block text-[12px] font-medium text-ink/70">
-                {t.historyYear}
-              </span>
-              <input
-                className={inputCls}
-                value={row.year}
-                placeholder={String(new Date().getFullYear())}
-                onChange={(e) => updateRow(i, { year: e.target.value })}
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() => removeRow(i)}
-              className="h-[38px] shrink-0 rounded-[3px] border border-black/15 px-3 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
-            >
-              {t.removeYear}
-            </button>
+      {rows.map((row, i) => {
+        const open = expanded === i;
+        const itemCount = row.items.filter((s) => s.trim().length > 0).length;
+        return (
+          <div key={i} className="rounded-[4px] border border-black/10 bg-[#fafafa]">
+            <div className="flex items-center gap-2 px-3 py-2">
+              <button
+                type="button"
+                onClick={() => setExpanded(open ? null : i)}
+                aria-expanded={open}
+                className="flex min-w-0 flex-1 items-center gap-2 text-left"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className={cn("shrink-0 text-ink/40 transition-transform", open && "rotate-90")}
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+                <span className="truncate text-[13px] font-bold text-ink">
+                  {row.year || "—"}
+                </span>
+                <span className="shrink-0 text-[11px] text-ink/40">
+                  {itemCount}건
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => removeRow(i)}
+                className="shrink-0 rounded-[3px] border border-black/15 px-2.5 py-1 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
+              >
+                {t.removeYear}
+              </button>
+            </div>
+            {open && (
+              <div className="space-y-2 border-t border-black/5 p-3 pt-2.5">
+                <label className="block min-w-0 flex-1">
+                  <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                    {t.historyYear}
+                  </span>
+                  <input
+                    className={inputCls}
+                    value={row.year}
+                    placeholder={String(new Date().getFullYear())}
+                    onChange={(e) => updateRow(i, { year: e.target.value })}
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                    {t.historyItems}
+                  </span>
+                  <textarea
+                    rows={3}
+                    className={cn(inputCls, "resize-y")}
+                    value={row.items.join("\n")}
+                    onChange={(e) => updateRow(i, { items: e.target.value.split("\n") })}
+                  />
+                </label>
+              </div>
+            )}
           </div>
-          <label className="mt-2 block">
-            <span className="mb-1 block text-[12px] font-medium text-ink/70">
-              {t.historyItems}
-            </span>
-            <textarea
-              rows={3}
-              className={cn(inputCls, "resize-y")}
-              value={row.items.join("\n")}
-              onChange={(e) => updateRow(i, { items: e.target.value.split("\n") })}
-            />
-          </label>
-        </div>
-      ))}
+        );
+      })}
       <button
         type="button"
         onClick={addRow}
@@ -506,6 +545,115 @@ function OfficeListEditor({
   );
 }
 
+interface CertRow {
+  thumb: string;
+  full: string;
+}
+
+/** about.certs JSON 문자열 → 행 배열. 파싱 실패/형태 불일치 시 빈 배열. */
+function parseCertsJson(value: string): CertRow[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((entry) => {
+        if (!entry || typeof entry !== "object") return null;
+        const e = entry as Record<string, unknown>;
+        const str = (v: unknown) => (typeof v === "string" ? v : "");
+        return { thumb: str(e.thumb), full: str(e.full) };
+      })
+      .filter((x): x is CertRow => x !== null);
+  } catch {
+    return [];
+  }
+}
+
+/** 행 배열 → about.certs JSON 문자열. */
+function serializeCertsJson(rows: CertRow[]): string {
+  return JSON.stringify(rows.map((r) => ({ thumb: r.thumb, full: r.full })));
+}
+
+/** 인증서 동적 목록 편집기 — 행 추가/삭제, 각 행 = 썸네일 + 원본 이미지 URL 입력. */
+function CertListEditor({
+  value,
+  onChange,
+  t,
+}: {
+  value: string;
+  onChange: (json: string) => void;
+  t: {
+    certThumb: string;
+    certFull: string;
+    addCert: string;
+    removeCert: string;
+  };
+}) {
+  const rows = useMemo(() => parseCertsJson(value), [value]);
+
+  const updateRow = (i: number, patch: Partial<CertRow>) => {
+    onChange(serializeCertsJson(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r))));
+  };
+  const removeRow = (i: number) => {
+    onChange(serializeCertsJson(rows.filter((_, idx) => idx !== i)));
+  };
+  const addRow = () => {
+    onChange(serializeCertsJson([...rows, { thumb: "", full: "" }]));
+  };
+
+  return (
+    <div className="space-y-3">
+      {rows.length === 0 && (
+        <p className="text-[12px] text-ink/50">
+          {t.addCert}
+        </p>
+      )}
+      {rows.map((row, i) => (
+        <div key={i} className="rounded-[4px] border border-black/10 bg-[#fafafa] p-3">
+          <div className="flex items-end gap-2">
+            <label className="block min-w-0 flex-1">
+              <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                {t.certThumb}
+              </span>
+              <input
+                className={inputCls}
+                value={row.thumb}
+                placeholder="/assets/…"
+                onChange={(e) => updateRow(i, { thumb: e.target.value })}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => removeRow(i)}
+              className="h-[38px] shrink-0 rounded-[3px] border border-black/15 px-3 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
+            >
+              {t.removeCert}
+            </button>
+          </div>
+          <label className="mt-2 block">
+            <span className="mb-1 block text-[12px] font-medium text-ink/70">
+              {t.certFull}
+            </span>
+            <input
+              className={inputCls}
+              value={row.full}
+              placeholder="/assets/…"
+              onChange={(e) => updateRow(i, { full: e.target.value })}
+            />
+          </label>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addRow}
+        className="h-[32px] rounded-[3px] border border-dashed border-black/20 px-4 text-[12px] text-ink/70 transition-colors hover:border-navy-700 hover:text-navy-900"
+      >
+        + {t.addCert}
+      </button>
+    </div>
+  );
+}
+
 function Row({
   def,
   values,
@@ -550,6 +698,10 @@ function Row({
     officeAddress: string;
     addOffice: string;
     removeOffice: string;
+    certThumb: string;
+    certFull: string;
+    addCert: string;
+    removeCert: string;
   };
 }) {
   const uiLocale = useLocale();
@@ -615,6 +767,17 @@ function Row({
 
         {def.kind === "officeList" && (
           <OfficeListEditor
+            value={values.ko}
+            onChange={(json) => {
+              onDraft("ko", json);
+              onDraft("en", json);
+            }}
+            t={t}
+          />
+        )}
+
+        {def.kind === "certList" && (
+          <CertListEditor
             value={values.ko}
             onChange={(json) => {
               onDraft("ko", json);
@@ -811,7 +974,7 @@ export default function PagesEditor({
       // 초기값 = 데이터 파일 기본값 (placeholder 가 아니라 실제 값)
       init[`${def.key}:ko`] = values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "";
       init[`${def.key}:en`] =
-        def.kind === "url" || def.kind === "historyList" || def.kind === "officeList"
+        def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList"
           ? (values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "")
           : (values[def.key]?.en ?? EN_DEFAULTS.get(def.key) ?? "");
     }
@@ -848,7 +1011,7 @@ export default function PagesEditor({
     for (const def of defs) {
       rows[def.key] = {
         ko: drafts[`${def.key}:ko`] ?? "",
-        en: def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
+        en: def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
       };
     }
     return rows;
@@ -938,7 +1101,7 @@ export default function PagesEditor({
     setMessage(null);
     setPendingRow(def.key);
     try {
-      if (def.kind === "url" || def.kind === "historyList" || def.kind === "officeList") {
+      if (def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList") {
         const res = await savePageContent(def.key, "ko", drafts[`${def.key}:ko`] ?? "");
         if (!res.ok) throw new Error(res.message ?? t.failed);
       } else {

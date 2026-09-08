@@ -4,7 +4,7 @@
  * (not a server-action module)
  */
 
-export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList" | "officeList";
+export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList" | "officeList" | "certList";
 export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about";
 
 export interface ContentDef {
@@ -277,11 +277,8 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.certsBanner.bg", "about", aboutCertsSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
 
-  // ── ABOUT 인증서 (8) ──
-  ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => [
-    d(`about.certs.${i}.thumb`, "about", aboutCertsSec, `인증서 ${i + 1} 썸네일`, `Certificate ${i + 1} thumbnail`, "image", ABOUT),
-    d(`about.certs.${i}.full`, "about", aboutCertsSec, `인증서 ${i + 1} 원본`, `Certificate ${i + 1} full image`, "image", ABOUT),
-  ]).flat(),
+  // ── ABOUT 인증서 (동적 목록 — JSON: [{"thumb":"...","full":"..."}, ...]) ──
+  d("about.certs", "about", aboutCertsSec, "인증서 목록", "Certificates list", "certList", ABOUT),
 
   // ── ABOUT 문의 배너 ──
   d("about.contact.banner.bg", "about", aboutContactBannerSec, "배경 이미지", "Background image", "image", ABOUT),
@@ -310,6 +307,7 @@ export const MAX_LENGTH: Record<ContentKind, number> = {
   url: 2000,
   historyList: 20000,
   officeList: 20000,
+  certList: 20000,
 };
 
 /** image/video/url 값 검증 — 상대 /assets 경로, blob URL, http(s) 외부 URL 허용 */

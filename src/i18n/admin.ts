@@ -113,6 +113,11 @@ export interface AdminDict {
     officeAddress: string;
     addOffice: string;
     removeOffice: string;
+    /** 인증서 동적 목록 편집기 라벨 */
+    certThumb: string;
+    certFull: string;
+    addCert: string;
+    removeCert: string;
     ko: string;
     en: string;
     sharedUrlNote: string;
@@ -284,6 +289,7 @@ const ko: AdminDict = {
       url: "링크",
       historyList: "연혁 목록",
       officeList: "오피스 목록",
+      certList: "인증서 목록",
     },
     historyYear: "연도",
     historyItems: "사건 (줄바꿈 = 항목 구분)",
@@ -296,6 +302,10 @@ const ko: AdminDict = {
     officeAddress: "주소",
     addOffice: "오피스 추가",
     removeOffice: "삭제",
+    certThumb: "인증서 썸네일 이미지",
+    certFull: "인증서 원본 이미지",
+    addCert: "인증서 추가",
+    removeCert: "삭제",
     ko: "한국어",
     en: "English",
     sharedUrlNote: "링크는 언어 공통으로 저장됩니다.",
@@ -470,6 +480,7 @@ const en: AdminDict = {
       url: "Link",
       historyList: "History list",
       officeList: "Offices list",
+      certList: "Certificates list",
     },
     historyYear: "Year",
     historyItems: "Events (one per line)",
@@ -482,6 +493,10 @@ const en: AdminDict = {
     officeAddress: "Address",
     addOffice: "Add office",
     removeOffice: "Remove",
+    certThumb: "Certificate thumbnail image",
+    certFull: "Certificate full image",
+    addCert: "Add certificate",
+    removeCert: "Remove",
     ko: "Korean",
     en: "English",
     sharedUrlNote: "Links are saved once for both languages.",

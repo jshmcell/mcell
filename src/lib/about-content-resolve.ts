@@ -146,10 +146,31 @@ export function resolveAboutCertificationsFromRows(
     return v;
   };
 
-  const certifications = dCertifications.map((cert, i) => ({
-    thumb: t(`about.certs.${i}.thumb`, cert.thumb),
-    full: t(`about.certs.${i}.full`, cert.full),
-  }));
+  // about.certs — JSON 목록 [{"thumb":"...","full":"..."}, ...].
+  // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
+  const rawCerts = pickText(rows, "about.certs", locale, "");
+  let certifications: Certification[] = dCertifications;
+  if (rawCerts) {
+    try {
+      const parsed = JSON.parse(rawCerts) as unknown;
+      if (Array.isArray(parsed)) {
+        const mapped = parsed
+          .map((entry) => {
+            if (!entry || typeof entry !== "object") return null;
+            const e = entry as Record<string, unknown>;
+            const str = (v: unknown) => (typeof v === "string" ? v : "");
+            const thumb = str(e.thumb);
+            const full = str(e.full);
+            return { thumb, full };
+          })
+          .filter((x): x is Certification => x !== null && x.thumb !== "");
+        if (mapped.length > 0) certifications = mapped;
+      }
+    } catch {
+      // JSON 파싱 실패 → 기본값 유지
+    }
+  }
+  collect?.set("about.certs", rawCerts || JSON.stringify(dCertifications));
 
   const banner = t("about.certsBanner.bg", "/assets/img/f9124d9afd25e.jpg");
 
