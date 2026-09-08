@@ -20,12 +20,12 @@ export default async function HomePage() {
       <Hero slide={c.hero[0]} />
       <TechIntro content={c.tech} />
       <FeatureGrid cards={c.features} />
-      <LayerCta content={c.layer} />
-      <Industries content={c.industries} />
+      <LayerCta content={c.layer} locale={locale} />
+      <Industries content={c.industries} locale={locale} />
       <CertCarousel content={c.certs} />
-      <AboutBanner content={c.aboutBanner} />
+      <AboutBanner content={c.aboutBanner} locale={locale} />
       <Production content={c.production} />
-      <HeatFlex content={c.heatFlex} />
+      <HeatFlex content={c.heatFlex} locale={locale} />
     </>
   );
 }

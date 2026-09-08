@@ -2,17 +2,18 @@ import SmartImage from "@/components/ui/SmartImage";
 import { ButtonLink } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { aboutBanner as defaultContent } from "@/data/home";
-import { getLocale } from "@/i18n/server";
-import { localizeHref } from "@/i18n/config";
+import { localizeHref, type Locale } from "@/i18n/config";
 import type { ResolvedHome } from "@/lib/home-content";
 
-export default async function AboutBanner({
+export default function AboutBanner({
   content = defaultContent,
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
 }: {
   content?: ResolvedHome["aboutBanner"];
+  locale?: Locale;
 }) {
   const aboutBanner = content;
-  const locale = await getLocale();
   return (
     <section className="relative overflow-hidden">
       <SmartImage

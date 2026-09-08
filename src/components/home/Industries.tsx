@@ -2,17 +2,18 @@ import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import { industries as defaultContent } from "@/data/home";
-import { getLocale } from "@/i18n/server";
-import { localizeHref } from "@/i18n/config";
+import { localizeHref, type Locale } from "@/i18n/config";
 import type { ResolvedHome } from "@/lib/home-content";
 
-export default async function Industries({
+export default function Industries({
   content = defaultContent,
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
 }: {
   content?: ResolvedHome["industries"];
+  locale?: Locale;
 }) {
   const industries = content;
-  const locale = await getLocale();
   return (
     <section className="bg-[#f5f4f4]">
       <div className="container-site pb-[48px] pt-[102px] md-header:pb-[110px] md-header:pt-[110px]">
