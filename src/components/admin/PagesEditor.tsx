@@ -603,7 +603,11 @@ export default function PagesEditor({
           </p>
           <div className="max-h-[82vh] overflow-y-auto">
             {group === "home" && home && homePreviewSection && (
-              <HomeSectionPreview section={homePreviewSection} home={home} />
+              <HomeSectionPreview
+                section={homePreviewSection}
+                home={home}
+                locale={previewLang}
+              />
             )}
             {group === "shop" && shopHero && shopProducts && (
               shopPreviewKind === "products" ? (
