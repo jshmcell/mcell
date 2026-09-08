@@ -5,7 +5,7 @@
  */
 
 export type ContentKind = "text" | "textarea" | "image" | "video" | "url";
-export type ContentGroup = "home" | "shop" | "partnership";
+export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about";
 
 export interface ContentDef {
   key: string;
@@ -32,6 +32,17 @@ function d(
 const HOME = ["/", "/en"];
 const SHOP = ["/shop", "/en/shop"];
 const PARTNERSHIP = ["/partnership", "/en/partnership"];
+const MCELL = ["/mcell", "/en/mcell", "/mcell/oem-odm", "/en/mcell/oem-odm"];
+const ABOUT = [
+  "/about",
+  "/en/about",
+  "/about/history",
+  "/en/about/history",
+  "/about/certifications",
+  "/en/about/certifications",
+  "/about/contact",
+  "/en/about/contact",
+];
 
 const heroSec = { ko: "히어로", en: "Hero" };
 const techSec = { ko: "기술 소개", en: "Tech intro" };
@@ -42,6 +53,30 @@ const certSec = { ko: "인증서", en: "Certifications" };
 const aboutSec = { ko: "About 배너", en: "About banner" };
 const prodSec = { ko: "생산 설비", en: "Production" };
 const heatSec = { ko: "HEAT FLEX", en: "HEAT FLEX" };
+
+// ── mcell group ──
+const mcellHeroSec = { ko: "배너", en: "Hero banner" };
+const mcellStatsSec = { ko: "투자 현황", en: "Investment stats" };
+const mcellTechSec = { ko: "핵심 기술", en: "Core technology" };
+const mcellTechLayerSec = { ko: "기술 레이어", en: "Tech layers" };
+const mcellProductsSec = { ko: "제품 정보", en: "Products" };
+const mcellComparisonsSec = { ko: "성능 비교", en: "Comparisons" };
+const mcellPlatformSec = { ko: "기술 확장", en: "Platform" };
+const mcellIndustriesSec = { ko: "적용 산업", en: "Industries" };
+const mcellCooperationSec = { ko: "기술 협력", en: "Cooperation" };
+const mcellOemBannerSec = { ko: "OEM 배너", en: "OEM banner" };
+const mcellOemBlocksSec = { ko: "OEM 적용 분야", en: "OEM fields" };
+const mcellRndSec = { ko: "R&D", en: "R&D" };
+const mcellOemProofSec = { ko: "파트너십 실적", en: "Partnership proof" };
+const mcellProofSec = { ko: "실적 항목", en: "Proof items" };
+
+// ── about group ──
+const aboutCeoSec = { ko: "CEO 인사말", en: "CEO message" };
+const aboutHistorySec = { ko: "연혁", en: "History" };
+const aboutHistoryImagesSec = { ko: "연혁 이미지", en: "History images" };
+const aboutCertsSec = { ko: "인증서", en: "Certifications" };
+const aboutContactBannerSec = { ko: "문의 배너", en: "Contact banner" };
+const aboutOfficesSec = { ko: "오피스 정보", en: "Offices" };
 
 export const CONTENT_DEFS: ContentDef[] = [
   // ── Hero ──
@@ -132,6 +167,142 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("partnership.title", "partnership", { ko: "문의 헤딩", en: "Inquiry heading" }, "타이틀", "Title", "text", PARTNERSHIP),
   d("partnership.lines", "partnership", { ko: "문의 헤딩", en: "Inquiry heading" }, "본문 (줄바꿈 구분)", "Body (one per line)", "textarea", PARTNERSHIP),
   d("partnership.banner", "partnership", { ko: "문의 헤딩", en: "Inquiry heading" }, "배너 이미지", "Banner image", "image", PARTNERSHIP),
+
+  // ── MCELL (기술력 소개 /mcell) ──
+  d("mcell.hero.bg", "mcell", mcellHeroSec, "배경 이미지", "Background image", "image", MCELL),
+  d("mcell.hero.title", "mcell", mcellHeroSec, "제목", "Title", "text", MCELL),
+  d("mcell.hero.description", "mcell", mcellHeroSec, "설명", "Description", "text", MCELL),
+  d("mcell.hero.logo", "mcell", mcellHeroSec, "로고 이미지", "Logo image", "image", MCELL),
+  d("mcell.hero.strip", "mcell", mcellHeroSec, "하단 스트립 이미지", "Bottom strip image", "image", MCELL),
+
+  // ── MCELL 투자 현황 (4) ──
+  ...[0, 1, 2, 3].map((i) => [
+    d(`mcell.stats.${i}.label`, "mcell", mcellStatsSec, `카드 ${i + 1} 라벨`, `Card ${i + 1} label`, "text", MCELL),
+    d(`mcell.stats.${i}.value`, "mcell", mcellStatsSec, `카드 ${i + 1} 값`, `Card ${i + 1} value`, "text", MCELL),
+    d(`mcell.stats.${i}.note`, "mcell", mcellStatsSec, `카드 ${i + 1} 설명`, `Card ${i + 1} note`, "text", MCELL),
+  ]).flat(),
+
+  // ── MCELL 핵심 기술 ──
+  d("mcell.tech.bg", "mcell", mcellTechSec, "배경 이미지", "Background image", "image", MCELL),
+  d("mcell.tech.heading", "mcell", mcellTechSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.tech.title", "mcell", mcellTechSec, "제목", "Title", "text", MCELL),
+  d("mcell.tech.description", "mcell", mcellTechSec, "설명", "Description", "text", MCELL),
+  d("mcell.tech.image", "mcell", mcellTechSec, "단면 다이어그램 이미지", "Cross-section image", "image", MCELL),
+  ...[0, 1, 2, 3].map((i) => [
+    d(`mcell.tech.layers.${i}.title`, "mcell", mcellTechLayerSec, `레이어 ${i + 1} 제목`, `Layer ${i + 1} title`, "text", MCELL),
+    d(`mcell.tech.layers.${i}.lines`, "mcell", mcellTechLayerSec, `레이어 ${i + 1} 본문`, `Layer ${i + 1} body`, "textarea", MCELL),
+  ]).flat(),
+
+  // ── MCELL 제품 정보 (6) ──
+  ...[0, 1, 2, 3, 4, 5].map((i) => [
+    d(`mcell.products.${i}.name`, "mcell", mcellProductsSec, `제품 ${i + 1} 이름`, `Product ${i + 1} name`, "text", MCELL),
+    d(`mcell.products.${i}.thumb`, "mcell", mcellProductsSec, `제품 ${i + 1} 썸네일`, `Product ${i + 1} thumbnail`, "image", MCELL),
+    d(`mcell.products.${i}.image`, "mcell", mcellProductsSec, `제품 ${i + 1} 이미지`, `Product ${i + 1} image`, "image", MCELL),
+    d(`mcell.products.${i}.description`, "mcell", mcellProductsSec, `제품 ${i + 1} 설명`, `Product ${i + 1} description`, "textarea", MCELL),
+  ]).flat(),
+
+  // ── MCELL 성능 비교 (2) ──
+  ...[0, 1].map((i) => [
+    d(`mcell.comparisons.${i}.image`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 열화상 이미지`, `Comparison ${i + 1} thermal image`, "image", MCELL),
+    d(`mcell.comparisons.${i}.heading`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 헤딩`, `Comparison ${i + 1} heading`, "text", MCELL),
+    d(`mcell.comparisons.${i}.subheading`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 부제`, `Comparison ${i + 1} subheading`, "text", MCELL),
+    d(`mcell.comparisons.${i}.description`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 설명`, `Comparison ${i + 1} description`, "text", MCELL),
+    d(`mcell.comparisons.${i}.competitorTitle`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 타사 제목`, `Comparison ${i + 1} competitor title`, "text", MCELL),
+    d(`mcell.comparisons.${i}.competitorLogo`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 타사 로고`, `Comparison ${i + 1} competitor logo`, "image", MCELL),
+    d(`mcell.comparisons.${i}.competitorLines`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 타사 본문`, `Comparison ${i + 1} competitor body`, "textarea", MCELL),
+    d(`mcell.comparisons.${i}.oursTitle`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 히트플렉스 제목`, `Comparison ${i + 1} ours title`, "text", MCELL),
+    d(`mcell.comparisons.${i}.oursLogo`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 히트플렉스 로고`, `Comparison ${i + 1} ours logo`, "image", MCELL),
+    d(`mcell.comparisons.${i}.oursLines`, "mcell", mcellComparisonsSec, `비교 ${i + 1} 히트플렉스 본문`, `Comparison ${i + 1} ours body`, "textarea", MCELL),
+  ]).flat(),
+
+  // ── MCELL 기술 확장 ──
+  d("mcell.platform.heading", "mcell", mcellPlatformSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.platform.title", "mcell", mcellPlatformSec, "제목", "Title", "text", MCELL),
+  d("mcell.platform.description", "mcell", mcellPlatformSec, "설명", "Description", "text", MCELL),
+  d("mcell.platform.image", "mcell", mcellPlatformSec, "이미지", "Image", "image", MCELL),
+  d("mcell.platform.banner", "mcell", mcellPlatformSec, "배너 문구", "Banner text", "text", MCELL),
+
+  // ── MCELL 적용 산업 ──
+  d("mcell.industries.heading", "mcell", mcellIndustriesSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.industries.title", "mcell", mcellIndustriesSec, "제목", "Title", "text", MCELL),
+  d("mcell.industries.description", "mcell", mcellIndustriesSec, "설명", "Description", "text", MCELL),
+  d("mcell.industries.image", "mcell", mcellIndustriesSec, "이미지", "Image", "image", MCELL),
+
+  // ── MCELL 기술 협력 ──
+  d("mcell.cooperation.heading", "mcell", mcellCooperationSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.cooperation.title", "mcell", mcellCooperationSec, "제목", "Title", "text", MCELL),
+  d("mcell.cooperation.description", "mcell", mcellCooperationSec, "설명", "Description", "text", MCELL),
+  ...[0, 1, 2, 3].map((i) =>
+    d(`mcell.cooperation.slides.${i}`, "mcell", mcellCooperationSec, `슬라이드 ${i + 1} 이미지`, `Slide ${i + 1} image`, "image", MCELL),
+  ),
+
+  // ── MCELL OEM/ODM 배너 ──
+  d("mcell.oemBanner.bg", "mcell", mcellOemBannerSec, "배경 이미지", "Background image", "image", MCELL),
+  d("mcell.oemBanner.logo", "mcell", mcellOemBannerSec, "로고 이미지", "Logo image", "image", MCELL),
+  d("mcell.oemBanner.lines", "mcell", mcellOemBannerSec, "본문 (줄바꿈 구분)", "Body (one per line)", "textarea", MCELL),
+
+  // ── MCELL OEM 적용 분야 (3) ──
+  ...[0, 1, 2].map((i) => [
+    d(`mcell.oemBlocks.${i}.title`, "mcell", mcellOemBlocksSec, `분야 ${i + 1} 제목`, `Field ${i + 1} title`, "text", MCELL),
+    d(`mcell.oemBlocks.${i}.subtitle`, "mcell", mcellOemBlocksSec, `분야 ${i + 1} 부제`, `Field ${i + 1} subtitle`, "text", MCELL),
+    d(`mcell.oemBlocks.${i}.lines`, "mcell", mcellOemBlocksSec, `분야 ${i + 1} 본문`, `Field ${i + 1} body`, "textarea", MCELL),
+    d(`mcell.oemBlocks.${i}.image`, "mcell", mcellOemBlocksSec, `분야 ${i + 1} 이미지`, `Field ${i + 1} image`, "image", MCELL),
+  ]).flat(),
+
+  // ── MCELL R&D ──
+  d("mcell.rnd.heading", "mcell", mcellRndSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.rnd.title", "mcell", mcellRndSec, "제목", "Title", "text", MCELL),
+  d("mcell.rnd.image", "mcell", mcellRndSec, "이미지", "Image", "image", MCELL),
+
+  // ── MCELL 파트너십 실적 ──
+  d("mcell.oemProof.heading", "mcell", mcellOemProofSec, "헤딩", "Heading", "text", MCELL),
+  d("mcell.oemProof.title", "mcell", mcellOemProofSec, "제목", "Title", "text", MCELL),
+  ...[0, 1, 2, 3, 4, 5].map((i) => [
+    d(`mcell.proof.${i}.icon`, "mcell", mcellProofSec, `항목 ${i + 1} 아이콘`, `Item ${i + 1} icon`, "image", MCELL),
+    d(`mcell.proof.${i}.title`, "mcell", mcellProofSec, `항목 ${i + 1} 제목`, `Item ${i + 1} title`, "text", MCELL),
+    d(`mcell.proof.${i}.lines`, "mcell", mcellProofSec, `항목 ${i + 1} 본문`, `Item ${i + 1} body`, "textarea", MCELL),
+  ]).flat(),
+
+  // ── ABOUT CEO 인사말 ──
+  d("about.ceo.banner.bg", "about", aboutCeoSec, "배너 이미지", "Banner image", "image", ABOUT),
+  d("about.ceo.banner.title", "about", aboutCeoSec, "제목", "Title", "text", ABOUT),
+  d("about.ceo.banner.quote", "about", aboutCeoSec, "인용구", "Quote", "text", ABOUT),
+  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
+    d(`about.ceo.paragraphs.${i}`, "about", aboutCeoSec, `문단 ${i + 1}`, `Paragraph ${i + 1}`, "textarea", ABOUT),
+  ),
+  d("about.ceo.signature", "about", aboutCeoSec, "서명", "Signature", "text", ABOUT),
+
+  // ── ABOUT 연혁 (12) ──
+  ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => [
+    d(`about.history.${i}.year`, "about", aboutHistorySec, `연도 ${i + 1}`, `Year ${i + 1}`, "text", ABOUT),
+    d(`about.history.${i}.events.0`, "about", aboutHistorySec, `연도 ${i + 1} 사건 1`, `Year ${i + 1} event 1`, "text", ABOUT),
+  ]).flat(),
+  // 2개 사건이 있는 연도만 (2020, 2021)
+  d("about.history.5.events.1", "about", aboutHistorySec, "연도 6 사건 2", "Year 6 event 2", "text", ABOUT),
+  d("about.history.6.events.1", "about", aboutHistorySec, "연도 7 사건 2", "Year 7 event 2", "text", ABOUT),
+
+  // ── ABOUT 연혁 이미지 ──
+  d("about.historyImages.pc", "about", aboutHistoryImagesSec, "PC 이미지", "PC image", "image", ABOUT),
+  d("about.historyImages.mobile", "about", aboutHistoryImagesSec, "모바일 이미지", "Mobile image", "image", ABOUT),
+
+  // ── ABOUT 인증서 (8) ──
+  ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => [
+    d(`about.certs.${i}.thumb`, "about", aboutCertsSec, `인증서 ${i + 1} 썸네일`, `Certificate ${i + 1} thumbnail`, "image", ABOUT),
+    d(`about.certs.${i}.full`, "about", aboutCertsSec, `인증서 ${i + 1} 원본`, `Certificate ${i + 1} full image`, "image", ABOUT),
+  ]).flat(),
+
+  // ── ABOUT 문의 배너 ──
+  d("about.contact.banner.bg", "about", aboutContactBannerSec, "배경 이미지", "Background image", "image", ABOUT),
+  d("about.contact.banner.lines.0", "about", aboutContactBannerSec, "문구 1", "Line 1", "text", ABOUT),
+  d("about.contact.banner.lines.1", "about", aboutContactBannerSec, "문구 2", "Line 2", "text", ABOUT),
+
+  // ── ABOUT 오피스 (2) ──
+  ...[0, 1].map((i) => [
+    d(`about.contact.offices.${i}.name`, "about", aboutOfficesSec, `오피스 ${i + 1} 이름`, `Office ${i + 1} name`, "text", ABOUT),
+    d(`about.contact.offices.${i}.tel`, "about", aboutOfficesSec, `오피스 ${i + 1} 전화`, `Office ${i + 1} tel`, "text", ABOUT),
+    d(`about.contact.offices.${i}.email`, "about", aboutOfficesSec, `오피스 ${i + 1} 이메일`, `Office ${i + 1} email`, "text", ABOUT),
+    d(`about.contact.offices.${i}.address`, "about", aboutOfficesSec, `오피스 ${i + 1} 주소`, `Office ${i + 1} address`, "text", ABOUT),
+  ]).flat(),
 ];
 
 export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
@@ -141,6 +312,8 @@ export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
 export const CONTENT_KEYS = CONTENT_DEFS.map((def) => def.key);
 export const HOME_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "home").map((def) => def.key);
 export const SHOP_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "shop").map((def) => def.key);
+export const MCELL_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "mcell").map((def) => def.key);
+export const ABOUT_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "about").map((def) => def.key);
 
 export const MAX_LENGTH: Record<ContentKind, number> = {
   text: 500,

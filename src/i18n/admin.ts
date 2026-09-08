@@ -250,6 +250,8 @@ const ko: AdminDict = {
       home: "홈",
       shop: "SHOP",
       partnership: "제휴 및 문의",
+      mcell: "기술력 소개",
+      about: "회사 소개",
     },
     kinds: {
       text: "텍스트",
@@ -413,6 +415,8 @@ const en: AdminDict = {
       home: "Home",
       shop: "SHOP",
       partnership: "Partnership",
+      mcell: "Technology",
+      about: "About",
     },
     kinds: {
       text: "Text",

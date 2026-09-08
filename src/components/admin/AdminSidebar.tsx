@@ -45,6 +45,16 @@ function buildGroups(t: AdminDict, locale: string): SidebarGroup[] {
           query: { group: "partnership" },
           label: locale === "ko" ? "제휴 및 문의" : "Partnership",
         },
+        {
+          href: "/admin/pages",
+          query: { group: "mcell" },
+          label: locale === "ko" ? "기술력 소개" : "Technology",
+        },
+        {
+          href: "/admin/pages",
+          query: { group: "about" },
+          label: locale === "ko" ? "회사 소개" : "About",
+        },
       ],
     },
     {

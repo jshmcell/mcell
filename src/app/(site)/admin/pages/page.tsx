@@ -12,7 +12,12 @@ export default async function AdminPagesPage({
 }) {
   const { group } = await searchParams;
   const activeGroup: ContentGroup =
-    group === "shop" || group === "partnership" ? group : "home";
+    group === "shop" ||
+    group === "partnership" ||
+    group === "mcell" ||
+    group === "about"
+      ? group
+      : "home";
   const defs = CONTENT_DEFS.filter((d) => d.group === activeGroup);
 
   const rows = await prisma.pageContent.findMany();

@@ -93,3 +93,17 @@ export const EN_PARTNERSHIP: Record<string, string> = {
   "partnership.lines":
     "From material development to co-designed products, sample testing and mass-production readiness, we propose a collaboration structure tailored to your goals —\nas a partner with proven technology and execution.",
 };
+
+/**
+ * mcell(/mcell, /mcell/oem-odm) 영어 기본 문구.
+ * 현재 mcell 페이지/컴포넌트에는 EN 분기가 없어(전부 한국어 정적 콘텐츠) 빈 사전으로 시작한다.
+ * EN 사전에 없는 키는 한국어 기본값으로 폴백한다 — 번역 추가 시 여기에 키를 채우면 된다.
+ */
+export const EN_MCELL: Record<string, string> = {};
+
+/**
+ * about(/about, /about/history, /about/certifications, /about/contact) 영어 기본 문구.
+ * 현재 about 페이지/컴포넌트에는 EN 분기가 없어(전부 한국어 정적 콘텐츠) 빈 사전으로 시작한다.
+ * EN 사전에 없는 키는 한국어 기본값으로 폴백한다 — 번역 추가 시 여기에 키를 채우면 된다.
+ */
+export const EN_ABOUT: Record<string, string> = {};
