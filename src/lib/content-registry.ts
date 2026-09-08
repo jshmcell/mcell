@@ -273,11 +273,8 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.historyBanner.bg", "about", aboutHistorySec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.history", "about", aboutHistorySec, "연혁 목록", "History list", "historyList", ABOUT),
 
-  // ── ABOUT 페이지별 상단 배너 이미지 ──
+  // ── ABOUT 인증서 (상단 배너 이미지 + 동적 목록 — JSON: [{"thumb":"...","full":"..."}, ...]) ──
   d("about.certsBanner.bg", "about", aboutCertsSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
-  d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
-
-  // ── ABOUT 인증서 (동적 목록 — JSON: [{"thumb":"...","full":"..."}, ...]) ──
   d("about.certs", "about", aboutCertsSec, "인증서 목록", "Certificates list", "certList", ABOUT),
 
   // ── ABOUT 문의 배너 ──
@@ -285,7 +282,8 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.contact.banner.lines.0", "about", aboutContactBannerSec, "문구 1", "Line 1", "text", ABOUT),
   d("about.contact.banner.lines.1", "about", aboutContactBannerSec, "문구 2", "Line 2", "text", ABOUT),
 
-  // ── ABOUT 오피스 (동적 목록 — JSON: [{"name","mapSrc","tel","email","address"}, ...]) ──
+  // ── ABOUT 오피스 (상단 배너 이미지 + 동적 목록 — JSON: [{"name","mapSrc","tel","email","address"}, ...]) ──
+  d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.contact.offices", "about", aboutOfficesSec, "오피스 목록", "Offices list", "officeList", ABOUT),
 ];
 
