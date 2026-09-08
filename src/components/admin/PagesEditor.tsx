@@ -6,6 +6,8 @@ import {
   HomeSectionPreview,
   ShopHeroPreview,
   ShopProductsPreview,
+  McellSectionPreview,
+  AboutSectionPreview,
 } from "@/components/admin/SectionPreview";
 import { savePageContent } from "@/lib/actions/admin-pages";
 import {
@@ -24,6 +26,22 @@ import {
   resolveShopProductsFromRows,
 } from "@/lib/shop-content-resolve";
 import {
+  resolveMcellFromRows,
+  resolveMcellOemFromRows,
+  type ResolvedMcell,
+  type ResolvedMcellOem,
+} from "@/lib/mcell-content-resolve";
+import {
+  resolveAboutFromRows,
+  resolveAboutHistoryFromRows,
+  resolveAboutCertificationsFromRows,
+  resolveAboutContactFromRows,
+  type ResolvedAbout,
+  type ResolvedAboutHistory,
+  type ResolvedAboutCertifications,
+  type ResolvedAboutContact,
+} from "@/lib/about-content-resolve";
+import {
   pickLines,
   pickText,
   type ContentRows,
@@ -36,6 +54,35 @@ import { cn } from "@/lib/cn";
 
 export type ContentValues = Record<string, { ko?: string; en?: string }>;
 type PreviewLang = "ko" | "en";
+
+/** 콘텐츠 키 prefix → mcell 미리보기 섹션 (메인 페이지 + OEM 페이지). */
+function mcellSectionOfKey(key: string) {
+  if (key.startsWith("mcell.hero.")) return "hero";
+  if (key.startsWith("mcell.stats.")) return "stats";
+  if (key.startsWith("mcell.tech.")) return "tech";
+  if (key.startsWith("mcell.products.")) return "products";
+  if (key.startsWith("mcell.comparisons.")) return "comparisons";
+  if (key.startsWith("mcell.industries.")) return "industries";
+  if (key.startsWith("mcell.cooperation.")) return "cooperation";
+  if (key.startsWith("mcell.platform.")) return "platform";
+  if (key.startsWith("mcell.oemBanner.")) return "oemBanner";
+  if (key.startsWith("mcell.oemBlocks.")) return "oemBlocks";
+  if (key.startsWith("mcell.rnd.")) return "rnd";
+  // oemProof + proof 둘 다 OemProof 컴포넌트가 소비
+  if (key.startsWith("mcell.oemProof.") || key.startsWith("mcell.proof.")) return "oemProof";
+  return null;
+}
+
+/** 콘텐츠 키 prefix → about 미리보기 섹션. */
+function aboutSectionOfKey(key: string) {
+  if (key.startsWith("about.ceo.")) return "ceo";
+  if (key.startsWith("about.historyImages.")) return "historyImages";
+  if (key.startsWith("about.history.")) return "history";
+  if (key.startsWith("about.certs.")) return "certifications";
+  if (key.startsWith("about.contact.banner.")) return "contactBanner";
+  if (key.startsWith("about.contact.")) return "contact";
+  return null;
+}
 
 const inputCls =
   "w-full rounded-[3px] border border-black/10 bg-white px-3 py-2 text-[14px] outline-none focus:border-navy-700";
@@ -358,6 +405,12 @@ function buildDefaultMap(locale: "ko" | "en"): Map<string, string> {
   resolveHomeFromRows({}, locale, m);
   resolveShopHeroFromRows({}, locale, m);
   resolveShopProductsFromRows({}, locale, m);
+  resolveMcellFromRows({}, locale, m);
+  resolveMcellOemFromRows({}, locale, m);
+  resolveAboutFromRows({}, locale, m);
+  resolveAboutHistoryFromRows({}, locale, m);
+  resolveAboutCertificationsFromRows({}, locale, m);
+  resolveAboutContactFromRows({}, locale, m);
   const en = EN_PARTNERSHIP;
   m.set(
     "partnership.heading",
@@ -452,6 +505,30 @@ export default function PagesEditor({
     () => (group === "shop" ? resolveShopProductsFromRows(previewRows, previewLang) : null),
     [group, previewRows, previewLang],
   );
+  const mcell = useMemo<ResolvedMcell | null>(
+    () => (group === "mcell" ? resolveMcellFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const mcellOem = useMemo<ResolvedMcellOem | null>(
+    () => (group === "mcell" ? resolveMcellOemFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const about = useMemo<ResolvedAbout | null>(
+    () => (group === "about" ? resolveAboutFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const aboutHistory = useMemo<ResolvedAboutHistory | null>(
+    () => (group === "about" ? resolveAboutHistoryFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const aboutCertifications = useMemo<ResolvedAboutCertifications | null>(
+    () => (group === "about" ? resolveAboutCertificationsFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const aboutContact = useMemo<ResolvedAboutContact | null>(
+    () => (group === "about" ? resolveAboutContactFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
 
   // which preview slice matches the open section (all closed → first section)
   const firstSectionKey = defs.length
@@ -469,6 +546,17 @@ export default function PagesEditor({
       ? "hero"
       : "products"
     : null;
+  // mcell: 첫 키 세그먼트가 메인 페이지 섹션(mcell.*)인지 OEM 섹션(oemBanner/oemBlocks/rnd/oemProof/proof)인지 판별
+  const mcellPreviewSection: keyof ResolvedMcell | keyof ResolvedMcellOem | null =
+    openDef && openDef.group === "mcell" ? mcellSectionOfKey(openDef.key) : null;
+  // about: 첫 키 세그먼트로 4개 페이지 섹션 판별
+  const aboutPreviewSection:
+    | keyof ResolvedAbout
+    | keyof ResolvedAboutHistory
+    | keyof ResolvedAboutCertifications
+    | "contactBanner"
+    | keyof ResolvedAboutContact
+    | null = openDef && openDef.group === "about" ? aboutSectionOfKey(openDef.key) : null;
 
   function draftFor(def: ContentDef): { ko: string; en: string } {
     return {
@@ -619,6 +707,28 @@ export default function PagesEditor({
             {group === "partnership" && (
               <PartnershipPreview rows={previewRows} lang={previewLang} />
             )}
+            {group === "mcell" && mcell && mcellOem && mcellPreviewSection && (
+              <McellSectionPreview
+                section={mcellPreviewSection}
+                mcell={mcell}
+                oem={mcellOem}
+              />
+            )}
+            {group === "about" &&
+              about &&
+              aboutPreviewSection &&
+              aboutHistory &&
+              aboutCertifications &&
+              aboutContact && (
+                <AboutSectionPreview
+                  section={aboutPreviewSection}
+                  about={about}
+                  history={aboutHistory}
+                  certifications={aboutCertifications}
+                  contact={aboutContact}
+                  locale={previewLang}
+                />
+              )}
           </div>
         </div>
         <p className="mt-2 text-[11px] leading-5 text-ink/50">
