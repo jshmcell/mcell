@@ -13,7 +13,7 @@ export default function FeatureGrid({
   return (
     <section className="bg-navy-900">
       <div className="container-site pb-[19px] pt-[18px] md-header:pb-[110px] md-header:pt-[110px]">
-        <div className="my-[15px] grid grid-cols-2 gap-[15px] md-header:grid-cols-4 md-header:gap-[30px]">
+        <div className="my-[15px] grid auto-rows-[1fr] grid-cols-2 gap-[15px] md-header:grid-cols-4 md-header:gap-[30px]">
           {featureCards.map((card, i) => (
             <Reveal
               key={card.no}
@@ -21,12 +21,18 @@ export default function FeatureGrid({
               duration={0.7}
               delay={DELAYS[i]}
             >
-              <div className="flex h-auto flex-col items-center justify-center rounded-[10px] bg-white px-2 py-[10px] text-center md-header:h-[163px] md-header:rounded-[15px] md-header:px-4 md-header:py-5">
+              <div className="flex h-full flex-col items-center justify-center rounded-[10px] bg-white px-2 py-[10px] text-center md-header:rounded-[15px] md-header:px-4 md-header:py-5">
                 <span className="text-[18px]">{card.no}</span>
-                <h3 className="mt-[10px] text-[16px] font-bold leading-[22.4px] text-[#2a2a2a] md-header:text-[22px] md-header:leading-[26.4px]">
+                <h3
+                  title={card.title}
+                  className="mt-[10px] line-clamp-5 break-words text-[16px] font-bold leading-[22.4px] text-[#2a2a2a] md-header:text-[22px] md-header:leading-[26.4px]"
+                >
                   {card.title}
                 </h3>
-                <div className="mt-[15px] text-[14px] leading-[22.4px] text-[#2a2a2a] md-header:mt-[16px] md-header:text-[16px] md-header:leading-[25.6px]">
+                <div
+                  title={card.lines.join(" ")}
+                  className="mt-[15px] line-clamp-5 break-words text-[14px] leading-[22.4px] text-[#2a2a2a] md-header:mt-[16px] md-header:text-[16px] md-header:leading-[25.6px]"
+                >
                   {card.lines.map((line) => (
                     <p key={line}>{line}</p>
                   ))}
