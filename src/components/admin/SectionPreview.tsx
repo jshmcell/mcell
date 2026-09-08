@@ -48,7 +48,7 @@ import type {
 /** Renders children at the real desktop width (1280px container) scaled down
  *  to fit the preview column, so the preview is a true WYSIWYG thumbnail of
  *  the big-screen layout. */
-function ScaledDesktop({ children }: { children: ReactNode }) {
+export function ScaledDesktop({ children }: { children: ReactNode }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);

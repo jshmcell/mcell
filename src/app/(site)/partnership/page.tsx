@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import SubHero from "@/components/subpage/SubHero";
-import SubPageBanner from "@/components/subpage/SubPageBanner";
+import PartnershipSection from "@/components/partnership/PartnershipSection";
 import InquiryForm from "@/components/forms/InquiryForm";
 import InfiniteSlider from "@/components/ui/InfiniteSlider";
-import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { partnership } from "@/data/partnership";
 import { EN_PARTNERSHIP } from "@/data/content-en";
 import { partnerStrip, partnerStripFull, partnershipBadge } from "@/data/mcell";
 import { getLocale } from "@/i18n/server";
 import { getContentRows, pickLines, pickText } from "@/lib/content";
+import { PARTNERSHIP_CONTENT_KEYS } from "@/lib/content-registry";
 
 export const metadata: Metadata = {
   title: "제휴 및 문의",
@@ -26,12 +26,7 @@ export const dynamic = "force-dynamic";
  */
 export default async function PartnershipPage() {
   const locale = await getLocale();
-  const rows = await getContentRows([
-    "partnership.heading",
-    "partnership.title",
-    "partnership.lines",
-    "partnership.banner",
-  ]);
+  const rows = await getContentRows(PARTNERSHIP_CONTENT_KEYS);
   const heading = pickText(rows, "partnership.heading", locale, EN_PARTNERSHIP.heading ?? partnership.heading);
   const title = pickText(
     rows,
@@ -58,26 +53,10 @@ export default async function PartnershipPage() {
         compact
         locale={locale}
       />
-      <SubPageBanner image={banner} overlay locale={locale} />
+      <PartnershipSection heading={heading} title={title} lines={lines} banner={banner} />
 
       <section className="bg-[#f7f7f7]">
-        <div className="container-site pt-[30px] text-center">
-          <Appear animation="fadeIn" duration={0.7} className="my-[15px]">
-            {/* 헤딩 블록 — 원본 h6: PC 20px/27px(#17375e) · 30px/36px(#363636) · 18px 줄간격 2,
-                모바일 16px/22.4px, h6 마진 10px */}
-            <h2 className="my-[10px] text-[16px] leading-[22.4px] font-bold text-navy-900 md-header:mt-[54px] md-header:text-[20px] md-header:leading-[27px]">
-              {heading}
-            </h2>
-            <h2 className="my-[10px] text-[16px] leading-[22.4px] font-bold text-ink md-header:text-[30px] md-header:leading-[36px]">
-              {title}
-            </h2>
-            <div className="text-[15px] leading-[30px] text-ink md-header:text-[18px] md-header:leading-[30px]">
-              {lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-          </Appear>
-
+        <div className="container-site text-center">
           <div className="my-[15px] md-header:mt-[30px]">
             <InquiryForm />
           </div>

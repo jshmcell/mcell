@@ -294,6 +294,7 @@ export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
 export const CONTENT_KEYS = CONTENT_DEFS.map((def) => def.key);
 export const HOME_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "home").map((def) => def.key);
 export const SHOP_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "shop").map((def) => def.key);
+export const PARTNERSHIP_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "partnership").map((def) => def.key);
 export const MCELL_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "mcell").map((def) => def.key);
 export const ABOUT_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "about").map((def) => def.key);
 

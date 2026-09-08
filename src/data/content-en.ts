@@ -81,6 +81,7 @@ export const EN_HOME: Record<string, string> = {
 };
 
 export const EN_SHOP: Record<string, string> = {
+  "shop.hero.title": "SHOP",
   "shop.hero.description": "Explore a range of products powered by MCELL technology.",
   "shop.product.0.name": "Heated Vest",
   "shop.product.1.name": "Heated Eye Mask",

@@ -1,14 +1,15 @@
 "use client";
 
 import { Fragment, useMemo, useRef, useState } from "react";
-import SmartImage from "@/components/ui/SmartImage";
 import {
   HomeSectionPreview,
   ShopHeroPreview,
   ShopProductsPreview,
   McellSectionPreview,
   AboutSectionPreview,
+  ScaledDesktop,
 } from "@/components/admin/SectionPreview";
+import PartnershipSection from "@/components/partnership/PartnershipSection";
 import { savePageContent } from "@/lib/actions/admin-pages";
 import {
   normalizeMediaUrl,
@@ -886,38 +887,26 @@ function PartnershipPreview({
   rows: ContentRows;
   lang: PreviewLang;
 }) {
-  const heading = pickText(rows, "partnership.heading", lang, EN_PARTNERSHIP.heading ?? "PARTNERSHIP INQUIRY");
+  const heading = pickText(rows, "partnership.heading", lang, EN_PARTNERSHIP.heading ?? partnershipDefaults.heading);
   const title = pickText(
     rows,
     "partnership.title",
     lang,
     lang === "en"
-      ? (EN_PARTNERSHIP.title ?? "엠셀과 함께 새로운 기술 가치를 만들어갑니다.")
-      : "엠셀과 함께 새로운 기술 가치를 만들어갑니다.",
+      ? (EN_PARTNERSHIP.title ?? partnershipDefaults.title)
+      : partnershipDefaults.title,
   );
-  const lines = pickLines(rows, "partnership.lines", lang, [""]);
+  const lines = pickLines(rows, "partnership.lines", lang, partnershipDefaults.lines);
   const banner = pickText(
     rows,
     "partnership.banner",
     lang,
-    "/assets/img/ab3b53993fa77.jpg",
+    partnershipDefaults.banner,
   );
   return (
-    <div>
-      <div className="relative h-[140px] overflow-hidden">
-        <SmartImage src={banner} alt="" fill className="object-cover" sizes="460px" />
-        <div className="absolute inset-0 bg-black/45" />
-      </div>
-      <div className="bg-[#f7f7f7] p-5 text-center">
-        <p className="text-[12px] font-bold text-navy-900">{heading}</p>
-        <h3 className="mt-1 text-[17px] font-bold text-ink">{title}</h3>
-        <div className="mt-2 text-[11px] leading-[1.9] text-ink">
-          {lines.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
-        </div>
-      </div>
-    </div>
+    <ScaledDesktop>
+      <PartnershipSection heading={heading} title={title} lines={lines} banner={banner} />
+    </ScaledDesktop>
   );
 }
 
