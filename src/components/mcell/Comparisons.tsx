@@ -3,7 +3,8 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { cn } from "@/lib/cn";
-import { comparisons } from "@/data/mcell";
+import { comparisons as defaultContent } from "@/data/mcell";
+import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 function StatCard({
   title,
@@ -44,10 +45,14 @@ function StatCard({
  * 우측 카드 2장(타사 #e6e6e6 / 히트플렉스 #c3cbd4).
  * 첫 번째 섹션: pad 103/31 + 타이틀 블록 / 두 번째: pad 0/97, 타이틀 없음.
  */
-export default function Comparisons() {
+export default function Comparisons({
+  content = defaultContent,
+}: {
+  content?: ResolvedMcell["comparisons"];
+}) {
   return (
     <>
-      {comparisons.map((cmp, idx) => (
+      {content.map((cmp, idx) => (
         <section
           key={idx}
           className={cn(

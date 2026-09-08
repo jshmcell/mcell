@@ -1,13 +1,18 @@
 import Appear from "@/components/ui/Appear";
-import { stats } from "@/data/mcell";
+import { stats as defaultContent } from "@/data/mcell";
+import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /**
  * 투자 유치 현황 — 원본: #eaeef2 배경, 네이비 #17375e 카드 290x155,
  * fadeInUp 1.2s (딜레이 0.2/0.3/0.4/0.5), PC 4열 / 모바일 2열
  */
-export default function Stats() {
+export default function Stats({
+  content = defaultContent,
+}: {
+  content?: ResolvedMcell["stats"];
+}) {
   const cards = (mobile: boolean) =>
-    stats.map((stat, i) => (
+    content.map((stat, i) => (
       <Appear
         key={stat.label}
         duration={1.2}

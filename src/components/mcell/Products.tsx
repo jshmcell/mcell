@@ -3,16 +3,21 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { useImageViewer } from "@/components/ui/ImageViewer";
-import { products, type Product } from "@/data/mcell";
+import { products as defaultContent } from "@/data/mcell";
+import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /**
  * 제품 정보 — 원본: 3열 갤러리(컨테이너 1037), 이미지 324x183 +
  * 텍스트 블록(타이틀 14px #212121, 설명 12px #999),
  * 호버 시 카드 전체가 20px 상승 + 그림자(0.5s), 클릭 시 뷰어(캡션 표시)
  */
-export default function Products() {
+export default function Products({
+  content = defaultContent,
+}: {
+  content?: ResolvedMcell["products"];
+}) {
   const openViewer = useImageViewer();
-  const viewerImages = products.map((p: Product) => ({
+  const viewerImages = content.map((p) => ({
     src: p.image,
     alt: p.name,
     caption: { title: p.name, description: p.description },
@@ -34,7 +39,7 @@ export default function Products() {
 
         <Appear className="mx-auto mt-[30px] max-w-[1067px]">
           <div className="grid grid-cols-1 sm:grid-cols-3">
-            {products.map((product, i) => (
+            {content.map((product, i) => (
               <button
                 key={product.name}
                 type="button"
