@@ -5,7 +5,7 @@
  */
 
 export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList" | "officeList" | "certList";
-export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about";
+export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about" | "footer";
 
 export interface ContentDef {
   key: string;
@@ -43,6 +43,7 @@ const ABOUT = [
   "/about/contact",
   "/en/about/contact",
 ];
+const FOOTER = ["/", "/en"];
 
 const heroSec = { ko: "히어로", en: "Hero" };
 const techSec = { ko: "기술 소개", en: "Tech intro" };
@@ -76,6 +77,9 @@ const aboutHistorySec = { ko: "연혁", en: "History" };
 const aboutCertsSec = { ko: "인증서", en: "Certifications" };
 const aboutContactBannerSec = { ko: "문의 배너", en: "Contact banner" };
 const aboutOfficesSec = { ko: "오피스 정보", en: "Offices" };
+
+// ── footer group ──
+const footerSec = { ko: "푸터", en: "Footer" };
 
 export const CONTENT_DEFS: ContentDef[] = [
   // ── Hero ──
@@ -285,6 +289,16 @@ export const CONTENT_DEFS: ContentDef[] = [
   // ── ABOUT 오피스 (상단 배너 이미지 + 동적 목록 — JSON: [{"name","mapSrc","tel","email","address"}, ...]) ──
   d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.contact.offices", "about", aboutOfficesSec, "오피스 목록", "Offices list", "officeList", ABOUT),
+
+  // ── FOOTER ──
+  d("footer.companyName", "footer", footerSec, "회사명 (로고 alt)", "Company name (logo alt)", "text", FOOTER),
+  d("footer.address", "footer", footerSec, "본점 주소", "Head office address", "text", FOOTER),
+  d("footer.lab", "footer", footerSec, "연구실 주소", "Research lab address", "text", FOOTER),
+  d("footer.telPrefix", "footer", footerSec, "전화 접두사", "Tel prefix", "text", FOOTER),
+  d("footer.faxPrefix", "footer", footerSec, "팩스 접두사", "Fax prefix", "text", FOOTER),
+  d("footer.emailPrefix", "footer", footerSec, "이메일 접두사", "Email prefix", "text", FOOTER),
+  d("footer.terms", "footer", footerSec, "이용약관 링크 문구", "Terms link label", "text", FOOTER),
+  d("footer.privacy", "footer", footerSec, "개인정보처리방침 링크 문구", "Privacy link label", "text", FOOTER),
 ];
 
 export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
@@ -297,6 +311,7 @@ export const SHOP_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "sho
 export const PARTNERSHIP_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "partnership").map((def) => def.key);
 export const MCELL_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "mcell").map((def) => def.key);
 export const ABOUT_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "about").map((def) => def.key);
+export const FOOTER_CONTENT_KEYS = CONTENT_DEFS.filter((def) => def.group === "footer").map((def) => def.key);
 
 export const MAX_LENGTH: Record<ContentKind, number> = {
   text: 500,

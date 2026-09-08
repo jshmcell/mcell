@@ -55,6 +55,11 @@ function buildGroups(t: AdminDict, locale: string): SidebarGroup[] {
           query: { group: "about" },
           label: locale === "ko" ? "회사 소개" : "About",
         },
+        {
+          href: "/admin/pages",
+          query: { group: "footer" },
+          label: locale === "ko" ? "푸터" : "Footer",
+        },
       ],
     },
     {

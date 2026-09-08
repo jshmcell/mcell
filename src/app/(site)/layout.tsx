@@ -6,6 +6,7 @@ import { getLocale } from "@/i18n/server";
 import { getCurrentUser } from "@/lib/session";
 import { getActor } from "@/lib/roles";
 import { getSiteSettings } from "@/lib/settings";
+import { getFooterContent } from "@/lib/footer-content";
 
 export default async function SiteLayout({
   children,
@@ -18,6 +19,7 @@ export default async function SiteLayout({
     getSiteSettings(),
     getLocale(),
   ]);
+  const footer = await getFooterContent(locale);
   const headerUser = user
     ? { ...user, isAdmin: actor?.isAdmin ?? false }
     : null;
@@ -27,7 +29,7 @@ export default async function SiteLayout({
       <Header user={headerUser} settings={{ companyName: settings.company.name }} />
       <MobileDrawer user={headerUser} />
       <main className="flex-1">{children}</main>
-      <Footer settings={settings} locale={locale} />
+      <Footer settings={settings} content={footer} locale={locale} />
       <ImageViewer />
     </>
   );

@@ -272,6 +272,7 @@ const ko: AdminDict = {
       partnership: "제휴 및 문의",
       mcell: "MCell",
       about: "회사 소개",
+      footer: "푸터",
     },
     pageLabels: {
       mcellMain: "메인 페이지",
@@ -463,6 +464,7 @@ const en: AdminDict = {
       partnership: "Partnership",
       mcell: "MCell",
       about: "About",
+      footer: "Footer",
     },
     pageLabels: {
       mcellMain: "Main page",

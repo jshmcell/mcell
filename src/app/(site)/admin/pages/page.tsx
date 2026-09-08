@@ -15,7 +15,8 @@ export default async function AdminPagesPage({
     group === "shop" ||
     group === "partnership" ||
     group === "mcell" ||
-    group === "about"
+    group === "about" ||
+    group === "footer"
       ? group
       : "home";
   const defs = CONTENT_DEFS.filter((d) => d.group === activeGroup);

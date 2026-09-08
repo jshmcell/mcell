@@ -317,3 +317,19 @@ export const EN_OFFICES: {
     address: "64, Deokgyesil 2-gil, Samjuk-myeon, Anseong-si, Gyeonggi-do, Korea",
   },
 ];
+
+/**
+ * 푸터(footer) 영어 기본 문구 — data/footer.ts 한국어 기본값의 EN 사본.
+ * tel/fax/email 접두사는 언어 무관이라 KO와 동일.
+ */
+export const EN_FOOTER: Record<string, string> = {
+  "footer.companyName": "MCell",
+  "footer.address":
+    "Head office ) Global Convergence Center A401, 46 Dallaenae-ro, Sujeong-gu, Seongnam-si, Gyeonggi-do, Korea MCell",
+  "footer.lab": "Research lab ) 64, Deokgyesil 2-gil, Samjuk-myeon, Anseong-si, Gyeonggi-do, Korea",
+  "footer.telPrefix": "TEL. :",
+  "footer.faxPrefix": "FAX :",
+  "footer.emailPrefix": "E-mail:",
+  "footer.terms": "Terms of Service",
+  "footer.privacy": "Privacy Policy",
+};

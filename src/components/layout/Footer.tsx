@@ -1,10 +1,10 @@
 import SmartImage from "@/components/ui/SmartImage";
 import Link from "next/link";
 import type { ComponentType, SVGProps } from "react";
-import { company as defaultCompany } from "@/data/site";
-import { chromeDict } from "@/i18n/chrome";
 import { localizeHref, type Locale } from "@/i18n/config";
 import type { ResolvedSiteSettings } from "@/lib/settings";
+import type { ResolvedFooter } from "@/lib/footer-content";
+import { FOOTER_DEFAULTS } from "@/data/footer";
 
 function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -56,13 +56,23 @@ const defaultSocials: ResolvedSiteSettings["socials"] = [
 
 export default function Footer({
   settings,
+  content,
   locale = "ko",
 }: {
   settings?: ResolvedSiteSettings;
+  content?: ResolvedFooter;
   locale?: Locale;
 }) {
-  const t = chromeDict[locale];
-  const company = settings?.company ?? defaultCompany;
+  const c = content ?? {
+    companyName: FOOTER_DEFAULTS.companyName,
+    address: FOOTER_DEFAULTS.address,
+    lab: FOOTER_DEFAULTS.lab,
+    telPrefix: FOOTER_DEFAULTS.telPrefix,
+    faxPrefix: FOOTER_DEFAULTS.faxPrefix,
+    emailPrefix: FOOTER_DEFAULTS.emailPrefix,
+    terms: FOOTER_DEFAULTS.terms,
+    privacy: FOOTER_DEFAULTS.privacy,
+  };
   const socialLinks = (settings?.socials ?? defaultSocials)
     .map((s) => ({
       label: s.label,
@@ -76,17 +86,17 @@ export default function Footer({
         <div>
           <SmartImage
             src="/assets/img/fd051c1da84e1.png"
-            alt={company.name}
+            alt={c.companyName}
             width={134}
             height={50}
             className="h-auto w-[134px]"
           />
           <div className="mt-[8px] text-[15px] leading-[24px] text-[#949494] lg:mt-[7px]">
-            <p>{company.address}</p>
-            <p>{company.lab}</p>
-            <p className="mt-[24px]">TEL. : {company.tel}</p>
-            <p>FAX : {company.fax}</p>
-            <p>E-mail: {company.email}</p>
+            <p>{c.address}</p>
+            <p>{c.lab}</p>
+            <p className="mt-[24px]">{c.telPrefix} {settings?.company?.tel ?? ""}</p>
+            <p>{c.faxPrefix} {settings?.company?.fax ?? ""}</p>
+            <p>{c.emailPrefix} {settings?.company?.email ?? ""}</p>
           </div>
         </div>
 
@@ -108,13 +118,13 @@ export default function Footer({
               href={localizeHref("/policy", locale)}
               className="transition-colors hover:text-white"
             >
-              {t.footer.terms}
+              {c.terms}
             </Link>
             <Link
               href={localizeHref("/privacy", locale)}
               className="transition-colors hover:text-white"
             >
-              {t.footer.privacy}
+              {c.privacy}
             </Link>
           </p>
         </div>

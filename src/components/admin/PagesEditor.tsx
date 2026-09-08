@@ -43,6 +43,10 @@ import {
   type ResolvedAboutContact,
 } from "@/lib/about-content-resolve";
 import {
+  resolveFooterFromRows,
+  type ResolvedFooter,
+} from "@/lib/footer-content-resolve";
+import {
   pickLines,
   pickText,
   type ContentRows,
@@ -928,6 +932,28 @@ function PartnershipPreview({
   );
 }
 
+/* ── footer preview (single section — simple scaled text preview) ─────── */
+
+function FooterPreview({ footer }: { footer: ResolvedFooter }) {
+  return (
+    <ScaledDesktop>
+      <div className="bg-[#242424] p-6 text-[#949494]">
+        <p className="text-[15px] font-bold text-white">{footer.companyName}</p>
+        <p className="mt-2 text-[13px] leading-[22px]">{footer.address}</p>
+        <p className="text-[13px] leading-[22px]">{footer.lab}</p>
+        <p className="mt-3 text-[13px] leading-[22px]">
+          {footer.telPrefix} +82-70-4333-5233
+        </p>
+        <p className="text-[13px] leading-[22px]">{footer.faxPrefix} +82-50-4180-9916</p>
+        <p className="text-[13px] leading-[22px]">{footer.emailPrefix} contact@mcell.co.kr</p>
+        <p className="mt-3 text-[13px] leading-[22px]">
+          {footer.terms} · {footer.privacy}
+        </p>
+      </div>
+    </ScaledDesktop>
+  );
+}
+
 /* ── main editor ──────────────────────────────────────────────────────── */
 
 /** 파일 기본값 맵 — 빈 rows 로 resolve 하면 기본값이 수집된다. */
@@ -942,6 +968,7 @@ function buildDefaultMap(locale: "ko" | "en"): Map<string, string> {
   resolveAboutHistoryFromRows({}, locale, m);
   resolveAboutCertificationsFromRows({}, locale, m);
   resolveAboutContactFromRows({}, locale, m);
+  resolveFooterFromRows({}, locale, m);
   const en = EN_PARTNERSHIP;
   m.set(
     "partnership.heading",
@@ -1058,6 +1085,10 @@ export default function PagesEditor({
   );
   const aboutContact = useMemo<ResolvedAboutContact | null>(
     () => (group === "about" ? resolveAboutContactFromRows(previewRows, previewLang) : null),
+    [group, previewRows, previewLang],
+  );
+  const footer = useMemo<ResolvedFooter | null>(
+    () => (group === "footer" ? resolveFooterFromRows(previewRows, previewLang) : null),
     [group, previewRows, previewLang],
   );
 
@@ -1284,6 +1315,7 @@ export default function PagesEditor({
                   locale={previewLang}
                 />
               )}
+            {group === "footer" && footer && <FooterPreview footer={footer} />}
           </div>
         </div>
         <p className="mt-2 text-[11px] leading-5 text-ink/50">
