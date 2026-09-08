@@ -29,6 +29,7 @@ import HistoryTimeline from "@/components/about/HistoryTimeline";
 import ContactBanner from "@/components/about/ContactBanner";
 import ContactOffices from "@/components/about/ContactOffices";
 import CertGallery from "@/components/subpage/CertGallery";
+import SubPageBanner from "@/components/subpage/SubPageBanner";
 import type { Locale } from "@/i18n/config";
 import type { ResolvedHome } from "@/lib/home-content-resolve";
 import type { ResolvedShopHero } from "@/lib/shop-content-resolve";
@@ -395,6 +396,7 @@ function CeoContactBannerPreview({ contact, locale }: { contact: ResolvedAboutCo
 function AboutHistoryPreview({ history }: { history: ResolvedAboutHistory }) {
   return (
     <ScaledDesktop>
+      <SubPageBanner image={history.banner} overlay />
       <HistoryTimeline content={history} />
     </ScaledDesktop>
   );
@@ -403,15 +405,17 @@ function AboutHistoryPreview({ history }: { history: ResolvedAboutHistory }) {
 function AboutCertsPreview({ certifications }: { certifications: ResolvedAboutCertifications }) {
   return (
     <ScaledDesktop>
+      <SubPageBanner image={certifications.banner} overlay />
       <CertGallery items={certifications.certifications} />
     </ScaledDesktop>
   );
 }
 
-function AboutContactOfficesPreview({ contact }: { contact: ResolvedAboutContact["contact"] }) {
+function AboutContactOfficesPreview({ contact }: { contact: ResolvedAboutContact }) {
   return (
     <ScaledDesktop>
-      <ContactOffices content={contact} />
+      <SubPageBanner image={contact.banner} overlay />
+      <ContactOffices content={contact.contact} />
     </ScaledDesktop>
   );
 }
@@ -449,6 +453,6 @@ export function AboutSectionPreview({
     case "contactBanner":
       return contact ? <CeoContactBannerPreview contact={contact.contact} locale={locale} /> : null;
     case "contact":
-      return contact ? <AboutContactOfficesPreview contact={contact.contact} /> : null;
+      return contact ? <AboutContactOfficesPreview contact={contact} /> : null;
   }
 }

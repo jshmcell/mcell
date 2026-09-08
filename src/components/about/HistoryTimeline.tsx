@@ -3,7 +3,11 @@ import SmartImage from "@/components/ui/SmartImage";
 import { history, historyImages } from "@/data/about";
 import type { ResolvedAboutHistory } from "@/lib/about-content-resolve";
 
-const defaultContent: ResolvedAboutHistory = { history, historyImages };
+const defaultContent: ResolvedAboutHistory = {
+  history,
+  historyImages,
+  banner: "/assets/img/9e084a2b4a973.jpg",
+};
 
 /** About — 연혁 타임라인: 좌측 고정 이미지(PC) / 상단 이미지(모바일) + 연도별 이벤트 */
 export default function HistoryTimeline({

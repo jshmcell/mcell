@@ -16,7 +16,7 @@ export default async function HistoryPage() {
   return (
     <>
       <SubHero groupLabel="About" title="연혁" currentHref="/about/history" locale={locale} />
-      <SubPageBanner image="/assets/img/9e084a2b4a973.jpg" overlay locale={locale} />
+      <SubPageBanner image={c.banner} overlay locale={locale} />
       <HistoryTimeline content={c} />
       <div aria-hidden className="h-[76px] md-header:h-[151px]" />
     </>

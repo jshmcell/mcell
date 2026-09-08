@@ -19,16 +19,22 @@ export interface ResolvedAbout {
 export interface ResolvedAboutHistory {
   history: HistoryItem[];
   historyImages: typeof dHistoryImages;
+  /** /about/history 상단 배너 이미지 */
+  banner: string;
 }
 
 /** DB/드래프트 오버라이드가 적용된 인증서 데이터 — data/certifications.ts 와 동일한 shape. */
 export interface ResolvedAboutCertifications {
   certifications: Certification[];
+  /** /about/certifications 상단 배너 이미지 */
+  banner: string;
 }
 
 /** DB/드래프트 오버라이드가 적용된 문의 데이터 — data/contact.ts 와 동일한 shape. */
 export interface ResolvedAboutContact {
   contact: typeof dContact;
+  /** /about/contact 상단 배너 이미지 */
+  banner: string;
 }
 
 /** 순수 함수 — 서버(about-content.ts)와 관리자 미리보기(클라이언트) 양쪽에서 사용.
@@ -120,7 +126,9 @@ export function resolveAboutHistoryFromRows(
     mobile: t("about.historyImages.mobile", dHistoryImages.mobile),
   };
 
-  return { history, historyImages };
+  const banner = t("about.historyBanner.bg", "/assets/img/9e084a2b4a973.jpg");
+
+  return { history, historyImages, banner };
 }
 
 /** 순수 함수 — 서버(about-content.ts)와 관리자 미리보기(클라이언트) 양쪽에서 사용. */
@@ -142,7 +150,9 @@ export function resolveAboutCertificationsFromRows(
     full: t(`about.certs.${i}.full`, cert.full),
   }));
 
-  return { certifications };
+  const banner = t("about.certsBanner.bg", "/assets/img/f9124d9afd25e.jpg");
+
+  return { certifications, banner };
 }
 
 /** 순수 함수 — 서버(about-content.ts)와 관리자 미리보기(클라이언트) 양쪽에서 사용. */
@@ -167,14 +177,49 @@ export function resolveAboutContactFromRows(
         t(`about.contact.banner.lines.${i}`, line),
       ),
     },
-    offices: dContact.offices.map((office, i) => ({
-      ...office,
-      name: t(`about.contact.offices.${i}.name`, office.name),
-      tel: t(`about.contact.offices.${i}.tel`, office.tel),
-      email: t(`about.contact.offices.${i}.email`, office.email),
-      address: t(`about.contact.offices.${i}.address`, office.address),
-    })),
+    offices: (() => {
+      // about.contact.offices — JSON 목록 [{"name","mapSrc","tel","email","address"}, ...].
+      // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
+      const rawOffices = pickText(rows, "about.contact.offices", locale, "");
+      if (rawOffices) {
+        try {
+          const parsed = JSON.parse(rawOffices) as unknown;
+          if (Array.isArray(parsed)) {
+            const mapped = parsed
+              .map((entry) => {
+                if (!entry || typeof entry !== "object") return null;
+                const e = entry as Record<string, unknown>;
+                const str = (v: unknown) => (typeof v === "string" ? v : "");
+                return {
+                  name: str(e.name),
+                  mapSrc: str(e.mapSrc),
+                  tel: str(e.tel),
+                  email: str(e.email),
+                  address: str(e.address),
+                };
+              })
+              .filter((x): x is (typeof dContact.offices)[number] => x !== null);
+            if (mapped.length > 0) {
+              collect?.set("about.contact.offices", rawOffices);
+              return mapped;
+            }
+          }
+        } catch {
+          // JSON 파싱 실패 → 기본값 유지
+        }
+      }
+      collect?.set("about.contact.offices", JSON.stringify(dContact.offices));
+      return dContact.offices.map((office, i) => ({
+        ...office,
+        name: t(`about.contact.offices.${i}.name`, office.name),
+        tel: t(`about.contact.offices.${i}.tel`, office.tel),
+        email: t(`about.contact.offices.${i}.email`, office.email),
+        address: t(`about.contact.offices.${i}.address`, office.address),
+      }));
+    })(),
   };
 
-  return { contact };
+  const banner = t("about.contactBanner.bg", "/assets/img/38e99f51c3fe3.jpg");
+
+  return { contact, banner };
 }

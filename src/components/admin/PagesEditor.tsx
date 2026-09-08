@@ -133,7 +133,7 @@ const ABOUT_PAGES: PageDivider[] = [
   },
   { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history", "about.historyImages."] },
   { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs."] },
-  { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices."] },
+  { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices"] },
 ];
 
 /** 그룹 → 페이지 구분 정의 (미리보기 논리 없음 — 순수 표시 전용) */
@@ -294,7 +294,13 @@ function HistoryListEditor({
     onChange(serializeHistoryJson(rows.filter((_, idx) => idx !== i)));
   };
   const addRow = () => {
-    onChange(serializeHistoryJson([...rows, { year: "", items: [""] }]));
+    // 새 행 연도 = 마지막 행 연도 + 1 (숫자 연도만), 없으면 현재 연도
+    const last = rows[rows.length - 1]?.year ?? "";
+    const lastNum = /^\d{4}$/.test(last) ? parseInt(last, 10) : NaN;
+    const nextYear = Number.isNaN(lastNum)
+      ? String(new Date().getFullYear())
+      : String(lastNum + 1);
+    onChange(serializeHistoryJson([...rows, { year: nextYear, items: [""] }]));
   };
 
   return (
@@ -314,6 +320,7 @@ function HistoryListEditor({
               <input
                 className={inputCls}
                 value={row.year}
+                placeholder={String(new Date().getFullYear())}
                 onChange={(e) => updateRow(i, { year: e.target.value })}
               />
             </label>
@@ -344,6 +351,157 @@ function HistoryListEditor({
         className="h-[32px] rounded-[3px] border border-dashed border-black/20 px-4 text-[12px] text-ink/70 transition-colors hover:border-navy-700 hover:text-navy-900"
       >
         + {t.addYear}
+      </button>
+    </div>
+  );
+}
+
+interface OfficeRow {
+  name: string;
+  mapSrc: string;
+  tel: string;
+  email: string;
+  address: string;
+}
+
+/** about.contact.offices JSON 문자열 → 행 배열. 파싱 실패/형태 불일치 시 빈 배열. */
+function parseOfficesJson(value: string): OfficeRow[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((entry) => {
+        if (!entry || typeof entry !== "object") return null;
+        const e = entry as Record<string, unknown>;
+        const str = (v: unknown) => (typeof v === "string" ? v : "");
+        return {
+          name: str(e.name),
+          mapSrc: str(e.mapSrc),
+          tel: str(e.tel),
+          email: str(e.email),
+          address: str(e.address),
+        };
+      })
+      .filter((x): x is OfficeRow => x !== null);
+  } catch {
+    return [];
+  }
+}
+
+/** 행 배열 → about.contact.offices JSON 문자열. */
+function serializeOfficesJson(rows: OfficeRow[]): string {
+  return JSON.stringify(rows.map((r) => ({ ...r })));
+}
+
+/** 오피스 동적 목록 편집기 — 행 추가/삭제, 각 행 = 이름/지도 URL/전화/이메일/주소 입력. */
+function OfficeListEditor({
+  value,
+  onChange,
+  t,
+}: {
+  value: string;
+  onChange: (json: string) => void;
+  t: {
+    officeName: string;
+    officeMapSrc: string;
+    officeTel: string;
+    officeEmail: string;
+    officeAddress: string;
+    addOffice: string;
+    removeOffice: string;
+  };
+}) {
+  const rows = useMemo(() => parseOfficesJson(value), [value]);
+
+  const updateRow = (i: number, patch: Partial<OfficeRow>) => {
+    onChange(serializeOfficesJson(rows.map((r, idx) => (idx === i ? { ...r, ...patch } : r))));
+  };
+  const removeRow = (i: number) => {
+    onChange(serializeOfficesJson(rows.filter((_, idx) => idx !== i)));
+  };
+  const addRow = () => {
+    onChange(serializeOfficesJson([...rows, { name: "", mapSrc: "", tel: "", email: "", address: "" }]));
+  };
+
+  return (
+    <div className="space-y-3">
+      {rows.length === 0 && (
+        <p className="text-[12px] text-ink/50">
+          {t.addOffice}
+        </p>
+      )}
+      {rows.map((row, i) => (
+        <div key={i} className="rounded-[4px] border border-black/10 bg-[#fafafa] p-3">
+          <div className="flex items-end gap-2">
+            <label className="block min-w-0 flex-1">
+              <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                {t.officeName}
+              </span>
+              <input
+                className={inputCls}
+                value={row.name}
+                onChange={(e) => updateRow(i, { name: e.target.value })}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => removeRow(i)}
+              className="h-[38px] shrink-0 rounded-[3px] border border-black/15 px-3 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
+            >
+              {t.removeOffice}
+            </button>
+          </div>
+          <label className="mt-2 block">
+            <span className="mb-1 block text-[12px] font-medium text-ink/70">
+              {t.officeMapSrc}
+            </span>
+            <input
+              className={inputCls}
+              value={row.mapSrc}
+              onChange={(e) => updateRow(i, { mapSrc: e.target.value })}
+            />
+          </label>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                {t.officeTel}
+              </span>
+              <input
+                className={inputCls}
+                value={row.tel}
+                onChange={(e) => updateRow(i, { tel: e.target.value })}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                {t.officeEmail}
+              </span>
+              <input
+                className={inputCls}
+                value={row.email}
+                onChange={(e) => updateRow(i, { email: e.target.value })}
+              />
+            </label>
+          </div>
+          <label className="mt-2 block">
+            <span className="mb-1 block text-[12px] font-medium text-ink/70">
+              {t.officeAddress}
+            </span>
+            <input
+              className={inputCls}
+              value={row.address}
+              onChange={(e) => updateRow(i, { address: e.target.value })}
+            />
+          </label>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addRow}
+        className="h-[32px] rounded-[3px] border border-dashed border-black/20 px-4 text-[12px] text-ink/70 transition-colors hover:border-navy-700 hover:text-navy-900"
+      >
+        + {t.addOffice}
       </button>
     </div>
   );
@@ -386,6 +544,13 @@ function Row({
     historyItems: string;
     addYear: string;
     removeYear: string;
+    officeName: string;
+    officeMapSrc: string;
+    officeTel: string;
+    officeEmail: string;
+    officeAddress: string;
+    addOffice: string;
+    removeOffice: string;
   };
 }) {
   const uiLocale = useLocale();
@@ -440,6 +605,17 @@ function Row({
       <div className="mt-3 space-y-3">
         {def.kind === "historyList" && (
           <HistoryListEditor
+            value={values.ko}
+            onChange={(json) => {
+              onDraft("ko", json);
+              onDraft("en", json);
+            }}
+            t={t}
+          />
+        )}
+
+        {def.kind === "officeList" && (
+          <OfficeListEditor
             value={values.ko}
             onChange={(json) => {
               onDraft("ko", json);
@@ -636,7 +812,7 @@ export default function PagesEditor({
       // 초기값 = 데이터 파일 기본값 (placeholder 가 아니라 실제 값)
       init[`${def.key}:ko`] = values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "";
       init[`${def.key}:en`] =
-        def.kind === "url" || def.kind === "historyList"
+        def.kind === "url" || def.kind === "historyList" || def.kind === "officeList"
           ? (values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "")
           : (values[def.key]?.en ?? EN_DEFAULTS.get(def.key) ?? "");
     }
@@ -673,7 +849,7 @@ export default function PagesEditor({
     for (const def of defs) {
       rows[def.key] = {
         ko: drafts[`${def.key}:ko`] ?? "",
-        en: def.kind === "url" || def.kind === "historyList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
+        en: def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
       };
     }
     return rows;
@@ -763,7 +939,7 @@ export default function PagesEditor({
     setMessage(null);
     setPendingRow(def.key);
     try {
-      if (def.kind === "url" || def.kind === "historyList") {
+      if (def.kind === "url" || def.kind === "historyList" || def.kind === "officeList") {
         const res = await savePageContent(def.key, "ko", drafts[`${def.key}:ko`] ?? "");
         if (!res.ok) throw new Error(res.message ?? t.failed);
       } else {

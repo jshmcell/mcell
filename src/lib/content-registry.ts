@@ -4,7 +4,7 @@
  * (not a server-action module)
  */
 
-export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList";
+export type ContentKind = "text" | "textarea" | "image" | "video" | "url" | "historyList" | "officeList";
 export type ContentGroup = "home" | "shop" | "partnership" | "mcell" | "about";
 
 export interface ContentDef {
@@ -277,6 +277,11 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.historyImages.pc", "about", aboutHistoryImagesSec, "PC 이미지", "PC image", "image", ABOUT),
   d("about.historyImages.mobile", "about", aboutHistoryImagesSec, "모바일 이미지", "Mobile image", "image", ABOUT),
 
+  // ── ABOUT 페이지별 상단 배너 이미지 ──
+  d("about.historyBanner.bg", "about", aboutHistorySec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
+  d("about.certsBanner.bg", "about", aboutCertsSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
+  d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
+
   // ── ABOUT 인증서 (8) ──
   ...[0, 1, 2, 3, 4, 5, 6, 7].map((i) => [
     d(`about.certs.${i}.thumb`, "about", aboutCertsSec, `인증서 ${i + 1} 썸네일`, `Certificate ${i + 1} thumbnail`, "image", ABOUT),
@@ -288,13 +293,8 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.contact.banner.lines.0", "about", aboutContactBannerSec, "문구 1", "Line 1", "text", ABOUT),
   d("about.contact.banner.lines.1", "about", aboutContactBannerSec, "문구 2", "Line 2", "text", ABOUT),
 
-  // ── ABOUT 오피스 (2) ──
-  ...[0, 1].map((i) => [
-    d(`about.contact.offices.${i}.name`, "about", aboutOfficesSec, `오피스 ${i + 1} 이름`, `Office ${i + 1} name`, "text", ABOUT),
-    d(`about.contact.offices.${i}.tel`, "about", aboutOfficesSec, `오피스 ${i + 1} 전화`, `Office ${i + 1} tel`, "text", ABOUT),
-    d(`about.contact.offices.${i}.email`, "about", aboutOfficesSec, `오피스 ${i + 1} 이메일`, `Office ${i + 1} email`, "text", ABOUT),
-    d(`about.contact.offices.${i}.address`, "about", aboutOfficesSec, `오피스 ${i + 1} 주소`, `Office ${i + 1} address`, "text", ABOUT),
-  ]).flat(),
+  // ── ABOUT 오피스 (동적 목록 — JSON: [{"name","mapSrc","tel","email","address"}, ...]) ──
+  d("about.contact.offices", "about", aboutOfficesSec, "오피스 목록", "Offices list", "officeList", ABOUT),
 ];
 
 export const CONTENT_DEF_MAP: Record<string, ContentDef> = Object.fromEntries(
@@ -314,6 +314,7 @@ export const MAX_LENGTH: Record<ContentKind, number> = {
   video: 2000,
   url: 2000,
   historyList: 20000,
+  officeList: 20000,
 };
 
 /** image/video/url 값 검증 — 상대 /assets 경로, blob URL, http(s) 외부 URL 허용 */

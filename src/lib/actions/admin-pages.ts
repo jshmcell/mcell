@@ -41,7 +41,7 @@ export async function savePageContent(
 
   // 빈 값 = 오버라이드 삭제 (기본값으로 복귀)
   const locales =
-    def.kind === "url" || def.kind === "historyList"
+    def.kind === "url" || def.kind === "historyList" || def.kind === "officeList"
       ? (["ko", "en"] as const)
       : ([locale] as const);
   if (!v) {

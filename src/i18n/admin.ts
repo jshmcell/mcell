@@ -105,6 +105,14 @@ export interface AdminDict {
     historyItems: string;
     addYear: string;
     removeYear: string;
+    /** 오피스 동적 목록 편집기 라벨 */
+    officeName: string;
+    officeMapSrc: string;
+    officeTel: string;
+    officeEmail: string;
+    officeAddress: string;
+    addOffice: string;
+    removeOffice: string;
     ko: string;
     en: string;
     sharedUrlNote: string;
@@ -275,11 +283,19 @@ const ko: AdminDict = {
       video: "영상",
       url: "링크",
       historyList: "연혁 목록",
+      officeList: "오피스 목록",
     },
     historyYear: "연도",
     historyItems: "사건 (줄바꿈 = 항목 구분)",
     addYear: "연도 추가",
     removeYear: "삭제",
+    officeName: "오피스 이름",
+    officeMapSrc: "지도 주소 (Google Maps iframe URL)",
+    officeTel: "전화",
+    officeEmail: "이메일",
+    officeAddress: "주소",
+    addOffice: "오피스 추가",
+    removeOffice: "삭제",
     ko: "한국어",
     en: "English",
     sharedUrlNote: "링크는 언어 공통으로 저장됩니다.",
@@ -453,11 +469,19 @@ const en: AdminDict = {
       video: "Video",
       url: "Link",
       historyList: "History list",
+      officeList: "Offices list",
     },
     historyYear: "Year",
     historyItems: "Events (one per line)",
     addYear: "Add year",
     removeYear: "Remove",
+    officeName: "Office name",
+    officeMapSrc: "Map URL (Google Maps iframe src)",
+    officeTel: "Tel",
+    officeEmail: "Email",
+    officeAddress: "Address",
+    addOffice: "Add office",
+    removeOffice: "Remove",
     ko: "Korean",
     en: "English",
     sharedUrlNote: "Links are saved once for both languages.",
