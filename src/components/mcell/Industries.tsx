@@ -4,6 +4,7 @@ import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { useImageViewer } from "@/components/ui/ImageViewer";
 import { industries as defaultContent } from "@/data/mcell";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /** 적용 산업 — 원본: 타이틀 블록 + 이미지 1173x413 (클릭 시 라이트박스) */
@@ -13,6 +14,7 @@ export default function Industries({
   content?: ResolvedMcell["industries"];
 }) {
   const openViewer = useImageViewer();
+  const locale = useLocale();
 
   return (
     <section className="bg-white">
@@ -30,7 +32,11 @@ export default function Industries({
         <Appear className="mt-[31px] block">
           <button
             type="button"
-            aria-label="적용 산업 이미지 크게 보기"
+            aria-label={
+              locale === "ko"
+                ? "적용 산업 이미지 크게 보기"
+                : "View industries image larger"
+            }
             onClick={() =>
               openViewer([{ src: content.image, alt: content.title }])
             }

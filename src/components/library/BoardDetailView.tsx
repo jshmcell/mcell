@@ -12,6 +12,29 @@ const BOARD_BASE: Record<string, string> = {
   portfolio: "/library/portfolio",
 };
 
+const LABELS: Record<"ko" | "en", Record<string, string>> = {
+  ko: {
+    views: "조회수",
+    likes: "좋아요",
+    comments: "댓글",
+    share: "공유",
+    print: "인쇄",
+    prev: "이전글",
+    next: "다음글",
+    list: "목록",
+  },
+  en: {
+    views: "Views",
+    likes: "Likes",
+    comments: "Comments",
+    share: "Share",
+    print: "Print",
+    prev: "Previous",
+    next: "Next",
+    list: "List",
+  },
+};
+
 /**
  * 게시물 뷰 — 원본 /40·/45·/46 뷰 페이지 공통 레이아웃.
  * 제목(20px/32px) → 작성자(14px)+카테고리·날짜·조회수(13px, 70%회색·카테고리 #757575)
@@ -34,6 +57,7 @@ export default function BoardDetailView({
 }) {
   const base = BOARD_BASE[boardKey];
   const locale = useLocale();
+  const L = LABELS[locale];
 
   const onShare = async () => {
     const url = window.location.href;
@@ -68,7 +92,9 @@ export default function BoardDetailView({
           <p className="mt-[2px] flex items-center gap-[10px] text-[13px] leading-[16px]">
             <span className="text-[#757575]">{post.category}</span>
             <span className="text-[#363636]/70">{post.date}</span>
-            <span className="text-[#363636]/70">조회수{post.views}</span>
+            <span className="text-[#363636]/70">
+              {locale === "ko" ? `조회수${post.views}` : `${post.views} ${L.views}`}
+            </span>
           </p>
         </div>
 
@@ -100,8 +126,8 @@ export default function BoardDetailView({
         {/* 좋아요/댓글 행 */}
         <div className="mt-[20px] flex items-center justify-between border-y border-black/10 py-[10px]">
           <div className="flex gap-3 text-[13px] text-ink/60">
-            <span>좋아요 0</span>
-            <span>댓글 0</span>
+            <span>{L.likes} 0</span>
+            <span>{L.comments} 0</span>
           </div>
           <div className="flex gap-2">
             <button
@@ -109,14 +135,14 @@ export default function BoardDetailView({
               onClick={onShare}
               className="h-[30px] rounded-[2px] border border-black/15 px-3 text-[12px] text-ink hover:border-navy-700"
             >
-              공유
+              {L.share}
             </button>
             <button
               type="button"
               onClick={() => window.print()}
               className="h-[30px] rounded-[2px] border border-black/15 px-3 text-[12px] text-ink hover:border-navy-700"
             >
-              인쇄
+              {L.print}
             </button>
           </div>
         </div>
@@ -129,7 +155,7 @@ export default function BoardDetailView({
               className="flex h-[44px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
               <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
-                이전글
+                {L.prev}
               </span>
               <span className="line-clamp-1">{prev.title}</span>
             </Link>
@@ -140,7 +166,7 @@ export default function BoardDetailView({
               className="flex h-[43px] items-center gap-2 border-b border-black/10 text-[13px] text-ink/70 hover:text-navy-900"
             >
               <span className="shrink-0 rounded-[2px] bg-black/5 px-2 py-0.5 text-[11px]">
-                다음글
+                {L.next}
               </span>
               <span className="line-clamp-1">{next.title}</span>
             </Link>
@@ -153,7 +179,7 @@ export default function BoardDetailView({
             href={localizeHref(base, locale)}
             className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
-            목록
+            {L.list}
           </Link>
         </div>
       </div>

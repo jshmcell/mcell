@@ -8,11 +8,48 @@ import {
 import { certifications as dCertifications, type Certification } from "@/data/certifications";
 import { contact as dContact } from "@/data/contact";
 import { pickLines, pickText, type ContentRows } from "@/lib/content-resolve";
-import { EN_ABOUT } from "@/data/content-en";
+import { EN_ABOUT, EN_HISTORY, EN_OFFICES } from "@/data/content-en";
 
 /** DB/드래프트 오버라이드가 적용된 about 데이터 — data/about.ts 와 동일한 shape. */
 export interface ResolvedAbout {
   ceo: typeof dCeo;
+}
+
+/** about.history JSON 을 canonical HistoryItem[] 로 정규화 (items/events 둘 다 수용). */
+function historyCanonical(v: unknown): HistoryItem[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+      const e = entry as Record<string, unknown>;
+      const year = typeof e.year === "string" ? e.year : "";
+      const items = Array.isArray(e.items)
+        ? e.items.filter((x): x is string => typeof x === "string")
+        : Array.isArray(e.events)
+          ? e.events.filter((x): x is string => typeof x === "string")
+          : [];
+      return { year, events: items };
+    })
+    .filter((x): x is HistoryItem => x !== null);
+}
+
+/** about.contact.offices JSON 을 canonical 배열로 정규화. */
+function officesCanonical(v: unknown): (typeof dContact.offices)[number][] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+      const e = entry as Record<string, unknown>;
+      const str = (xv: unknown) => (typeof xv === "string" ? xv : "");
+      return {
+        name: str(e.name),
+        mapSrc: str(e.mapSrc),
+        tel: str(e.tel),
+        email: str(e.email),
+        address: str(e.address),
+      };
+    })
+    .filter((x): x is (typeof dContact.offices)[number] => x !== null);
 }
 
 /** DB/드래프트 오버라이드가 적용된 연혁 데이터 — data/about.ts 와 동일한 shape. */
@@ -61,14 +98,12 @@ export function resolveAboutFromRows(
       quote: t("about.ceo.banner.quote", dCeo.banner.quote),
     },
     // 단일 키(about.ceo.paragraphs) — 줄바꿈 = 문단 구분. 빈 줄은 빈 문자열로 보존
-    // (CeoIntro가 빈 문단을 &nbsp; 스페이서로 렌더링).
+    // (CeoIntro가 빈 문단을 &nbsp; 스페이서로 렌더링). EN 사전 → KO 기본값 순으로 폴백.
     paragraphs: (() => {
-      const v = pickLines(
-        rows,
-        "about.ceo.paragraphs",
-        locale,
-        dCeo.paragraphs,
-      );
+      const enFallback = locale === "en" && EN_ABOUT["about.ceo.paragraphs"]
+        ? EN_ABOUT["about.ceo.paragraphs"].split(/\r?\n/)
+        : dCeo.paragraphs;
+      const v = pickLines(rows, "about.ceo.paragraphs", locale, enFallback);
       collect?.set("about.ceo.paragraphs", v.join("\n"));
       return v;
     })(),
@@ -93,33 +128,42 @@ export function resolveAboutHistoryFromRows(
   };
 
   // about.history — JSON 목록 [{"year":"2021","items":["...","..."]}, ...].
-  // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
-  const rawHistory = pickText(rows, "about.history", locale, "");
-  let history: HistoryItem[] = dHistory;
-  if (rawHistory) {
+  // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 실제 사용된 JSON 문자열을 넣는다.
+  // locale=en 일 때: EN DB 행(기본값과 다르면) → KO DB 행 → EN_HISTORY 사전 순.
+  const rawHistoryKo = rows["about.history"]?.ko?.trim();
+  const rawHistoryEn = locale === "en" ? rows["about.history"]?.en?.trim() : undefined;
+  const parseHistory = (raw: string): HistoryItem[] | null => {
     try {
-      const parsed = JSON.parse(rawHistory) as unknown;
-      if (Array.isArray(parsed)) {
-        const mapped = parsed
-          .map((entry) => {
-            if (!entry || typeof entry !== "object") return null;
-            const e = entry as Record<string, unknown>;
-            const year = typeof e.year === "string" ? e.year : "";
-            const items = Array.isArray(e.items)
-              ? e.items.filter((x): x is string => typeof x === "string")
-              : Array.isArray(e.events)
-                ? e.events.filter((x): x is string => typeof x === "string")
-                : [];
-            return { year, events: items };
-          })
-          .filter((x): x is HistoryItem => x !== null);
-        if (mapped.length > 0) history = mapped;
-      }
+      const mapped = historyCanonical(JSON.parse(raw) as unknown);
+      return mapped.length > 0 ? mapped : null;
     } catch {
-      // JSON 파싱 실패 → 기본값 유지
+      return null;
     }
+  };
+  const sameHistoryAsDefault = (h: HistoryItem[]) =>
+    JSON.stringify(h) === JSON.stringify(dHistory);
+
+  let history: HistoryItem[] = dHistory;
+  if (locale === "en") {
+    const enParsed = rawHistoryEn ? parseHistory(rawHistoryEn) : null;
+    if (enParsed && !sameHistoryAsDefault(enParsed)) {
+      history = enParsed;
+      collect?.set("about.history", JSON.stringify(enParsed));
+    } else {
+      const koParsed = rawHistoryKo ? parseHistory(rawHistoryKo) : null;
+      if (koParsed && !sameHistoryAsDefault(koParsed)) {
+        history = koParsed;
+        collect?.set("about.history", JSON.stringify(koParsed));
+      } else {
+        history = EN_HISTORY.map((h) => ({ ...h }));
+        collect?.set("about.history", JSON.stringify(history));
+      }
+    }
+  } else {
+    const koParsed = rawHistoryKo ? parseHistory(rawHistoryKo) : null;
+    history = koParsed ?? dHistory;
+    collect?.set("about.history", rawHistoryKo || JSON.stringify(dHistory));
   }
-  collect?.set("about.history", rawHistory || JSON.stringify(dHistory));
 
   // historyImages는 더 이상 편집 대상이 아님 — 데이터 파일 기본값 그대로 사용
   const historyImages = {
@@ -147,6 +191,7 @@ export function resolveAboutCertificationsFromRows(
   };
 
   // about.certs — JSON 목록 [{"thumb":"...","full":"..."}, ...].
+  // 인증서는 이미지 경로만 들어 있어 언어 독립적이지만, 저장은 로케일별로 한다.
   // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
   const rawCerts = pickText(rows, "about.certs", locale, "");
   let certifications: Certification[] = dCertifications;
@@ -201,43 +246,53 @@ export function resolveAboutContactFromRows(
     },
     offices: (() => {
       // about.contact.offices — JSON 목록 [{"name","mapSrc","tel","email","address"}, ...].
-      // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 원본 JSON 문자열을 넣는다.
-      const rawOffices = pickText(rows, "about.contact.offices", locale, "");
-      if (rawOffices) {
+      // locale=en 일 때: EN DB 행(기본값과 다르면) → KO DB 행 → EN_OFFICES 사전 순.
+      // 파싱 실패/형태 불일치 시 기본값으로 폴백. collect에는 실제 사용된 JSON 문자열을 넣는다.
+      const rawOfficesKo = rows["about.contact.offices"]?.ko?.trim();
+      const rawOfficesEn =
+        locale === "en" ? rows["about.contact.offices"]?.en?.trim() : undefined;
+      const parseOffices = (raw: string) => {
         try {
-          const parsed = JSON.parse(rawOffices) as unknown;
-          if (Array.isArray(parsed)) {
-            const mapped = parsed
-              .map((entry) => {
-                if (!entry || typeof entry !== "object") return null;
-                const e = entry as Record<string, unknown>;
-                const str = (v: unknown) => (typeof v === "string" ? v : "");
-                return {
-                  name: str(e.name),
-                  mapSrc: str(e.mapSrc),
-                  tel: str(e.tel),
-                  email: str(e.email),
-                  address: str(e.address),
-                };
-              })
-              .filter((x): x is (typeof dContact.offices)[number] => x !== null);
-            if (mapped.length > 0) {
-              collect?.set("about.contact.offices", rawOffices);
-              return mapped;
-            }
-          }
+          return officesCanonical(JSON.parse(raw) as unknown);
         } catch {
-          // JSON 파싱 실패 → 기본값 유지
+          return [];
         }
+      };
+      const sameOfficesAsDefault = (o: (typeof dContact.offices)[number][]) =>
+        JSON.stringify(o) === JSON.stringify(dContact.offices);
+
+      const fallbackOffices = () =>
+        dContact.offices.map((office, i) => ({
+          ...office,
+          name: t(`about.contact.offices.${i}.name`, office.name),
+          tel: t(`about.contact.offices.${i}.tel`, office.tel),
+          email: t(`about.contact.offices.${i}.email`, office.email),
+          address: t(`about.contact.offices.${i}.address`, office.address),
+        }));
+
+      if (locale === "en") {
+        const enParsed = rawOfficesEn ? parseOffices(rawOfficesEn) : [];
+        if (enParsed.length > 0 && !sameOfficesAsDefault(enParsed)) {
+          collect?.set("about.contact.offices", JSON.stringify(enParsed));
+          return enParsed;
+        }
+        const koParsed = rawOfficesKo ? parseOffices(rawOfficesKo) : [];
+        if (koParsed.length > 0 && !sameOfficesAsDefault(koParsed)) {
+          collect?.set("about.contact.offices", JSON.stringify(koParsed));
+          return koParsed;
+        }
+        const enFallback = EN_OFFICES.map((o) => ({ ...o }));
+        collect?.set("about.contact.offices", JSON.stringify(enFallback));
+        return enFallback;
+      }
+
+      const koParsed = rawOfficesKo ? parseOffices(rawOfficesKo) : [];
+      if (koParsed.length > 0) {
+        collect?.set("about.contact.offices", JSON.stringify(koParsed));
+        return koParsed;
       }
       collect?.set("about.contact.offices", JSON.stringify(dContact.offices));
-      return dContact.offices.map((office, i) => ({
-        ...office,
-        name: t(`about.contact.offices.${i}.name`, office.name),
-        tel: t(`about.contact.offices.${i}.tel`, office.tel),
-        email: t(`about.contact.offices.${i}.email`, office.email),
-        address: t(`about.contact.offices.${i}.address`, office.address),
-      }));
+      return fallbackOffices();
     })(),
   };
 

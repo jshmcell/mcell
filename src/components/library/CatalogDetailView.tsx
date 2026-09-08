@@ -17,8 +17,37 @@ import { localizeHref } from "@/i18n/config";
  * 목록 → /library/catalog, 글쓰기 → /login, 첨부 → PDF 다운로드.
  * 공유: navigator.share (미지원 브라우저는 클립보드 복사), 인쇄: window.print().
  */
+
+const LABELS: Record<"ko" | "en", Record<string, string>> = {
+  ko: {
+    views: "조회수",
+    likeAria: "좋아요",
+    shareAria: "공유",
+    printAria: "인쇄",
+    downloadAria: "첨부파일 다운로드",
+    commentAria: "댓글 입력",
+    commentPh: "로그인이 필요합니다.",
+    write: "작성",
+    list: "목록",
+    writeAria: "글쓰기",
+  },
+  en: {
+    views: "Views",
+    likeAria: "Like",
+    shareAria: "Share",
+    printAria: "Print",
+    downloadAria: "Download attachment",
+    commentAria: "Write a comment",
+    commentPh: "Please sign in.",
+    write: "Write",
+    list: "List",
+    writeAria: "Write",
+  },
+};
+
 export default function CatalogDetailView({ post }: { post: PublicPost }) {
   const locale = useLocale();
+  const L = LABELS[locale];
   const onShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -58,7 +87,9 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
             <p className="flex items-center gap-[10px] text-[13px] leading-[16px]">
               <span className="text-[#757575]">{post.category}</span>
               <span className="text-[#363636]/70">{post.date}</span>
-              <span className="text-[#363636]/70">조회수 {post.views}</span>
+              <span className="text-[#363636]/70">
+                {locale === "ko" ? `조회수 ${post.views}` : `${post.views} ${L.views}`}
+              </span>
             </p>
           </div>
         </div>
@@ -82,7 +113,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
             <a
               href={post.attachment.href}
               download
-              aria-label="첨부파일 다운로드"
+              aria-label={L.downloadAria}
               className="-mr-[4px] p-[5px] text-[#999] transition-colors hover:text-[#363636]"
             >
               <svg
@@ -105,7 +136,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
           <div className="flex items-center">
             <button
               type="button"
-              aria-label="좋아요"
+              aria-label={L.likeAria}
               className="flex h-[46px] w-[35px] items-center gap-[5px]"
             >
               <svg
@@ -138,7 +169,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
           <div className="flex items-center">
             <button
               type="button"
-              aria-label="공유"
+              aria-label={L.shareAria}
               onClick={onShare}
               className="flex h-[46px] w-[41px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900"
             >
@@ -158,7 +189,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
             </button>
             <button
               type="button"
-              aria-label="인쇄"
+              aria-label={L.printAria}
               onClick={onPrint}
               className="hidden h-[46px] w-[29px] items-center justify-center text-[#363636] transition-colors hover:text-navy-900 md-header:flex"
             >
@@ -182,8 +213,8 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
         <div className="mt-[40px] border border-black/20 px-[15px] py-[15px]">
           <textarea
             rows={2}
-            placeholder="로그인이 필요합니다."
-            aria-label="댓글 입력"
+            placeholder={L.commentPh}
+            aria-label={L.commentAria}
             className="mb-[10px] block w-full resize-none text-[15px] leading-[24px] text-[#363636] outline-none placeholder:text-[#363636]/70"
           />
           <div className="flex justify-end">
@@ -191,7 +222,7 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
               href={localizeHref("/login", locale)}
               className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
             >
-              작성
+              {L.write}
             </Link>
           </div>
         </div>
@@ -202,13 +233,13 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
             href={localizeHref("/library/catalog", locale)}
             className="flex h-[30px] w-[63px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
-            목록
+            {L.list}
           </Link>
           <Link
             href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
-            글쓰기
+            {L.writeAria}
           </Link>
         </div>
       </div>

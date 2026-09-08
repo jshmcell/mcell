@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Reveal from "@/components/ui/Reveal";
 import { useImageViewerStore } from "@/lib/store";
 import { certifications as defaultContent } from "@/data/home";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedHome } from "@/lib/home-content";
 
 export default function CertCarousel({
@@ -14,10 +15,13 @@ export default function CertCarousel({
   content?: ResolvedHome["certs"];
 }) {
   const certifications = content;
+  const locale = useLocale();
+  const certName = locale === "ko" ? "엠셀 인증서" : "MCell certificate";
+  const certViewAria = locale === "ko" ? "인증서 크게 보기" : "View certificate larger";
   /** 라이트박스용 원본 이미지 목록 (인증서 전체) */
   const viewerImages = certifications.images.map((img) => ({
     src: img.full,
-    alt: "엠셀 인증서",
+    alt: certName,
   }));
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -91,14 +95,14 @@ export default function CertCarousel({
                 >
                   <button
                     type="button"
-                    aria-label="인증서 크게 보기"
+                    aria-label={certViewAria}
                     onClick={() => openViewer(viewerImages, i)}
                     className="block w-full cursor-pointer border border-[#eee] bg-white"
                   >
                     <div className="relative h-[224px] w-full md-header:h-[320px]">
                       <SmartImage
                         src={img.thumb}
-                        alt="엠셀 인증서"
+                        alt={certName}
                         fill
                         sizes="(max-width: 991px) 45vw, 17vw"
                         className="object-cover"
@@ -116,7 +120,9 @@ export default function CertCarousel({
               <button
                 key={i}
                 type="button"
-                aria-label={`인증서 ${i + 1}페이지`}
+                aria-label={
+                  locale === "ko" ? `인증서 ${i + 1}페이지` : `Certificate page ${i + 1}`
+                }
                 onClick={() => goToPage(i)}
                 className="flex h-[18px] w-[16px] cursor-pointer items-center justify-center"
               >

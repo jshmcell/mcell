@@ -5,6 +5,7 @@ import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { useImageViewer } from "@/components/ui/ImageViewer";
 import { portfolioItems } from "@/data/portfolio";
+import { useLocale } from "@/i18n/client";
 import { cn } from "@/lib/cn";
 
 /**
@@ -19,6 +20,7 @@ const MOBILE_VISIBLE = 4;
 
 export default function PortfolioGrid() {
   const openViewer = useImageViewer();
+  const locale = useLocale();
   const [expanded, setExpanded] = useState(false);
   const viewerImages = portfolioItems.map((p) => ({
     src: p.full,
@@ -41,7 +43,11 @@ export default function PortfolioGrid() {
               <Appear animation="fadeIn" duration={0.7} delay={(i % 3) * 0.1}>
                 <button
                   type="button"
-                  aria-label={`${item.name} 크게 보기`}
+                  aria-label={
+                    locale === "ko"
+                      ? `${item.name} 크게 보기`
+                      : `View ${item.name} larger`
+                  }
                   onClick={() => openViewer(viewerImages, i)}
                   className="group relative block h-full w-full cursor-pointer"
                 >
@@ -69,7 +75,7 @@ export default function PortfolioGrid() {
               onClick={() => setExpanded(true)}
               className="inline-block h-[39px] w-[76px] rounded-[2px] border border-[#363636] bg-[#363636] text-[12px] text-white"
             >
-              더보기
+              {locale === "ko" ? "더보기" : "View More"}
             </button>
           </div>
         )}

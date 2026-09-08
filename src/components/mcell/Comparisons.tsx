@@ -4,6 +4,7 @@ import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { cn } from "@/lib/cn";
 import { comparisons as defaultContent } from "@/data/mcell";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 function StatCard({
@@ -50,6 +51,7 @@ export default function Comparisons({
 }: {
   content?: ResolvedMcell["comparisons"];
 }) {
+  const locale = useLocale();
   return (
     <>
       {content.map((cmp, idx) => (
@@ -84,7 +86,7 @@ export default function Comparisons({
               <Appear animation="fadeIn" duration={1.2} delay={0.3}>
                 <SmartImage
                   src={cmp.image}
-                  alt="열화상 비교"
+                  alt={locale === "ko" ? "열화상 비교" : "Thermal imaging comparison"}
                   width={509}
                   height={548}
                   className="mx-auto h-auto max-h-[548px] w-auto max-w-full"

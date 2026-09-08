@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { NavChild } from "@/data/site";
-import { navItems } from "@/data/site";
-import { localizeHref, type Locale } from "@/i18n/config";
+import { localizeHref, localizedNavItems, type Locale } from "@/i18n/config";
 import Appear from "@/components/ui/Appear";
 import { cn } from "@/lib/cn";
 
@@ -23,10 +22,19 @@ export default function SubHero({
   // Default exists for client-component use (admin preview); server callers must pass the real locale.
   locale = "ko",
 }: SubHeroProps & { locale?: Locale }) {
-  const items =
-    children ?? navItems.find((n) => n.label === groupLabel)?.children ?? [];
+  const nav = localizedNavItems[locale];
+  // groupLabel은 페이지에서 한국어 라벨로 전달될 수 있으므로, 로케일 nav에서 못 찾으면
+  // KO nav로 폴백해 그룹을 찾는다 (칩/브레드크럼은 로케일 라벨로 표시).
+  const group =
+    nav.find((n) => n.label === groupLabel) ??
+    localizedNavItems.ko.find((n) => n.label === groupLabel);
+  // KO 라벨로 매칭됐고 locale=en 인 경우 같은 href 의 EN nav 항목 라벨/자식으로 표시.
+  const groupEn = group ? nav.find((n) => n.href === group.href) : undefined;
+  const groupShown = locale === "en" && groupEn ? groupEn : group;
+  const groupLabelShown = groupShown?.label ?? groupLabel;
+  const items = children ?? groupShown?.children ?? group?.children ?? [];
   const currentItem = items.find((item) => item.href === currentHref);
-  const groupHref = navItems.find((n) => n.label === groupLabel)?.href ?? "/";
+  const groupHref = group?.href ?? "/";
 
   return (
     <section className="border-b border-black/5 bg-white">
@@ -91,7 +99,7 @@ export default function SubHero({
                   href={localizeHref(groupHref, locale)}
                   className="text-[13px] leading-[21px] text-ink/70 transition-colors duration-300 hover:text-ink"
                 >
-                  {groupLabel}
+                  {groupLabelShown}
                 </Link>
               </li>
               {currentItem && (

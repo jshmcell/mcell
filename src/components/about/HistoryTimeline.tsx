@@ -1,6 +1,7 @@
 import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { history, historyImages } from "@/data/about";
+import type { Locale } from "@/i18n/config";
 import type { ResolvedAboutHistory } from "@/lib/about-content-resolve";
 
 const defaultContent: ResolvedAboutHistory = {
@@ -12,8 +13,11 @@ const defaultContent: ResolvedAboutHistory = {
 /** About — 연혁 타임라인: 좌측 고정 이미지(PC) / 상단 이미지(모바일) + 연도별 이벤트 */
 export default function HistoryTimeline({
   content = defaultContent,
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
 }: {
   content?: ResolvedAboutHistory;
+  locale?: Locale;
 }) {
   const { history, historyImages } = content;
   return (
@@ -21,7 +25,7 @@ export default function HistoryTimeline({
       <div className="pt-[30px] pb-[30px] text-center md-header:hidden">
         <SmartImage
           src={historyImages.mobile}
-          alt="엠셀 연구실"
+          alt={locale === "ko" ? "엠셀 연구실" : "MCell Research Lab"}
           width={345}
           height={239}
           className="mx-auto h-auto w-full"
@@ -39,7 +43,7 @@ export default function HistoryTimeline({
             >
               <SmartImage
                 src={historyImages.pc}
-                alt="엠셀"
+                alt={locale === "ko" ? "엠셀" : "MCell"}
                 width={524}
                 height={363}
                 className="ml-[30px] h-[363px] w-[524px] object-cover"

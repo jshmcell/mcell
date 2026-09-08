@@ -16,13 +16,24 @@ import { localizeHref } from "@/i18n/config";
  * 섹션 여백: 상 15px / 하 15px (PC), 상 8px / 하 7px (모바일).
  * 데이터: DB (board_post, published만).
  */
+const BOARD_LABELS: Record<string, { ko: string; en: string }> = {
+  title: { ko: "제목", en: "Title" },
+  author: { ko: "글쓴이", en: "Author" },
+  date: { ko: "작성시간", en: "Date" },
+  views: { ko: "조회수", en: "Views" },
+  likes: { ko: "좋아요", en: "Likes" },
+  write: { ko: "글쓰기", en: "Write" },
+  search: { ko: "검색", en: "Search" },
+  searchAria: { ko: "게시물 검색", en: "Search posts" },
+};
+
 const COLS = [
-  { key: "no", label: "No", width: "w-[63px]", align: "text-center" },
-  { key: "title", label: "제목", width: "w-[700px]", align: "text-center" },
-  { key: "author", label: "글쓴이", width: "w-[125px]", align: "text-left" },
-  { key: "date", label: "작성시간", width: "w-[150px]", align: "text-center" },
-  { key: "views", label: "조회수", width: "w-[125px]", align: "text-center" },
-  { key: "likes", label: "좋아요", width: "w-[88px]", align: "text-center" },
+  { key: "no", labelKey: "no" as const, width: "w-[63px]", align: "text-center" },
+  { key: "title", labelKey: "title" as const, width: "w-[700px]", align: "text-center" },
+  { key: "author", labelKey: "author" as const, width: "w-[125px]", align: "text-left" },
+  { key: "date", labelKey: "date" as const, width: "w-[150px]", align: "text-center" },
+  { key: "views", labelKey: "views" as const, width: "w-[125px]", align: "text-center" },
+  { key: "likes", labelKey: "likes" as const, width: "w-[88px]", align: "text-center" },
 ] as const;
 
 /** 게시판 URL prefix — boardKey → 실제 라우트 (/news/*, /library/*) */
@@ -44,6 +55,7 @@ export default function BoardTable({
 }) {
   const base = BOARD_BASE[boardKey];
   const locale = useLocale();
+  const L = BOARD_LABELS;
 
   return (
     <section className="bg-white">
@@ -57,21 +69,21 @@ export default function BoardTable({
             href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white md-header:hidden"
           >
-            글쓰기
+            {L.write[locale]}
           </Link>
           {/* PC 검색 */}
           <div className="hidden items-center md-header:flex">
             <input
               type="search"
               placeholder="Search"
-              aria-label="게시물 검색"
+              aria-label={L.searchAria[locale]}
               className="h-[34px] w-[220px] border border-black/10 bg-white px-3 text-[14px] text-[#212121] outline-none placeholder:text-ink/40"
             />
             <button
               type="button"
               className="w-[23px] shrink-0 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
             >
-              검색
+              {L.search[locale]}
             </button>
           </div>
         </div>
@@ -81,14 +93,14 @@ export default function BoardTable({
           <input
             type="search"
             placeholder="Search"
-            aria-label="게시물 검색"
+            aria-label={L.searchAria[locale]}
             className="h-[37px] w-full border border-black/10 bg-white px-3 pr-[36px] text-[16px] text-[#212121] outline-none placeholder:text-ink/40"
           />
           <button
             type="button"
             className="absolute top-1/2 right-[7px] w-[23px] -translate-y-1/2 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
           >
-            검색
+            {L.search[locale]}
           </button>
         </div>
 
@@ -100,7 +112,7 @@ export default function BoardTable({
                 key={col.key}
                 className={`${col.width} shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-[15px] leading-[24px] text-[#363636] ${col.align}`}
               >
-                {col.label}
+                {col.key === "no" ? "No" : L[col.labelKey][locale]}
               </div>
             ))}
           </div>
@@ -124,7 +136,7 @@ export default function BoardTable({
                 {post.date}
               </div>
               <div className="w-[125px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
-                조회수{post.views}
+                {locale === "ko" ? `조회수${post.views}` : `${post.views} views`}
               </div>
               <div className="w-[88px] shrink-0 border-b border-[#363636]/15 px-[7px] py-[10px] text-center text-[12px] leading-[24px] text-[#363636]/65">
                 0
@@ -146,7 +158,9 @@ export default function BoardTable({
               <div className="mt-[1px] flex items-center gap-2 text-[12px] leading-[24px] text-[#363636]/65">
                 <span>{post.author}</span>
                 <span>{post.date}</span>
-                <span>조회수{post.views}</span>
+                <span>
+                  {locale === "ko" ? `조회수${post.views}` : `${post.views} views`}
+                </span>
                 <span>0</span>
               </div>
             </div>
@@ -159,7 +173,7 @@ export default function BoardTable({
             href={localizeHref("/login", locale)}
             className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
           >
-            글쓰기
+            {L.write[locale]}
           </Link>
         </div>
       </div>

@@ -9,9 +9,10 @@ import { getActor } from "@/lib/roles";
 import { prisma } from "@/lib/prisma";
 import { signOutAction } from "@/lib/actions/signout";
 
-export const metadata: Metadata = {
-  title: "마이페이지",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: locale === "ko" ? "마이페이지" : "My Page" };
+}
 
 const itemCls =
   "flex min-h-[50px] items-center justify-between border-b border-black/10 py-3 text-[14px]";

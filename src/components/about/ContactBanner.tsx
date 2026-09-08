@@ -41,7 +41,7 @@ export default function ContactBanner({
               variant="outline"
               className="shrink-0 rounded-full border-white px-[50px] py-[12px] text-[17px] hover:bg-white/10"
             >
-              문의하기 바로가기 →
+              {locale === "ko" ? "문의하기 바로가기 →" : "Contact us →"}
             </ButtonLink>
           </Appear>
         </div>

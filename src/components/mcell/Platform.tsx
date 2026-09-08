@@ -4,6 +4,7 @@ import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { useImageViewer } from "@/components/ui/ImageViewer";
 import { platform as defaultContent } from "@/data/mcell";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /** 기술의 확장 가능성 — 원본: 타이틀 블록 + 이미지 981x268 (클릭 시 라이트박스) */
@@ -13,6 +14,7 @@ export default function Platform({
   content?: ResolvedMcell["platform"];
 }) {
   const openViewer = useImageViewer();
+  const locale = useLocale();
 
   return (
     <section className="bg-white">
@@ -33,7 +35,11 @@ export default function Platform({
         <Appear className="mt-0 block">
           <button
             type="button"
-            aria-label="확장 로드맵 이미지 크게 보기"
+            aria-label={
+              locale === "ko"
+                ? "확장 로드맵 이미지 크게 보기"
+                : "View expansion roadmap image larger"
+            }
             onClick={() =>
               openViewer([{ src: content.image, alt: content.title }])
             }

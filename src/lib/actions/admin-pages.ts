@@ -12,8 +12,8 @@ import {
 export type ContentResult = { ok: boolean; message?: string };
 
 /**
- * 페이지 콘텐츠 저장 — text/textarea/image/video는 언어별(ko/en) 저장,
- * url(링크)은 언어 공통이므로 양쪽 locale에 동일 값으로 저장한다.
+ * 페이지 콘텐츠 저장 — text/textarea/image/video/historyList/officeList/certList는
+ * 언어별(ko/en) 저장, url(링크)은 언어 공통이므로 양쪽 locale에 동일 값으로 저장한다.
  */
 export async function savePageContent(
   key: string,
@@ -40,10 +40,9 @@ export async function savePageContent(
   }
 
   // 빈 값 = 오버라이드 삭제 (기본값으로 복귀)
-  const locales =
-    def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList"
-      ? (["ko", "en"] as const)
-      : ([locale] as const);
+  // url(링크)은 언어 공통. historyList/officeList/certList는 다른 텍스트 키처럼
+  // 로케일별로 저장한다 (EN이 KO와 다를 수 있음).
+  const locales = def.kind === "url" ? (["ko", "en"] as const) : ([locale] as const);
   if (!v) {
     await prisma.pageContent.deleteMany({
       where: { key, locale: { in: [...locales] } },

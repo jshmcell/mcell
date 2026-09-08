@@ -11,9 +11,10 @@ import { getLocale } from "@/i18n/server";
 import { getContentRows, pickLines, pickText } from "@/lib/content";
 import { PARTNERSHIP_CONTENT_KEYS } from "@/lib/content-registry";
 
-export const metadata: Metadata = {
-  title: "제휴 및 문의",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: locale === "ko" ? "제휴 및 문의" : "Partnership" };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -43,12 +44,13 @@ export default async function PartnershipPage() {
       : partnership.lines,
   );
   const banner = pickText(rows, "partnership.banner", locale, partnership.banner);
+  const pageTitle = locale === "ko" ? "제휴 및 문의" : "Partnership";
 
   return (
     <>
       <SubHero
-        groupLabel="제휴 및 문의"
-        title="제휴 및 문의"
+        groupLabel={locale === "ko" ? "제휴 및 문의" : "Partnership"}
+        title={pageTitle}
         currentHref="/partnership"
         compact
         locale={locale}

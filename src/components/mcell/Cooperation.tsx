@@ -5,6 +5,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { cooperation as defaultContent } from "@/data/mcell";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /**
@@ -16,6 +17,7 @@ export default function Cooperation({
 }: {
   content?: ResolvedMcell["cooperation"];
 }) {
+  const locale = useLocale();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selected, setSelected] = useState(0);
 
@@ -54,7 +56,11 @@ export default function Cooperation({
                 <div key={i} className="min-w-0 shrink-0 grow-0 basis-full">
                   <SmartImage
                     src={slide}
-                    alt={`기술 협력 ${i + 1}`}
+                    alt={
+                      locale === "ko"
+                        ? `기술 협력 ${i + 1}`
+                        : `Technology cooperation ${i + 1}`
+                    }
                     width={1250}
                     height={447}
                     className="h-[447px] w-full object-cover"
@@ -67,7 +73,7 @@ export default function Cooperation({
 
           <button
             type="button"
-            aria-label="이전 슬라이드"
+            aria-label={locale === "ko" ? "이전 슬라이드" : "Previous slide"}
             onClick={scrollPrev}
             className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60"
           >
@@ -84,7 +90,7 @@ export default function Cooperation({
           </button>
           <button
             type="button"
-            aria-label="다음 슬라이드"
+            aria-label={locale === "ko" ? "다음 슬라이드" : "Next slide"}
             onClick={scrollNext}
             className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60"
           >
@@ -105,7 +111,9 @@ export default function Cooperation({
               <button
                 key={i}
                 type="button"
-                aria-label={`슬라이드 ${i + 1}`}
+                aria-label={
+                  locale === "ko" ? `슬라이드 ${i + 1}` : `Slide ${i + 1}`
+                }
                 onClick={() => emblaApi?.scrollTo(i)}
                 className={
                   i === selected

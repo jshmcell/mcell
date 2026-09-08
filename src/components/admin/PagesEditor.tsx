@@ -756,36 +756,54 @@ function Row({
 
       <div className="mt-3 space-y-3">
         {def.kind === "historyList" && (
-          <HistoryListEditor
-            value={values.ko}
-            onChange={(json) => {
-              onDraft("ko", json);
-              onDraft("en", json);
-            }}
-            t={t}
-          />
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {(["ko", "en"] as const).map((loc) => (
+              <div key={loc}>
+                <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                  {loc === "ko" ? t.ko : t.en}
+                </span>
+                <HistoryListEditor
+                  value={values[loc]}
+                  onChange={(json) => onDraft(loc, json)}
+                  t={t}
+                />
+              </div>
+            ))}
+          </div>
         )}
 
         {def.kind === "officeList" && (
-          <OfficeListEditor
-            value={values.ko}
-            onChange={(json) => {
-              onDraft("ko", json);
-              onDraft("en", json);
-            }}
-            t={t}
-          />
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {(["ko", "en"] as const).map((loc) => (
+              <div key={loc}>
+                <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                  {loc === "ko" ? t.ko : t.en}
+                </span>
+                <OfficeListEditor
+                  value={values[loc]}
+                  onChange={(json) => onDraft(loc, json)}
+                  t={t}
+                />
+              </div>
+            ))}
+          </div>
         )}
 
         {def.kind === "certList" && (
-          <CertListEditor
-            value={values.ko}
-            onChange={(json) => {
-              onDraft("ko", json);
-              onDraft("en", json);
-            }}
-            t={t}
-          />
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {(["ko", "en"] as const).map((loc) => (
+              <div key={loc}>
+                <span className="mb-1 block text-[12px] font-medium text-ink/70">
+                  {loc === "ko" ? t.ko : t.en}
+                </span>
+                <CertListEditor
+                  value={values[loc]}
+                  onChange={(json) => onDraft(loc, json)}
+                  t={t}
+                />
+              </div>
+            ))}
+          </div>
         )}
 
         {(def.kind === "text" || def.kind === "textarea") && (
@@ -963,7 +981,7 @@ export default function PagesEditor({
       // 초기값 = 데이터 파일 기본값 (placeholder 가 아니라 실제 값)
       init[`${def.key}:ko`] = values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "";
       init[`${def.key}:en`] =
-        def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList"
+        def.kind === "url"
           ? (values[def.key]?.ko ?? KO_DEFAULTS.get(def.key) ?? "")
           : (values[def.key]?.en ?? EN_DEFAULTS.get(def.key) ?? "");
     }
@@ -1000,7 +1018,7 @@ export default function PagesEditor({
     for (const def of defs) {
       rows[def.key] = {
         ko: drafts[`${def.key}:ko`] ?? "",
-        en: def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
+        en: def.kind === "url" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
       };
     }
     return rows;
@@ -1090,7 +1108,7 @@ export default function PagesEditor({
     setMessage(null);
     setPendingRow(def.key);
     try {
-      if (def.kind === "url" || def.kind === "historyList" || def.kind === "officeList" || def.kind === "certList") {
+      if (def.kind === "url") {
         const res = await savePageContent(def.key, "ko", drafts[`${def.key}:ko`] ?? "");
         if (!res.ok) throw new Error(res.message ?? t.failed);
       } else {

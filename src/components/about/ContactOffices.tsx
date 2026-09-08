@@ -1,13 +1,17 @@
 import Appear from "@/components/ui/Appear";
 import { contact as defaultContent } from "@/data/contact";
 import { cn } from "@/lib/cn";
+import type { Locale } from "@/i18n/config";
 import type { ResolvedAboutContact } from "@/lib/about-content-resolve";
 
 /** About — Contact 오피스 블록 (원본 /48): 오피스 이름 + 구글맵(비편집 콘텐츠) + 연락처 테이블 */
 export default function ContactOffices({
   content = defaultContent,
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
 }: {
   content?: ResolvedAboutContact["contact"];
+  locale?: Locale;
 }) {
   const contact = content;
   return (
@@ -20,7 +24,11 @@ export default function ContactOffices({
           <div className="py-[15px]">
             <iframe
               src={office.mapSrc}
-              title={`${office.name} 위치`}
+              title={
+                locale === "ko"
+                  ? `${office.name} 위치`
+                  : `${office.name} location`
+              }
               className="h-[450px] w-full border-0 md:h-[383px] md-header:h-[450px]"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

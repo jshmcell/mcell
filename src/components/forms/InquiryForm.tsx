@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { submitInquiry } from "@/lib/actions/inquiry";
+import { useLocale } from "@/i18n/client";
+import type { Locale } from "@/i18n/config";
 
 /**
  * 파트너십 문의 폼 — 원본 /44 imweb 입력폼 위젯 동일 필드·스타일.
@@ -15,6 +17,61 @@ import { submitInquiry } from "@/lib/actions/inquiry";
 const inputCls =
   "h-[34px] md:h-[50px] w-full rounded-[3px] border border-black/10 bg-white px-[12px] py-[6px] text-[16px] text-[#212121] outline-none transition-colors placeholder:text-[#212121]/60 focus:border-navy-900 md:py-[10px] md:text-[15px]";
 
+interface InquiryFormT {
+  company: string;
+  companyPh: string;
+  manager: string;
+  managerPh: string;
+  phone: string;
+  phonePh: string;
+  email: string;
+  emailPh: string;
+  address: string;
+  addressPh: string;
+  development: string;
+  done: [string, string];
+  submitting: string;
+  submit: string;
+  error: string;
+}
+
+const i18n: Record<Locale, InquiryFormT> = {
+  ko: {
+    company: "업체명",
+    companyPh: "업체명을 입력해 주세요",
+    manager: "담당자(회사명)",
+    managerPh: "담당자(회사명)을 입력해주세요",
+    phone: "연락처",
+    phonePh: "연락처를 입력해 주세요",
+    email: "이메일",
+    emailPh: "이메일을 입력해 주세요",
+    address: "주소",
+    addressPh: "주소를 입력해 주세요",
+    development: "개발내용",
+    done: ["문의가 정상적으로 접수되었습니다.", "담당자가 확인 후 연락드리겠습니다."],
+    submitting: "접수 중...",
+    submit: "문의하기",
+    error: "접수 중 문제가 발생했습니다.",
+  },
+  en: {
+    company: "Company",
+    companyPh: "Enter your company name",
+    manager: "Contact Person (Company)",
+    managerPh: "Enter the contact person (company)",
+    phone: "Phone",
+    phonePh: "Enter your phone number",
+    email: "Email",
+    emailPh: "Enter your email address",
+    address: "Address",
+    addressPh: "Enter your address",
+    development: "Development Details",
+    done: ["Your inquiry has been submitted successfully.", "Our team will contact you shortly."],
+    submitting: "Submitting...",
+    submit: "Submit",
+    error: "An error occurred while submitting your inquiry.",
+  },
+};
+
 function Required() {
   return (
     <i
@@ -25,6 +82,8 @@ function Required() {
 }
 
 export default function InquiryForm() {
+  const locale = useLocale();
+  const t = i18n[locale];
   const [type, setType] = useState<"OEM" | "ODM">("OEM");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +105,7 @@ export default function InquiryForm() {
     });
     setSubmitting(false);
     if (!res.ok) {
-      setError(res.message ?? "접수 중 문제가 발생했습니다.");
+      setError(res.message ?? t.error);
       return;
     }
     setDone(true);
@@ -56,9 +115,9 @@ export default function InquiryForm() {
     return (
       <div className="mx-auto max-w-[768px] px-[50px] py-[80px] text-center md-header:max-w-[1250px]">
         <p className="text-[18px] leading-7 text-ink">
-          문의가 정상적으로 접수되었습니다.
+          {t.done[0]}
           <br />
-          담당자가 확인 후 연락드리겠습니다.
+          {t.done[1]}
         </p>
       </div>
     );
@@ -73,13 +132,13 @@ export default function InquiryForm() {
         <div className="mb-[15px] md:mb-[28px] md:w-[calc(50%-7px)] md-header:mb-[40px] md-header:w-auto">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              업체명
+              {t.company}
               <Required />
             </span>
             <input
               name="company"
               className={inputCls}
-              placeholder="업체명을 입력해 주세요"
+              placeholder={t.companyPh}
               required
             />
           </label>
@@ -87,13 +146,13 @@ export default function InquiryForm() {
         <div className="mb-[15px] md:mb-[28px] md:w-[calc(50%-7px)] md-header:mb-[40px] md-header:w-auto">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              담당자(회사명)
+              {t.manager}
               <Required />
             </span>
             <input
               name="manager"
               className={inputCls}
-              placeholder="담당자(회사명)을 입력해주세요"
+              placeholder={t.managerPh}
               required
             />
           </label>
@@ -101,14 +160,14 @@ export default function InquiryForm() {
         <div className="mb-[15px] md:mb-[28px] md:w-[calc(50%-7px)] md-header:mb-[40px] md-header:w-auto">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              연락처
+              {t.phone}
               <Required />
             </span>
             <input
               name="phone"
               type="tel"
               className={inputCls}
-              placeholder="연락처를 입력해 주세요"
+              placeholder={t.phonePh}
               required
             />
           </label>
@@ -116,14 +175,14 @@ export default function InquiryForm() {
         <div className="mb-[15px] md:mb-[28px] md:w-[calc(50%-7px)] md-header:mb-[40px] md-header:w-auto">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              이메일
+              {t.email}
               <Required />
             </span>
             <input
               name="email"
               type="email"
               className={inputCls}
-              placeholder="이메일을 입력해 주세요"
+              placeholder={t.emailPh}
               required
             />
           </label>
@@ -131,9 +190,9 @@ export default function InquiryForm() {
         <div className="mb-[15px] md:mb-[28px] md:w-[calc(50%-7px)] md-header:mb-[40px] md-header:w-auto">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              주소
+              {t.address}
             </span>
-            <input name="address" className={inputCls} placeholder="주소를 입력해 주세요" />
+            <input name="address" className={inputCls} placeholder={t.addressPh} />
           </label>
         </div>
 
@@ -178,7 +237,7 @@ export default function InquiryForm() {
         <div className="mb-[15px] md-header:col-span-2 md:mb-[33px] md-header:mb-[40px]">
           <label className="block">
             <span className="mb-[5px] block text-[16px] leading-[26px] font-normal text-ink md:text-[17px] md:leading-[20px] md-header:leading-[27px]">
-              개발내용
+              {t.development}
             </span>
             <textarea
               name="content"
@@ -199,7 +258,7 @@ export default function InquiryForm() {
           disabled={submitting}
           className="inline-block h-[51px] rounded-[2px] bg-[#363636] px-[60px] py-[10px] text-[20px] leading-[28px] font-normal text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "접수 중..." : "문의하기"}
+          {submitting ? t.submitting : t.submit}
         </button>
       </div>
     </form>

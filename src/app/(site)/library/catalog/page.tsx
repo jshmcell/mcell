@@ -6,9 +6,10 @@ import { catalogBand } from "@/data/portfolio";
 import { getPublicPosts } from "@/lib/boards";
 import { getLocale } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "카달로그",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: locale === "ko" ? "카달로그" : "Catalog" };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -16,16 +17,17 @@ export const dynamic = "force-dynamic";
 export default async function CatalogPage() {
   const locale = await getLocale();
   const posts = await getPublicPosts("catalog");
+  const pageTitle = locale === "ko" ? "카달로그" : "Catalog";
   return (
     <>
       <SubHero
-        groupLabel="자료실"
-        title="카달로그"
+        groupLabel={locale === "ko" ? "자료실" : "Library"}
+        title={pageTitle}
         currentHref="/library/catalog"
         locale={locale}
       />
       <SubPageBanner image={catalogBand} heightClassName="h-[300px]" locale={locale} />
-      <BoardTable label="카달로그" posts={posts} boardKey="catalog" />
+      <BoardTable label={pageTitle} posts={posts} boardKey="catalog" />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>
   );

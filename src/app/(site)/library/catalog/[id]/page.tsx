@@ -31,12 +31,13 @@ export default async function CatalogViewPage({
   if (!post) notFound();
 
   await incrementViews(id);
+  const pageTitle = locale === "ko" ? "카달로그" : "Catalog";
 
   return (
     <>
       <SubHero
-        groupLabel="자료실"
-        title="카달로그"
+        groupLabel={locale === "ko" ? "자료실" : "Library"}
+        title={pageTitle}
         currentHref="/library/catalog"
         locale={locale}
       />

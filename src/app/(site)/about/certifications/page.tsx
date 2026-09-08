@@ -5,19 +5,21 @@ import CertGallery from "@/components/subpage/CertGallery";
 import { getLocale } from "@/i18n/server";
 import { getAboutCertificationsContent } from "@/lib/about-content";
 
-export const metadata: Metadata = {
-  title: "인증서",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: locale === "ko" ? "인증서" : "Certifications" };
+}
 
 export default async function CertificationsPage() {
   const locale = await getLocale();
   const c = await getAboutCertificationsContent(locale);
+  const title = locale === "ko" ? "인증서" : "Certifications";
 
   return (
     <>
       <SubHero
         groupLabel="About"
-        title="인증서"
+        title={title}
         currentHref="/about/certifications"
         locale={locale}
       />

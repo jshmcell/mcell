@@ -3,26 +3,38 @@ import InfiniteSlider from "@/components/ui/InfiniteSlider";
 import SmartImage from "@/components/ui/SmartImage";
 import InquiryForm from "@/components/forms/InquiryForm";
 import { partnership } from "@/data/partnership";
+import { EN_PARTNERSHIP } from "@/data/content-en";
 import { partnerStrip, partnerStripFull, partnershipBadge } from "@/data/mcell";
+import { getLocale } from "@/i18n/server";
 
 /**
  * PARTNERSHIP INQUIRY — 원본 /31·/32 하단 임베드 섹션 (#f7f7f7 배경,
  * 타이틀 블록 fadeIn 0.7s + 입력폼 + 배지(181x67, 107px 행) + 60px 스페이서 +
  * 풀 블리드 무한 슬라이드(166px) + 하단 여백 146px (모바일 73px))
  */
-export default function PartnershipInquiry() {
+export default async function PartnershipInquiry() {
+  const locale = await getLocale();
+  const heading =
+    locale === "en" ? (EN_PARTNERSHIP.heading ?? partnership.heading) : partnership.heading;
+  const title =
+    locale === "en" ? (EN_PARTNERSHIP.title ?? partnership.title) : partnership.title;
+  const lines =
+    locale === "en" && EN_PARTNERSHIP.lines
+      ? EN_PARTNERSHIP.lines.split(/\r?\n/)
+      : partnership.lines;
+
   return (
     <section className="bg-[#f7f7f7]">
       <div className="container-site pt-[60px] text-center">
         <Appear animation="fadeIn" duration={0.7}>
           <p className="text-[20px] font-bold text-navy-900">
-            {partnership.heading}
+            {heading}
           </p>
           <h2 className="text-[30px] font-bold text-ink">
-            {partnership.title}
+            {title}
           </h2>
           <div className="mt-[6px] text-[18px] leading-[2] text-ink">
-            {partnership.lines.map((line) => (
+            {lines.map((line) => (
               <p key={line}>{line}</p>
             ))}
           </div>

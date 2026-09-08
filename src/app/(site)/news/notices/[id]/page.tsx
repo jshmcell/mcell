@@ -32,12 +32,13 @@ export default async function NoticeViewPage({
 
   await incrementViews(id);
   const { prev, next } = await getAdjacentPosts("notices", id);
+  const pageTitle = locale === "ko" ? "공지사항" : "Notices";
 
   return (
     <>
       <SubHero
-        groupLabel="뉴스"
-        title="공지사항"
+        groupLabel={locale === "ko" ? "뉴스" : "News"}
+        title={pageTitle}
         currentHref="/news/notices"
         locale={locale}
       />

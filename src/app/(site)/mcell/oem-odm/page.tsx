@@ -7,9 +7,10 @@ import PartnershipInquiry from "@/components/mcell/PartnershipInquiry";
 import { getLocale } from "@/i18n/server";
 import { getMcellOemContent } from "@/lib/mcell-content";
 
-export const metadata: Metadata = {
-  title: "OEM/ODM | 엠셀",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: locale === "ko" ? "OEM/ODM | 엠셀" : "OEM/ODM | MCell" };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function OemOdmPage() {
   const c = await getMcellOemContent(locale);
   return (
     <>
-      <OemBanner content={c.oemBanner} />
+      <OemBanner content={c.oemBanner} locale={locale} />
       <OemBlocks content={c.oemBlocks} />
       <OemRnd content={c.rnd} />
       <OemProof content={c.oemProof} proof={c.proof} />

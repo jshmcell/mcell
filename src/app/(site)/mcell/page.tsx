@@ -11,9 +11,13 @@ import PartnershipInquiry from "@/components/mcell/PartnershipInquiry";
 import { getLocale } from "@/i18n/server";
 import { getMcellContent } from "@/lib/mcell-content";
 
-export const metadata: Metadata = {
-  title: "기술력 소개 | 엠셀",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return {
+    title:
+      locale === "ko" ? "기술력 소개 | 엠셀" : "Technology | MCell",
+  };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +27,7 @@ export default async function McellPage() {
   const c = await getMcellContent(locale);
   return (
     <>
-      <McellHero content={c.hero} />
+      <McellHero content={c.hero} locale={locale} />
       <Stats content={c.stats} />
       <TechLayers content={c.tech} />
       <Products content={c.products} />

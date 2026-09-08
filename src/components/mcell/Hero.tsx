@@ -1,6 +1,7 @@
 import Appear from "@/components/ui/Appear";
 import SmartImage from "@/components/ui/SmartImage";
 import { hero as defaultContent } from "@/data/mcell";
+import type { Locale } from "@/i18n/config";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 const STRIP_COPIES = 12;
@@ -12,8 +13,11 @@ const STRIP_COPIES = 12;
  */
 export default function McellHero({
   content = defaultContent,
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
 }: {
   content?: ResolvedMcell["hero"];
+  locale?: Locale;
 }) {
   return (
     <section className="relative overflow-hidden">
@@ -39,7 +43,7 @@ export default function McellHero({
         <div className="mt-[18px] md-header:mt-0">
           <SmartImage
             src={content.logo}
-            alt="엠셀"
+            alt={locale === "ko" ? "엠셀" : "MCell"}
             width={140}
             height={52}
             className="h-auto w-[140px]"

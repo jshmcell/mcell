@@ -23,7 +23,7 @@ export default async function ContactPage() {
       />
       <SubPageBanner image={c.banner} overlay locale={locale} />
       <section className="bg-white">
-        <ContactOffices content={c.contact} />
+        <ContactOffices content={c.contact} locale={locale} />
         <div aria-hidden className="h-[76px] md-header:h-[148px]" />
       </section>
     </>

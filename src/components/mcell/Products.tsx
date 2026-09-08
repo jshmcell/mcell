@@ -4,6 +4,7 @@ import SmartImage from "@/components/ui/SmartImage";
 import Appear from "@/components/ui/Appear";
 import { useImageViewer } from "@/components/ui/ImageViewer";
 import { products as defaultContent } from "@/data/mcell";
+import { useLocale } from "@/i18n/client";
 import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
 
 /**
@@ -11,12 +12,29 @@ import type { ResolvedMcell } from "@/lib/mcell-content-resolve";
  * 텍스트 블록(타이틀 14px #212121, 설명 12px #999),
  * 호버 시 카드 전체가 20px 상승 + 그림자(0.5s), 클릭 시 뷰어(캡션 표시)
  */
+
+const HEADINGS = {
+  ko: {
+    kicker: "제품 정보",
+    title: "히트플렉스로 완성된 차세대 발열 제품",
+    description: "에너지 효율과 유연성, 안정성을 모두 갖춘 HEAT-FLEX는 다양한 분야에 활용되고 있습니다.",
+  },
+  en: {
+    kicker: "Products",
+    title: "Next-generation heating products completed with HeatFlex",
+    description:
+      "HEAT-FLEX, with energy efficiency, flexibility and stability, is applied across a wide range of fields.",
+  },
+};
+
 export default function Products({
   content = defaultContent,
 }: {
   content?: ResolvedMcell["products"];
 }) {
   const openViewer = useImageViewer();
+  const locale = useLocale();
+  const h = HEADINGS[locale];
   const viewerImages = content.map((p) => ({
     src: p.image,
     alt: p.name,
@@ -27,13 +45,10 @@ export default function Products({
     <section className="bg-white">
       <div className="container-site pt-[109px] pb-[105px] text-center">
         <Appear animation="fadeIn" duration={0.7}>
-          <p className="text-[20px] font-bold text-navy-900">제품 정보</p>
-          <h2 className="text-[30px] font-bold text-ink">
-            히트플렉스로 완성된 차세대 발열 제품
-          </h2>
+          <p className="text-[20px] font-bold text-navy-900">{h.kicker}</p>
+          <h2 className="text-[30px] font-bold text-ink">{h.title}</h2>
           <p className="mt-[6px] text-[18px] leading-[2] text-ink">
-            에너지 효율과 유연성, 안정성을 모두 갖춘 HEAT-FLEX는 다양한 분야에
-            활용되고 있습니다.
+            {h.description}
           </p>
         </Appear>
 
@@ -43,7 +58,11 @@ export default function Products({
               <button
                 key={product.name}
                 type="button"
-                aria-label={`${product.name} 크게 보기`}
+                aria-label={
+                  locale === "ko"
+                    ? `${product.name} 크게 보기`
+                    : `View ${product.name} larger`
+                }
                 onClick={() => openViewer(viewerImages, i)}
                 className="group cursor-pointer p-[15px]"
               >
