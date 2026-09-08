@@ -121,9 +121,10 @@ export function resolveAboutHistoryFromRows(
   }
   collect?.set("about.history", rawHistory || JSON.stringify(dHistory));
 
+  // historyImages는 더 이상 편집 대상이 아님 — 데이터 파일 기본값 그대로 사용
   const historyImages = {
-    pc: t("about.historyImages.pc", dHistoryImages.pc),
-    mobile: t("about.historyImages.mobile", dHistoryImages.mobile),
+    pc: dHistoryImages.pc,
+    mobile: dHistoryImages.mobile,
   };
 
   const banner = t("about.historyBanner.bg", "/assets/img/9e084a2b4a973.jpg");

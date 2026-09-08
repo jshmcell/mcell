@@ -76,7 +76,6 @@ function mcellSectionOfKey(key: string) {
 /** 콘텐츠 키 prefix → about 미리보기 섹션. */
 function aboutSectionOfKey(key: string) {
   if (key.startsWith("about.ceo.")) return "ceo";
-  if (key.startsWith("about.historyImages.")) return "historyImages";
   // 정확한 키 about.history (동적 목록) + 기존 about.history.* 키 모두 연혁 섹션
   if (key === "about.history" || key.startsWith("about.history.")) return "history";
   if (key.startsWith("about.certs.")) return "certifications";
@@ -131,7 +130,7 @@ const ABOUT_PAGES: PageDivider[] = [
     route: "/about",
     prefixes: ["about.ceo.", "about.contact.banner."],
   },
-  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history", "about.historyImages."] },
+  { labelKey: "aboutHistory", route: "/about/history", prefixes: ["about.history"] },
   { labelKey: "aboutCerts", route: "/about/certifications", prefixes: ["about.certs."] },
   { labelKey: "aboutContact", route: "/about/contact", prefixes: ["about.contact.offices"] },
 ];

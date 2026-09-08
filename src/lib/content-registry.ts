@@ -73,7 +73,6 @@ const mcellProofSec = { ko: "실적 항목", en: "Proof items" };
 // ── about group ──
 const aboutCeoSec = { ko: "CEO 인사말", en: "CEO message" };
 const aboutHistorySec = { ko: "연혁", en: "History" };
-const aboutHistoryImagesSec = { ko: "연혁 이미지", en: "History images" };
 const aboutCertsSec = { ko: "인증서", en: "Certifications" };
 const aboutContactBannerSec = { ko: "문의 배너", en: "Contact banner" };
 const aboutOfficesSec = { ko: "오피스 정보", en: "Offices" };
@@ -270,15 +269,11 @@ export const CONTENT_DEFS: ContentDef[] = [
   d("about.ceo.paragraphs", "about", aboutCeoSec, "본문 (줄바꿈 = 문단 구분)", "Body (one paragraph per line)", "textarea", ABOUT),
   d("about.ceo.signature", "about", aboutCeoSec, "서명", "Signature", "text", ABOUT),
 
-  // ── ABOUT 연혁 (동적 목록 — JSON: [{"year":"2021","items":["...","..."]}, ...]) ──
+  // ── ABOUT 연혁 (상단 배너 이미지 + 동적 연도 목록) ──
+  d("about.historyBanner.bg", "about", aboutHistorySec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.history", "about", aboutHistorySec, "연혁 목록", "History list", "historyList", ABOUT),
 
-  // ── ABOUT 연혁 이미지 ──
-  d("about.historyImages.pc", "about", aboutHistoryImagesSec, "PC 이미지", "PC image", "image", ABOUT),
-  d("about.historyImages.mobile", "about", aboutHistoryImagesSec, "모바일 이미지", "Mobile image", "image", ABOUT),
-
   // ── ABOUT 페이지별 상단 배너 이미지 ──
-  d("about.historyBanner.bg", "about", aboutHistorySec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.certsBanner.bg", "about", aboutCertsSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
   d("about.contactBanner.bg", "about", aboutOfficesSec, "상단 배너 이미지", "Top banner image", "image", ABOUT),
 

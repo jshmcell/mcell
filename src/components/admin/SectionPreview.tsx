@@ -446,8 +446,6 @@ export function AboutSectionPreview({
       return <CeoIntroPreview ceo={about.ceo} />;
     case "history":
       return history ? <AboutHistoryPreview history={history} /> : null;
-    case "historyImages":
-      return history ? <AboutHistoryPreview history={history} /> : null;
     case "certifications":
       return certifications ? <AboutCertsPreview certifications={certifications} /> : null;
     case "contactBanner":
