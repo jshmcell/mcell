@@ -56,8 +56,9 @@ export default async function PartnershipPage() {
         title="제휴 및 문의"
         currentHref="/partnership"
         compact
+        locale={locale}
       />
-      <SubPageBanner image={banner} overlay />
+      <SubPageBanner image={banner} overlay locale={locale} />
 
       <section className="bg-[#f7f7f7]">
         <div className="container-site pt-[30px] text-center">

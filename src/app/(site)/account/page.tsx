@@ -32,7 +32,12 @@ export default async function AccountPage() {
 
   return (
     <>
-      <SubHero groupLabel="엠셀" title="마이페이지" currentHref="/account" />
+      <SubHero
+        groupLabel="엠셀"
+        title="마이페이지"
+        currentHref="/account"
+        locale={locale}
+      />
       <section className="bg-white">
         <div className="container-site py-10 md:py-16">
           <div className="mx-auto max-w-[720px]">

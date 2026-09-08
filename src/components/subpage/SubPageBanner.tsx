@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/cn";
 
 interface SubPageBannerProps {
@@ -6,6 +7,8 @@ interface SubPageBannerProps {
   overlay?: boolean;
   /** 높이 오버라이드 (기본: 290px 모바일 / 245px 태블릿 / 300px PC) */
   heightClassName?: string;
+  /** Default exists for client-component use (admin preview); server callers must pass the real locale. */
+  locale?: Locale;
 }
 
 /**

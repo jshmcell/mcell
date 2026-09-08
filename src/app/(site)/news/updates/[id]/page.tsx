@@ -4,6 +4,7 @@ import SubPageBanner from "@/components/subpage/SubPageBanner";
 import BoardDetailView from "@/components/library/BoardDetailView";
 import { newsBand } from "@/data/boards";
 import { getAdjacentPosts, getPublicPost, incrementViews } from "@/lib/boards";
+import { getLocale } from "@/i18n/server";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function UpdateViewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const locale = await getLocale();
   const post = await getPublicPost("updates", id);
   if (!post) notFound();
 
@@ -33,8 +35,13 @@ export default async function UpdateViewPage({
 
   return (
     <>
-      <SubHero groupLabel="뉴스" title="소식" currentHref="/news/updates" />
-      <SubPageBanner image={newsBand} heightClassName="h-[250px]" />
+      <SubHero
+        groupLabel="뉴스"
+        title="소식"
+        currentHref="/news/updates"
+        locale={locale}
+      />
+      <SubPageBanner image={newsBand} heightClassName="h-[250px]" locale={locale} />
       <BoardDetailView boardKey="updates" post={post} prev={prev} next={next} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>

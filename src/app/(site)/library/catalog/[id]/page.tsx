@@ -4,6 +4,7 @@ import SubPageBanner from "@/components/subpage/SubPageBanner";
 import CatalogDetailView from "@/components/library/CatalogDetailView";
 import { catalogBand } from "@/data/portfolio";
 import { getPublicPost, incrementViews } from "@/lib/boards";
+import { getLocale } from "@/i18n/server";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function CatalogViewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const locale = await getLocale();
   const post = await getPublicPost("catalog", id);
   if (!post) notFound();
 
@@ -36,8 +38,9 @@ export default async function CatalogViewPage({
         groupLabel="자료실"
         title="카달로그"
         currentHref="/library/catalog"
+        locale={locale}
       />
-      <SubPageBanner image={catalogBand} heightClassName="h-[250px]" />
+      <SubPageBanner image={catalogBand} heightClassName="h-[250px]" locale={locale} />
       <CatalogDetailView post={post} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>

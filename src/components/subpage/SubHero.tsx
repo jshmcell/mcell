@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { NavChild } from "@/data/site";
 import { navItems } from "@/data/site";
-import { getLocale } from "@/i18n/server";
-import { localizeHref } from "@/i18n/config";
+import { localizeHref, type Locale } from "@/i18n/config";
 import Appear from "@/components/ui/Appear";
 import { cn } from "@/lib/cn";
 
@@ -15,14 +14,15 @@ interface SubHeroProps {
   compact?: boolean;
 }
 
-export default async function SubHero({
+export default function SubHero({
   groupLabel,
   title,
   children,
   currentHref,
   compact = false,
-}: SubHeroProps) {
-  const locale = await getLocale();
+  // Default exists for client-component use (admin preview); server callers must pass the real locale.
+  locale = "ko",
+}: SubHeroProps & { locale?: Locale }) {
   const items =
     children ?? navItems.find((n) => n.label === groupLabel)?.children ?? [];
   const currentItem = items.find((item) => item.href === currentHref);

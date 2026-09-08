@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import SubHero from "@/components/subpage/SubHero";
+import { getLocale } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const locale = await getLocale();
   return (
     <>
       <SubHero
         groupLabel="엠셀"
         title="개인정보처리방침"
         currentHref="/privacy"
+        locale={locale}
       />
       <section className="bg-white">
         <div className="container-site py-16">

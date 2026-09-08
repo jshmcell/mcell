@@ -3,6 +3,7 @@ import SubHero from "@/components/subpage/SubHero";
 import Reveal from "@/components/ui/Reveal";
 import { boards, type BoardPost } from "@/data/boards";
 import type { NavChild } from "@/data/site";
+import type { Locale } from "@/i18n/config";
 
 interface BoardListProps {
   boardKey: keyof typeof boards;
@@ -10,6 +11,8 @@ interface BoardListProps {
   title: string;
   currentHref: string;
   nav: NavChild[];
+  /** Default exists for client-component use (admin preview); server callers must pass the real locale. */
+  locale?: Locale;
 }
 
 export default function BoardList({
@@ -18,12 +21,18 @@ export default function BoardList({
   title,
   currentHref,
   nav,
+  locale = "ko",
 }: BoardListProps) {
   const board = boards[boardKey];
 
   return (
     <>
-      <SubHero groupLabel={groupLabel} title={title} currentHref={currentHref}>
+      <SubHero
+        groupLabel={groupLabel}
+        title={title}
+        currentHref={currentHref}
+        locale={locale}
+      >
         {nav}
       </SubHero>
       <section className="bg-white">
