@@ -1,7 +1,16 @@
+import { cache } from "react";
+
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "@/lib/session";
 
-export type Role = "NORMAL" | "ADMIN";
+export type Actor = {
+  id: string;
+  email: string;
+  name: string;
+  role: "NORMAL" | "ADMIN";
+  isSuperuser: boolean;
+  isAdmin: boolean;
+};
 
 /**
  * 슈퍼유저 판별: DB role이 아니라 SUPERUSER_EMAIL env와 일치하는 이메일.
@@ -22,8 +31,11 @@ export async function getCurrentUserRow() {
   return user;
 }
 
-/** 서버 컴포넌트/액션용 관리자 게이트 (admin = role ADMIN or 슈퍼유저). */
-export async function getActor() {
+/**
+ * 서버 컴포넌트/액션용 관리자 게이트 (admin = role ADMIN or 슈퍼유저).
+ * react cache()로 요청당 1회만 Prisma 조회한다 (뉴스/관리 페이지가 3회씩 호출하던 것 디듀프).
+ */
+export const getActor = cache(async (): Promise<Actor | null> => {
   const user = await getCurrentUserRow();
   if (!user) return null;
   return {
@@ -34,31 +46,4 @@ export async function getActor() {
     isSuperuser: isSuperuserEmail(user.email),
     isAdmin: user.role === "ADMIN" || isSuperuserEmail(user.email),
   };
-}
-
-export class ForbiddenError extends Error {
-  constructor(message = "권한이 없습니다.") {
-    super(message);
-    this.name = "ForbiddenError";
-  }
-}
-
-export async function requireAdmin() {
-  const actor = await getActor();
-  if (!actor) throw new ForbiddenError();
-  if (!actor.isAdmin) throw new ForbiddenError();
-  return actor;
-}
-
-export async function requireSuperuser() {
-  const actor = await getActor();
-  if (!actor) throw new ForbiddenError();
-  if (!actor.isSuperuser) throw new ForbiddenError();
-  return actor;
-}
-
-/** 페이지용: 관리자가 아니면 홈으로 (throw 대신 redirect는 호출부에서) */
-export async function getAdminOrNull() {
-  const actor = await getActor();
-  return actor?.isSuperuser ? actor : null;
-}
+});

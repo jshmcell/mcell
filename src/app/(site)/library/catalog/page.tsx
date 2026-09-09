@@ -5,6 +5,7 @@ import BoardTable from "@/components/library/BoardTable";
 import { catalogBand } from "@/data/portfolio";
 import { getPublicPosts } from "@/lib/boards";
 import { getLocale } from "@/i18n/server";
+import { getActor } from "@/lib/roles";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -17,6 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function CatalogPage() {
   const locale = await getLocale();
   const posts = await getPublicPosts("catalog");
+  const actor = await getActor();
   const pageTitle = locale === "ko" ? "카달로그" : "Catalog";
   return (
     <>
@@ -26,8 +28,8 @@ export default async function CatalogPage() {
         currentHref="/library/catalog"
         locale={locale}
       />
-      <SubPageBanner image={catalogBand} heightClassName="h-[300px]" locale={locale} />
-      <BoardTable label={pageTitle} posts={posts} boardKey="catalog" />
+      <SubPageBanner image={catalogBand} heightClassName="h-[300px]" />
+      <BoardTable label={pageTitle} posts={posts} boardKey="catalog" isAdmin={actor?.isAdmin} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>
   );

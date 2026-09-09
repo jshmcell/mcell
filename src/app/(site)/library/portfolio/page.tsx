@@ -22,7 +22,7 @@ export default async function PortfolioPage() {
         currentHref="/library/portfolio"
         locale={locale}
       />
-      <SubPageBanner image={portfolioBand} heightClassName="h-[300px]" locale={locale} />
+      <SubPageBanner image={portfolioBand} heightClassName="h-[300px]" />
       <PortfolioGrid />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>

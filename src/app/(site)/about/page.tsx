@@ -17,7 +17,7 @@ export default async function AboutPage() {
   return (
     <>
       <SubHero groupLabel="About" title="About Us" currentHref="/about" locale={locale} />
-      <SubPageBanner image={c.ceo.banner.bg} locale={locale} />
+      <SubPageBanner image={c.ceo.banner.bg} />
       <CeoIntro content={c.ceo} />
       <ContactBanner content={c.contact} locale={locale} />
     </>

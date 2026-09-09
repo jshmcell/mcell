@@ -3,6 +3,7 @@ import { getActor, isSuperuserEmail } from "@/lib/roles";
 import { getLocale } from "@/i18n/server";
 import { adminDict } from "@/i18n/admin";
 import { localizeHref } from "@/i18n/config";
+import { redirect } from "next/navigation";
 import UsersRoleControls from "@/components/admin/UsersRoleControls";
 
 /** /admin/users — 회원 목록 + 권한 관리 */
@@ -13,7 +14,7 @@ export default async function AdminUsersPage({
 }) {
   const { q } = await searchParams;
   const actor = await getActor();
-  if (!actor) return null;
+  if (!actor) redirect("/login");
   const locale = await getLocale();
   const t = adminDict[locale].users;
 

@@ -20,9 +20,7 @@
     "next": "16.3.4",
     "pg": "^8.23.0",
     "react": "19.2.8",
-    "react-countup": "^6.5.3",
     "react-dom": "19.2.8",
-    "react-icons": "^5.7.0",
     "resend": "^6.25.0",
     "zod": "^4.5.4",
     "zustand": "^5.0.15"
@@ -36,11 +34,9 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "playwright": "^1.62.1",
-    "prettier": "^3.9.6",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5",
-    "vercel": "^59.11.2"
+    "typescript": "^5"
   }
 }

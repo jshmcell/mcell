@@ -66,15 +66,6 @@ export default function MobileDrawer({ user }: { user?: HeaderUser | null }) {
                 >
                   {t.header.mypage}
                 </Link>
-                {user.isAdmin && (
-                  <Link
-                    href={localizeHref("/admin", locale)}
-                    onClick={() => toggleMobileMenu(false)}
-                    className="inline-block rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-[12px] font-bold text-white"
-                  >
-                    {t.header.admin}
-                  </Link>
-                )}
                 <form action={signOutAction}>
                   <button
                     type="submit"

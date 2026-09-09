@@ -9,51 +9,6 @@ export interface NavItem {
   children?: NavChild[];
 }
 
-export const navItems: NavItem[] = [
-  {
-    label: "About",
-    href: "/about",
-    children: [
-      { label: "About Us", href: "/about" },
-      { label: "연혁", href: "/about/history" },
-      { label: "인증서", href: "/about/certifications" },
-      { label: "Contact Us", href: "/about/contact" },
-    ],
-  },
-  {
-    label: "Mcell",
-    href: "/mcell",
-    children: [
-      { label: "기술력 소개", href: "/mcell" },
-      { label: "OEM/ODM", href: "/mcell/oem-odm" },
-    ],
-  },
-  {
-    label: "SHOP",
-    href: "/shop",
-  },
-  {
-    label: "자료실",
-    href: "/library/portfolio",
-    children: [
-      { label: "포트폴리오", href: "/library/portfolio" },
-      { label: "카달로그", href: "/library/catalog" },
-    ],
-  },
-  {
-    label: "뉴스",
-    href: "/news/notices",
-    children: [
-      { label: "공지사항", href: "/news/notices" },
-      { label: "소식", href: "/news/updates" },
-    ],
-  },
-  {
-    label: "제휴 및 문의",
-    href: "/partnership",
-  },
-];
-
 export const company = {
   name: "엠셀",
   logoWhite: "/assets/img/ee5680f827a98.png",
@@ -65,9 +20,3 @@ export const company = {
   fax: "+82-50-4180-9916",
   email: "contact@mcell.co.kr",
 };
-
-export const socials = [
-  { label: "Facebook", href: "#" },
-  { label: "Instagram", href: "#" },
-  { label: "Twitter", href: "#" },
-] as const;

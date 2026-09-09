@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActor } from "@/lib/roles";
 import { getLocale } from "@/i18n/server";
 import { adminDict } from "@/i18n/admin";
+import { redirect } from "next/navigation";
 import BoardsAdminPanel from "@/components/admin/BoardsAdminPanel";
 
 /** /admin/boards — 게시물 CRUD */
@@ -12,7 +13,7 @@ export default async function AdminBoardsPage({
 }) {
   const { board } = await searchParams;
   const actor = await getActor();
-  if (!actor) return null;
+  if (!actor) redirect("/login");
   const locale = await getLocale();
   const boards = adminDict[locale].boards.meta;
 
@@ -21,7 +22,18 @@ export default async function AdminBoardsPage({
   const posts = await prisma.boardPost.findMany({
     where: { board: active.key },
     orderBy: { createdAt: "desc" },
-    include: { attachment: true },
+    select: {
+      id: true,
+      board: true,
+      category: true,
+      title: true,
+      body: true,
+      author: true,
+      views: true,
+      published: true,
+      createdAt: true,
+      attachment: true,
+    },
   });
 
   return (

@@ -11,6 +11,7 @@ import {
 import { useLocale } from "@/i18n/client";
 import { adminDict, type AdminDict } from "@/i18n/admin";
 import { localizeHref } from "@/i18n/config";
+import type { BoardKey } from "@/lib/boards-types";
 
 type Attachment = { name: string; size: string; href: string };
 export type AdminPost = {
@@ -25,7 +26,7 @@ export type AdminPost = {
   attachment: Attachment | null;
 };
 
-type BoardMeta = { key: string; label: string; base: string };
+type BoardMeta = { key: BoardKey; label: string; base: string };
 
 const inputCls =
   "h-[40px] w-full rounded-[3px] border border-black/10 bg-white px-3 text-[14px] outline-none focus:border-navy-700";
@@ -36,7 +37,7 @@ export default function BoardsAdminPanel({
   posts,
 }: {
   boards: BoardMeta[];
-  activeKey: string;
+  activeKey: BoardKey;
   posts: AdminPost[];
 }) {
   const [editing, setEditing] = useState<AdminPost | "new" | null>(null);
@@ -115,8 +116,8 @@ export default function BoardsAdminPanel({
           onCancel={() => setEditing(null)}
           onSave={(data) =>
             editing === "new"
-              ? run(() => createBoardPost({ ...data, board: activeKey as never }))
-              : run(() => updateBoardPost(editing.id, { ...data, board: activeKey as never }))
+              ? run(() => createBoardPost({ ...data, board: activeKey }))
+              : run(() => updateBoardPost(editing.id, { ...data, board: activeKey }))
           }
         />
       )}

@@ -48,10 +48,12 @@ export default function BoardTable({
   label,
   posts,
   boardKey,
+  isAdmin = false,
 }: {
   label: string;
   posts: PublicPost[];
   boardKey: string;
+  isAdmin?: boolean;
 }) {
   const base = BOARD_BASE[boardKey];
   const locale = useLocale();
@@ -65,12 +67,14 @@ export default function BoardTable({
           <p className="text-[15px] leading-[1.5] text-[#363636]">
             {label} <span>{posts.length}</span>
           </p>
-          <Link
-            href={localizeHref("/login", locale)}
-            className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white md-header:hidden"
-          >
-            {L.write[locale]}
-          </Link>
+          {isAdmin && (
+            <Link
+              href={localizeHref("/admin/boards", locale)}
+              className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white md-header:hidden"
+            >
+              {L.write[locale]}
+            </Link>
+          )}
           {/* PC 검색 */}
           <div className="hidden items-center md-header:flex">
             <input
@@ -81,7 +85,7 @@ export default function BoardTable({
             />
             <button
               type="button"
-              className="w-[23px] shrink-0 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
+              className="ml-2 shrink-0 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
             >
               {L.search[locale]}
             </button>
@@ -89,16 +93,16 @@ export default function BoardTable({
         </div>
 
         {/* 모바일 검색 */}
-        <div className="relative mt-[10px] md-header:hidden">
+        <div className="mt-[10px] flex items-center md-header:hidden">
           <input
             type="search"
             placeholder="Search"
             aria-label={L.searchAria[locale]}
-            className="h-[37px] w-full border border-black/10 bg-white px-3 pr-[36px] text-[16px] text-[#212121] outline-none placeholder:text-ink/40"
+            className="h-[37px] min-w-0 flex-1 border border-black/10 bg-white px-3 text-[16px] text-[#212121] outline-none placeholder:text-ink/40"
           />
           <button
             type="button"
-            className="absolute top-1/2 right-[7px] w-[23px] -translate-y-1/2 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
+            className="ml-2 shrink-0 whitespace-nowrap text-[15px] leading-[18px] text-[#212121]"
           >
             {L.search[locale]}
           </button>
@@ -168,14 +172,16 @@ export default function BoardTable({
         </div>
 
         {/* 하단 글쓰기 */}
-        <div className="mt-[13px] flex justify-end md-header:mt-[15px]">
-          <Link
-            href={localizeHref("/login", locale)}
-            className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
-          >
-            {L.write[locale]}
-          </Link>
-        </div>
+        {isAdmin && (
+          <div className="mt-[13px] flex justify-end md-header:mt-[15px]">
+            <Link
+              href={localizeHref("/admin/boards", locale)}
+              className="flex h-[30px] w-[74px] items-center justify-center rounded-[2px] bg-[#363636] text-[12px] text-white"
+            >
+              {L.write[locale]}
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

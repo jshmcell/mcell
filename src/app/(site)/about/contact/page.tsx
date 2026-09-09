@@ -21,7 +21,7 @@ export default async function ContactPage() {
         currentHref="/about/contact"
         locale={locale}
       />
-      <SubPageBanner image={c.banner} overlay locale={locale} />
+      <SubPageBanner image={c.banner} overlay />
       <section className="bg-white">
         <ContactOffices content={c.contact} locale={locale} />
         <div aria-hidden className="h-[76px] md-header:h-[148px]" />

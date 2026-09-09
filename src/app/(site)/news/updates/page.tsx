@@ -5,6 +5,7 @@ import BoardTable from "@/components/library/BoardTable";
 import { newsBand } from "@/data/boards";
 import { getPublicPosts } from "@/lib/boards";
 import { getLocale } from "@/i18n/server";
+import { getActor } from "@/lib/roles";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -17,6 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function UpdatesPage() {
   const locale = await getLocale();
   const posts = await getPublicPosts("updates");
+  const actor = await getActor();
   const pageTitle = locale === "ko" ? "소식" : "Updates";
   return (
     <>
@@ -26,8 +28,8 @@ export default async function UpdatesPage() {
         currentHref="/news/updates"
         locale={locale}
       />
-      <SubPageBanner image={newsBand} heightClassName="h-[300px]" locale={locale} />
-      <BoardTable label={pageTitle} posts={posts} boardKey="updates" />
+      <SubPageBanner image={newsBand} heightClassName="h-[300px]" />
+      <BoardTable label={pageTitle} posts={posts} boardKey="updates" isAdmin={actor?.isAdmin} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>
   );

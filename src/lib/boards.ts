@@ -1,16 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import type { BoardKey } from "@/lib/actions/admin-boards";
+import type { BoardKey, PublicPost } from "@/lib/boards-types";
 
-export type PublicPost = {
-  id: string;
-  category: string;
-  title: string;
-  author: string;
-  date: string;
-  views: number;
-  body?: string;
-  attachment?: { name: string; size: string; href: string };
-};
+export type { BoardKey, PublicPost } from "@/lib/boards-types";
 
 /** 공개 게시물 목록 (published만) — 최신순 */
 export async function getPublicPosts(board: BoardKey): Promise<PublicPost[]> {

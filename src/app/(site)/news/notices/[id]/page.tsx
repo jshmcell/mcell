@@ -42,7 +42,7 @@ export default async function NoticeViewPage({
         currentHref="/news/notices"
         locale={locale}
       />
-      <SubPageBanner image={newsBand} heightClassName="h-[250px]" locale={locale} />
+      <SubPageBanner image={newsBand} heightClassName="h-[250px]" />
       <BoardDetailView boardKey="notices" post={post} prev={prev} next={next} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>

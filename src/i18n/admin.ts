@@ -1,4 +1,5 @@
 import type { Locale } from "./config";
+import type { BoardKey } from "@/lib/boards-types";
 
 export interface AdminDict {
   layout: {
@@ -58,8 +59,8 @@ export interface AdminDict {
     statusLabels: Record<string, string>;
   };
   boards: {
-    meta: { key: string; label: string; base: string }[];
-    defaultCategory: Record<string, string>;
+    meta: { key: BoardKey; label: string; base: string }[];
+    defaultCategory: Record<BoardKey, string>;
     newPost: string;
     thTitle: string;
     thStatus: string;

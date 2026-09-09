@@ -23,7 +23,7 @@ export default async function CertificationsPage() {
         currentHref="/about/certifications"
         locale={locale}
       />
-      <SubPageBanner image={c.banner} overlay locale={locale} />
+      <SubPageBanner image={c.banner} overlay />
       <section className="bg-white">
         <div className="container-site pt-[75px] pb-[51px]">
           <CertGallery items={c.certifications} />

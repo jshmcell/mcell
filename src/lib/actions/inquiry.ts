@@ -1,6 +1,5 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "@/lib/session";
@@ -39,9 +38,6 @@ export async function submitInquiry(
     });
     userId = u?.id ?? null;
   }
-
-  const requestHeaders = await headers();
-  void requestHeaders; // 향후 레이트리밋용
 
   await prisma.inquiry.create({
     data: {

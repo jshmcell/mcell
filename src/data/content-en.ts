@@ -284,9 +284,9 @@ export const EN_HISTORY: { year: string; events: string[] }[] = [
   { year: "2021", events: ["Investment from Huvis", "Selected for Startup Growth Technology R&D project"] },
   { year: "2022", events: ["Anseong, Gyeonggi factory established"] },
   { year: "2023", events: ["Conditional purchase R&D project"] },
-  { year: "2023.00", events: ["Selected as a promising SME of Gyeonggi Province"] },
+  { year: "2023", events: ["Selected as a promising SME of Gyeonggi Province"] },
   { year: "2024", events: ["Selected for the Regional Legend 50+ program"] },
-  { year: "2024.00", events: ["MOU signed with KyungDong Navien for next-generation mat development"] },
+  { year: "2024", events: ["MOU signed with KyungDong Navien for next-generation mat development"] },
 ];
 
 /**

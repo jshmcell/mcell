@@ -12,7 +12,12 @@ export async function setInquiryStatus(id: string, status: string) {
   if (!STATUSES.includes(status as (typeof STATUSES)[number])) {
     return { ok: false, message: "잘못된 상태입니다." };
   }
-  await prisma.inquiry.update({ where: { id }, data: { status } });
-  revalidatePath("/admin/inquiries");
-  return { ok: true };
+  try {
+    await prisma.inquiry.update({ where: { id }, data: { status } });
+    revalidatePath("/admin/inquiries");
+    return { ok: true };
+  } catch (e) {
+    console.error("setInquiryStatus failed:", e);
+    return { ok: false, message: "처리 중 오류가 발생했습니다." };
+  }
 }

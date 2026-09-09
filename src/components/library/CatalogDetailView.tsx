@@ -95,9 +95,14 @@ export default function CatalogDetailView({ post }: { post: PublicPost }) {
         </div>
 
         {/* 본문 */}
-        <div className="pt-[17px] pb-[10px] text-[15px] leading-[24px] text-[#363636]">
-          {post.body}
-        </div>
+        {post.body ? (
+          <div
+            className="fr-view-content text-[15px] leading-[24px] text-[#363636] [&_li]:ml-[16px] [&_p]:mb-[8px] [&_ul]:list-disc"
+            dangerouslySetInnerHTML={{ __html: post.body }}
+          />
+        ) : (
+          <div className="min-h-[80px]" />
+        )}
 
         {/* 첨부 박스 */}
         {post.attachment && (

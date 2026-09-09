@@ -20,7 +20,7 @@ export default function Stats({
         disableOnMobile={mobile}
         className={mobile ? undefined : "w-1/4"}
       >
-        <div className="flex h-[155px] flex-col items-center justify-center bg-navy-900 px-4 text-center text-white">
+        <div className="flex h-[250px] flex-col items-center justify-center bg-navy-900 px-4 py-4 text-center text-white">
           <p className="text-[15px] leading-[2] md-header:text-[18px]">
             {stat.label}
           </p>
@@ -36,9 +36,9 @@ export default function Stats({
 
   return (
     <>
-      {/* PC: 카드 290x155, 섹션 247px */}
+      {/* PC: 카드 h-[250px], 섹션 min-h-[250px] */}
       <section className="hidden bg-[#eaeef2] md-header:block">
-        <div className="container-site flex h-[247px] items-center justify-center gap-4">
+        <div className="container-site flex min-h-[250px] items-center justify-center gap-4 py-4">
           {cards(false)}
         </div>
       </section>

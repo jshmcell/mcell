@@ -41,7 +41,7 @@ export default async function CatalogViewPage({
         currentHref="/library/catalog"
         locale={locale}
       />
-      <SubPageBanner image={catalogBand} heightClassName="h-[250px]" locale={locale} />
+      <SubPageBanner image={catalogBand} heightClassName="h-[250px]" />
       <CatalogDetailView post={post} />
       <div aria-hidden className="h-[136px] bg-white md-header:h-[271px]" />
     </>
