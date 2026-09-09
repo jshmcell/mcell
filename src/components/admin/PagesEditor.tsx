@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   HomeSectionPreview,
   ShopHeroPreview,
@@ -59,6 +59,36 @@ import { cn } from "@/lib/cn";
 
 export type ContentValues = Record<string, { ko?: string; en?: string }>;
 type PreviewLang = "ko" | "en";
+
+/** 저장 전 브라우저 메모리에 보관 중인 선택 파일 (로컬 object URL 미리보기). */
+interface PendingMedia {
+  file: File;
+  objectUrl: string;
+}
+type PendingMediaMap = Record<string, Partial<Record<PreviewLang, PendingMedia>>>;
+
+/** 선택된 파일을 서버(Blob)에 업로드하고 URL을 반환한다. 실패 시 throw. */
+async function uploadFileToServer(file: File): Promise<string> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+  const text = await res.text().catch(() => "");
+  let data: { url?: string; error?: string } = {};
+  try {
+    data = text ? (JSON.parse(text) as { url?: string; error?: string }) : {};
+  } catch {
+    data = {};
+  }
+  if (!res.ok || !data.url) {
+    throw new Error(
+      data.error ??
+        (res.ok
+          ? "Upload returned no URL"
+          : `Server responded with HTTP ${res.status}`),
+    );
+  }
+  return data.url;
+}
 
 /** 콘텐츠 키 prefix → mcell 미리보기 섹션 (메인 페이지 + OEM 페이지). */
 function mcellSectionOfKey(key: string) {
@@ -166,8 +196,8 @@ function MediaField({
   placeholder,
   onChange,
   onUpload,
-  uploading,
-  uploadError,
+  pending,
+  onRemoveFile,
   fileInputRef,
   t,
 }: {
@@ -176,10 +206,20 @@ function MediaField({
   placeholder: string;
   onChange: (v: string) => void;
   onUpload: (file: File) => void;
-  uploading: boolean;
-  uploadError: string | null;
+  pending: PendingMedia | null;
+  onRemoveFile: () => void;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
-  t: { en: string; ko: string; urlPh: string; upload: string; uploading: string; uploadFailed: string; preview: string };
+  t: {
+    en: string;
+    ko: string;
+    urlPh: string;
+    upload: string;
+    uploading: string;
+    uploadFailed: string;
+    removeFile: string;
+    pendingUploadNote: string;
+    preview: string;
+  };
 }) {
   return (
     <div>
@@ -192,15 +232,17 @@ function MediaField({
           placeholder={placeholder || t.urlPh}
           className={inputCls}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            if (pending) onRemoveFile();
+          }}
         />
         <button
           type="button"
-          disabled={uploading}
           onClick={() => fileInputRef.current?.click()}
           className="h-[38px] shrink-0 rounded-[3px] border border-black/15 px-3 text-[12px] text-ink transition-colors hover:border-navy-700 hover:text-navy-900 disabled:opacity-50"
         >
-          {uploading ? t.uploading : t.upload}
+          {t.upload}
         </button>
         <input
           ref={fileInputRef}
@@ -214,17 +256,21 @@ function MediaField({
           }}
         />
       </div>
-      {uploadError && (
-        <p className="mt-1 text-[12px] text-[#ff4d4d]">
-          {t.uploadFailed}: {uploadError}
-        </p>
-      )}
-      {value && (
-        <div className="mt-2">
-          <span className="text-[11px] text-ink/40">{t.preview}</span>
-          {/\.(mp4|webm)(\?|#|$)/i.test(value) ? (
+      {pending ? (
+        <div className="mt-2 rounded-[4px] border border-black/10 bg-white p-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="truncate text-[12px] text-ink">{pending.file.name}</span>
+            <button
+              type="button"
+              onClick={onRemoveFile}
+              className="shrink-0 rounded-[3px] border border-black/15 px-2.5 py-1 text-[12px] text-ink transition-colors hover:border-[#ff4d4d] hover:text-[#ff4d4d]"
+            >
+              {t.removeFile}
+            </button>
+          </div>
+          {pending.file.type.startsWith("video/") ? (
             <video
-              src={value}
+              src={pending.objectUrl}
               controls
               className="mt-1 max-h-[160px] w-full rounded-[3px] bg-black object-contain"
             />
@@ -232,7 +278,7 @@ function MediaField({
             <div className="mt-1 flex h-[110px] items-center justify-center overflow-hidden rounded-[3px] border border-black/10 bg-[#f7f7f7]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={value}
+                src={pending.objectUrl}
                 alt=""
                 className="max-h-[110px] w-full object-contain"
                 onError={(e) => {
@@ -241,7 +287,33 @@ function MediaField({
               />
             </div>
           )}
+          <p className="mt-1 text-[12px] text-ink/50">{t.pendingUploadNote}</p>
         </div>
+      ) : (
+        value && (
+          <div className="mt-2">
+            <span className="text-[11px] text-ink/40">{t.preview}</span>
+            {/\.(mp4|webm)(\?|#|$)/i.test(value) ? (
+              <video
+                src={value}
+                controls
+                className="mt-1 max-h-[160px] w-full rounded-[3px] bg-black object-contain"
+              />
+            ) : (
+              <div className="mt-1 flex h-[110px] items-center justify-center overflow-hidden rounded-[3px] border border-black/10 bg-[#f7f7f7]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={value}
+                  alt=""
+                  className="max-h-[110px] w-full object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )
       )}
     </div>
   );
@@ -668,6 +740,9 @@ function Row({
   pending,
   saved,
   t,
+  pendingMedia,
+  onSelectFile,
+  onRemoveFile,
 }: {
   def: ContentDef;
   values: { ko: string; en: string };
@@ -676,6 +751,9 @@ function Row({
   onSave: () => void;
   pending: boolean;
   saved: boolean;
+  pendingMedia: Partial<Record<PreviewLang, PendingMedia>>;
+  onSelectFile: (loc: PreviewLang, file: File) => void;
+  onRemoveFile: (loc: PreviewLang) => void;
   t: {
     ko: string;
     en: string;
@@ -685,6 +763,8 @@ function Row({
     upload: string;
     uploading: string;
     uploadFailed: string;
+    removeFile: string;
+    pendingUploadNote: string;
     preview: string;
     save: string;
     saving: string;
@@ -711,8 +791,6 @@ function Row({
 }) {
   const uiLocale = useLocale();
   const label = uiLocale === "ko" ? def.label.ko : def.label.en;
-  const [uploading, setUploading] = useState<null | PreviewLang>(null);
-  const [uploadError, setUploadError] = useState<{ loc: PreviewLang; message: string } | null>(null);
   const koFileRef = useRef<HTMLInputElement | null>(null);
   const enFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -731,34 +809,8 @@ function Row({
   }, [def.kind, values.ko, values.en, t.invalidUrl, t.invalidVideo]);
   const hasError = !!(errors.ko || errors.en);
 
-  async function upload(file: File, loc: PreviewLang) {
-    setUploading(loc);
-    setUploadError(null);
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const text = await res.text().catch(() => "");
-      let data: { url?: string; error?: string } = {};
-      try {
-        data = text ? (JSON.parse(text) as { url?: string; error?: string }) : {};
-      } catch {
-        data = {};
-      }
-      if (!res.ok || !data.url) {
-        throw new Error(
-          data.error ??
-            (res.ok
-              ? "Upload returned no URL"
-              : `Server responded with HTTP ${res.status}`),
-        );
-      }
-      onDraft(loc, data.url);
-    } catch (e) {
-      setUploadError({ loc, message: e instanceof Error ? e.message : "error" });
-    } finally {
-      setUploading(null);
-    }
+  function selectFile(file: File, loc: PreviewLang) {
+    onSelectFile(loc, file);
   }
 
   return (
@@ -861,9 +913,9 @@ function Row({
                     value={values[loc]}
                     placeholder={placeholders[loc]}
                     onChange={(v) => onDraft(loc, normalizeMediaUrl(v))}
-                    onUpload={(f) => upload(f, loc)}
-                    uploading={uploading === loc}
-                    uploadError={uploadError?.loc === loc ? uploadError.message : null}
+                    onUpload={(f) => selectFile(f, loc)}
+                    pending={pendingMedia[loc] ?? null}
+                    onRemoveFile={() => onRemoveFile(loc)}
                     fileInputRef={loc === "ko" ? koFileRef : enFileRef}
                     t={t}
                   />
@@ -901,7 +953,7 @@ function Row({
       <div className="mt-3 flex items-center gap-2">
         <button
           type="button"
-          disabled={pending || uploading !== null || hasError}
+          disabled={pending || hasError}
           onClick={onSave}
           className="h-[32px] rounded-[3px] bg-navy-900 px-4 text-[12px] text-white disabled:opacity-50"
         >
@@ -1032,6 +1084,47 @@ export default function PagesEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [previewLang, setPreviewLang] = useState<PreviewLang>("ko");
+  // 저장 전 브라우저 메모리에 보관 중인 선택 파일 (def.key → locale → pending)
+  const [pendingMedia, setPendingMedia] = useState<PendingMediaMap>({});
+  const pendingRef = useRef(pendingMedia);
+  useEffect(() => {
+    pendingRef.current = pendingMedia;
+  }, [pendingMedia]);
+  // 언마운트 시 남은 object URL 전부 해제
+  useEffect(
+    () => () => {
+      Object.values(pendingRef.current).forEach((locMedia) =>
+        Object.values(locMedia).forEach((m) => URL.revokeObjectURL(m.objectUrl)),
+      );
+    },
+    [],
+  );
+
+  function setPending(defKey: string, loc: PreviewLang, file: File) {
+    setPendingMedia((s) => {
+      const cur = s[defKey]?.[loc];
+      if (cur) URL.revokeObjectURL(cur.objectUrl);
+      return {
+        ...s,
+        [defKey]: {
+          ...(s[defKey] ?? {}),
+          [loc]: { file, objectUrl: URL.createObjectURL(file) },
+        },
+      };
+    });
+  }
+  function clearPending(defKey: string, loc: PreviewLang) {
+    setPendingMedia((s) => {
+      const cur = s[defKey]?.[loc];
+      if (cur) URL.revokeObjectURL(cur.objectUrl);
+      const nextLoc = { ...(s[defKey] ?? {}) };
+      delete nextLoc[loc];
+      const next = { ...s };
+      if (Object.keys(nextLoc).length) next[defKey] = nextLoc;
+      else delete next[defKey];
+      return next;
+    });
+  }
   // accordion sections (registry order)
   const sections = useMemo(() => {
     const out: { key: string; defs: ContentDef[] }[] = [];
@@ -1057,12 +1150,15 @@ export default function PagesEditor({
     const rows: ContentRows = {};
     for (const def of defs) {
       rows[def.key] = {
-        ko: drafts[`${def.key}:ko`] ?? "",
-        en: def.kind === "url" ? (drafts[`${def.key}:ko`] ?? "") : (drafts[`${def.key}:en`] ?? ""),
+        ko: pendingMedia[def.key]?.ko?.objectUrl ?? drafts[`${def.key}:ko`] ?? "",
+        en:
+          def.kind === "url"
+            ? (drafts[`${def.key}:ko`] ?? "")
+            : (pendingMedia[def.key]?.en?.objectUrl ?? drafts[`${def.key}:en`] ?? ""),
       };
     }
     return rows;
-  }, [defs, drafts]);
+  }, [defs, drafts, pendingMedia]);
 
   const home = useMemo(
     () => (group === "home" ? resolveHomeFromRows(previewRows, previewLang) : null),
@@ -1152,7 +1248,18 @@ export default function PagesEditor({
     setMessage(null);
     setPendingRow(def.key);
     try {
-      if (def.kind === "url") {
+      if (def.kind === "image" || def.kind === "video") {
+        const saved: Record<string, string> = {};
+        for (const loc of ["ko", "en"] as const) {
+          const pend = pendingMedia[def.key]?.[loc];
+          const value = pend ? await uploadFileToServer(pend.file) : (drafts[`${def.key}:${loc}`] ?? "");
+          const res = await savePageContent(def.key, loc, value);
+          if (!res.ok) throw new Error(res.message ?? t.failed);
+          saved[`${def.key}:${loc}`] = value;
+        }
+        // 저장 성공 시 방금 올린 URL을 draft 에 반영해 필드/미리보기가 최신값 유지
+        setDrafts((s) => ({ ...s, ...saved }));
+      } else if (def.kind === "url") {
         const res = await savePageContent(def.key, "ko", drafts[`${def.key}:ko`] ?? "");
         if (!res.ok) throw new Error(res.message ?? t.failed);
       } else {
@@ -1161,6 +1268,15 @@ export default function PagesEditor({
           if (!res.ok) throw new Error(res.message ?? t.failed);
         }
       }
+      // 성공 시 이 키의 pending 파일 해제 (revoke 는 여기서 직접 수행)
+      setPendingMedia((s) => {
+        Object.values(s[def.key] ?? {}).forEach((locMedia) =>
+          URL.revokeObjectURL(locMedia.objectUrl),
+        );
+        const n = { ...s };
+        delete n[def.key];
+        return n;
+      });
       setSavedRows((s) => new Set(s).add(def.key));
     } catch (e) {
       setMessage(e instanceof Error ? e.message : t.failed);
@@ -1245,6 +1361,12 @@ export default function PagesEditor({
                         onSave={() => saveRow(def)}
                         pending={pendingRow === def.key}
                         saved={savedRows.has(def.key)}
+                        pendingMedia={pendingMedia[def.key] ?? {}}
+                        onSelectFile={(loc, f) => {
+                          setPending(def.key, loc, f);
+                          markDirty(def.key);
+                        }}
+                        onRemoveFile={(loc) => clearPending(def.key, loc)}
                         t={t}
                       />
                     ))}

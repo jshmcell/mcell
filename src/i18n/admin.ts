@@ -126,6 +126,8 @@ export interface AdminDict {
     upload: string;
     uploading: string;
     uploadFailed: string;
+    removeFile: string;
+    pendingUploadNote: string;
     preview: string;
     save: string;
     saving: string;
@@ -315,6 +317,8 @@ const ko: AdminDict = {
     upload: "파일 업로드",
     uploading: "업로드 중...",
     uploadFailed: "업로드 실패",
+    removeFile: "선택 취소",
+    pendingUploadNote: "저장 버튼을 누를 때 업로드됩니다.",
     preview: "미리보기",
     save: "저장",
     saving: "처리 중...",
@@ -507,6 +511,8 @@ const en: AdminDict = {
     upload: "Upload file",
     uploading: "Uploading...",
     uploadFailed: "Upload failed",
+    removeFile: "Remove file",
+    pendingUploadNote: "Will be uploaded when you press Save.",
     preview: "Preview",
     save: "Save",
     saving: "Working...",
