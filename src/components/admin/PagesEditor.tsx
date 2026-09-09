@@ -738,8 +738,21 @@ function Row({
       const form = new FormData();
       form.append("file", file);
       const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) throw new Error(data.error ?? res.statusText);
+      const text = await res.text().catch(() => "");
+      let data: { url?: string; error?: string } = {};
+      try {
+        data = text ? (JSON.parse(text) as { url?: string; error?: string }) : {};
+      } catch {
+        data = {};
+      }
+      if (!res.ok || !data.url) {
+        throw new Error(
+          data.error ??
+            (res.ok
+              ? "Upload returned no URL"
+              : `Server responded with HTTP ${res.status}`),
+        );
+      }
       onDraft(loc, data.url);
     } catch (e) {
       setUploadError({ loc, message: e instanceof Error ? e.message : "error" });

@@ -47,9 +47,23 @@ export async function POST(req: Request) {
   }
 
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_") || "upload";
-  const blob = await put(`content/${Date.now()}-${safeName}`, file, {
-    access: "public",
-    contentType: file.type,
-  });
-  return Response.json({ url: blob.url });
+  try {
+    const blob = await put(`content/${Date.now()}-${safeName}`, file, {
+      access: "public",
+      contentType: file.type,
+      // Pass the read-write token explicitly: the SDK prefers OIDC (VERCEL_OIDC_TOKEN)
+      // over BLOB_READ_WRITE_TOKEN, but OIDC is not available in the local dev
+      // environment. When the token is unset (e.g. production), OIDC is used instead.
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
+    return Response.json({ url: blob.url });
+  } catch (err) {
+    const message =
+      err instanceof Error
+        ? err.message.includes("private store")
+          ? "Upload storage is not configured for public access. Add a public Blob store to the project settings (Storage → Blob) or paste an image/video URL instead."
+          : err.message
+        : "Upload failed";
+    return Response.json({ error: message }, { status: 500 });
+  }
 }

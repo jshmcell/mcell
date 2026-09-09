@@ -48,3 +48,6 @@ shots/
 dev.log
 dev-server*.log
 analysis/
+
+.vercel
+.env*
